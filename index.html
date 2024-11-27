@@ -185,38 +185,6 @@ h3 {
     </style>
     
 </head>
-<body>
-    <div class="timezone-container">
-        <div class="timezone" id="timezone-pacific">Pacific Time: </div>
-        <div class="timezone" id="timezone-mountain">Mountain Time: </div>
-        <div class="timezone" id="timezone-central">Central Time: </div>
-        <div class="timezone" id="timezone-eastern">Eastern Time: </div>
-        <div class="timezone" id="timezone-philippines">Philippines Time: </div>
-    </div>
-
-    <div class="widget">
-        <!-- Collapsible Notepad Section -->
-        <button class="collapsible">Notepad</button>
-        <div class="collapsible-content" id="notepad-section">
-            <div class="section">
-                <h3>Notepad</h3>
-                <textarea id="notepad"></textarea>
-                <button id="clear-notes">Clear Notes</button>
-            </div>
-        </div>
-
-        <!-- Collapsible Task Manager Section -->
-        <button class="collapsible">Task Manager</button>
-        <div class="collapsible-content" id="task-manager-section">
-            <div class="section">
-                <h3>Task Manager</h3>
-                <input type="text" id="new-task" placeholder="Enter a task...">
-                <button id="add-task">Add Task</button>
-                <ul id="task-list"></ul>
-                <button id="clear-tasks">Clear All Tasks</button>
-            </div>
-        </div>
-    </div>
 <script>
     // Collapsible functionality
     document.querySelectorAll('.collapsible').forEach(button => {
@@ -336,7 +304,3 @@ h3 {
         });
     });
 </script>
-
-    
-</body>
-</html>
