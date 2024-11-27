@@ -13,7 +13,41 @@ themeToggle.addEventListener("click", () => {
     } else {
         localStorage.setItem('theme', 'light');
     }
-});
+}); 
+ });
+
+        // Timezone Update Functionality
+        function updateTimezones() {
+            const now = new Date();
+            document.getElementById('timezone-pacific').textContent = `Pacific Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`;
+            document.getElementById('timezone-mountain').textContent = `Mountain Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' })}`;
+            document.getElementById('timezone-central').textContent = `Central Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' })}`;
+            document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
+            document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
+
+            // Store timezones in localStorage
+            const timezones = {
+                pacific: now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }),
+                mountain: now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' }),
+                central: now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' }),
+                eastern: now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' }),
+                philippines: now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })
+            };
+            localStorage.setItem('timezones', JSON.stringify(timezones));
+        }
+
+        // Retrieve stored timezones on page load
+        const storedTimezones = JSON.parse(localStorage.getItem('timezones'));
+        if (storedTimezones) {
+            document.getElementById('timezone-pacific').textContent = `Pacific Time: ${storedTimezones.pacific}`;
+            document.getElementById('timezone-mountain').textContent = `Mountain Time: ${storedTimezones.mountain}`;
+            document.getElementById('timezone-central').textContent = `Central Time: ${storedTimezones.central}`;
+            document.getElementById('timezone-eastern').textContent = `Eastern Time: ${storedTimezones.eastern}`;
+            document.getElementById('timezone-philippines').textContent = `Philippines Time: ${storedTimezones.philippines}`;
+        }
+
+        setInterval(updateTimezones, 1000);
+        updateTimezones(); // Initial update
 
 // Notepad Persistence
 const notepad = document.getElementById('notepad');
