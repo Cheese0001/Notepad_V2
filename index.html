@@ -3,46 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notepad & Task Manager with Timezones</title>
-    <link rel="stylesheet" href="style.css">
-    
+    <title>Notepad & Task Manager</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Theme toggle and color palette -->
     <div class="theme-container">
-        <button class="theme-toggle" id="theme-toggle">Toggle Theme</button>
-    </div>
-
-    <div class="color-palette-container" id="color-palette-container">
-        <button class="color-button" data-color="#93B9CF">Purple</button>
-        <button class="color-button" data-color="#9DA8C4">Light Purple</button>
-        <button class="color-button" data-color="#C6B0C8">Lavender</button>
-        <button class="color-button" data-color="#D0B0BD">Pink</button>
-        <button class="color-button" data-color="#DFB7CC">Hot Pink</button>
-    </div>
-
-    <div class="timezone-container" id="timezone-container"></div>
-
-    <div class="widget-container">
-        <div class="notepad-container" id="notepad-container">
-    <div class="section">
-        <h3>Notepad</h3>
-        <textarea id="notepad"></textarea>
-        <button id="clear-notes">Clear Notes</button>
-            </div>
-            <div class="font-size-slider">
-                <label for="font-size">Font Size:</label>
-                <input type="range" id="font-size" min="10" max="30" value="16">
-            </div>
+        <button id="theme-toggle">Toggle Theme</button>
+        <div class="color-palette">
+            <button class="color-button" data-color="#61E294" style="background-color: #61E294;">Green</button>
+            <button class="color-button" data-color="#DFB7CC" style="background-color: #DFB7CC;">Pink</button>
+            <button class="color-button" data-color="#C6B0C8" style="background-color: #C6B0C8;">Purple</button>
         </div>
+    </div>
 
-        <div class="task-container" id="task-container">
-            <div class="section">
-                <h3>Task Manager</h3>
-                <input type="text" id="new-task" placeholder="Enter a task...">
-                <button id="add-task">Add Task</button>
-                <ul id="task-list"></ul>
-                <button id="clear-tasks">Clear All Tasks</button>
-            </div>
+    <!-- Widgets: Notepad and Task Manager -->
+    <div class="widget-container">
+        <div class="notepad-container">
+            <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+            <button id="clear-notes">Clear Notes</button>
+        </div>
+        <div class="task-container">
+            <input type="text" id="new-task" placeholder="Enter a task...">
+            <button id="add-task">Add Task</button>
+            <ul id="task-list"></ul>
         </div>
     </div>
 
