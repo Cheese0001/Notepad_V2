@@ -97,7 +97,19 @@ document.addEventListener('DOMContentLoaded', () => {
             taskText.classList.add('task-text');
             if (task.completed) {
                 taskText.classList.add('completed');
-            }
+            }  const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme) {
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+    }    // Apply the saved color palette from local storage
+    const savedColor = localStorage.getItem('selectedColor');
+    if (savedColor) {
+        document.querySelectorAll('button').forEach(btn => {
+            btn.style.backgroundColor = savedColor;
+        });
+    }
+});
 
             const checkButton = document.createElement('button');
             checkButton.textContent = '✓';
