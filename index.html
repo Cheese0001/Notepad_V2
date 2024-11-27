@@ -171,7 +171,7 @@
             display: none;
         }
 
-        /* Responsive Design */
+/* Responsive Design */
         @media (max-width: 768px) {
             .widget {
                 width: 95%;
@@ -179,7 +179,24 @@
             }
             textarea {
                 height: 80px;
-            }
+}/* Task Text Color */
+.task-text {
+    color: var(--text-color); /* Default text color */
+    flex: 1;
+    margin-right: 10px;
+    font-size: 12px;
+}
+
+/* Dark theme task text */
+body.dark-theme .task-text {
+    color: var(--text-color); /* Ensures task text is visible in dark mode */
+}
+
+/* Completed task text */
+.task-text.completed {
+    text-decoration: line-through;
+    color: #aaa;
+}
         }
     </style>
 </head>
