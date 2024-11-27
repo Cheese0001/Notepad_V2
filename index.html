@@ -20,18 +20,12 @@
             overflow-x: hidden;
         }
 
-        .theme-container {
+        .theme-container, .timezone-container {
             display: flex;
             justify-content: center;
-            margin-top: 10px;
-        }
-
-        .timezone-container {
-            display: flex;
             gap: 10px;
-            margin-top: 20px;
+            margin-top: 10px;
             flex-wrap: wrap;
-            justify-content: center;
         }
 
         .timezone {
@@ -136,7 +130,6 @@
             border-bottom: 1px dashed #ccc;
         }
 
-        /* Theme Toggle */
         .theme-toggle {
             padding: 10px 15px;
             border-radius: 5px;
@@ -149,6 +142,17 @@
         .theme-toggle:hover {
             background-color: #555;
         }
+
+        .color-button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .color-button:hover {
+            opacity: 0.8;
+        }
     </style>
 </head>
 <body>
@@ -156,16 +160,9 @@
         <button class="theme-toggle" id="theme-toggle">Toggle Theme</button>
     </div>
 
-    <div class="timezone-container">
-        <div class="timezone" id="timezone-pacific">Pacific Time: </div>
-        <div class="timezone" id="timezone-mountain">Mountain Time: </div>
-        <div class="timezone" id="timezone-central">Central Time: </div>
-        <div class="timezone" id="timezone-eastern">Eastern Time: </div>
-        <div class="timezone" id="timezone-philippines">Philippines Time: </div>
-    </div>
+    <div class="timezone-container" id="timezone-container"></div>
 
     <div class="widget-container">
-        <!-- Notepad Container -->
         <div class="notepad-container">
             <div class="section">
                 <h3>Notepad</h3>
@@ -178,7 +175,6 @@
             </div>
         </div>
 
-        <!-- Task Manager Container -->
         <div class="task-container">
             <div class="section">
                 <h3>Task Manager</h3>
@@ -191,6 +187,37 @@
     </div>
 
     <script>
+        // Timezone update function
+        function updateTimezones() {
+            const timezones = {
+                "Pacific Time": "America/Los_Angeles",
+                "Mountain Time": "America/Denver",
+                "Central Time": "America/Chicago",
+                "Eastern Time": "America/New_York",
+                "Philippines Time": "Asia/Manila"
+            };
+
+            const timezoneContainer = document.getElementById('timezone-container');
+            timezoneContainer.innerHTML = ''; // Clear previous content
+
+            for (let [label, zone] of Object.entries(timezones)) {
+                const timezoneDiv = document.createElement('div');
+                timezoneDiv.classList.add('timezone');
+                timezoneDiv.id = `timezone-${label.toLowerCase().replace(/\s+/g, '-')}`;
+
+                function updateClock() {
+                    const date = new Date().toLocaleString('en-US', { timeZone: zone });
+                    timezoneDiv.textContent = `${label}: ${date}`;
+                }
+
+                setInterval(updateClock, 1000);
+                updateClock(); // Initial update
+                timezoneContainer.appendChild(timezoneDiv);
+            }
+        }
+
+        updateTimezones();
+
         // Theme toggle functionality
         const themeToggle = document.getElementById('theme-toggle');
         themeToggle.addEventListener('click', () => {
