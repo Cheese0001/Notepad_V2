@@ -12,8 +12,8 @@
             padding: 0;
             background-color: #f7f7f7;
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
             gap: 20px;
             height: 100vh;
             padding: 20px;
@@ -30,24 +30,53 @@
             color: #f7f7f7;
         }
 
-        .timezone-container {
+        .theme-switcher {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .timezone {
-            background-color: #7BCDBA;
-            color: black;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
             padding: 10px;
+            border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin: 5px;
-            font-size: 14px;
+            width: 200px;
+        }
+
+        .theme-switcher button {
+            padding: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
             font-weight: 400;
+        }
+
+        .button-color-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .color-button {
+            width: 30px;
+            height: 30px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .color-button:hover {
+            transform: scale(1.1);
+        }
+
+        .left-side,
+        .right-side {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 600px;
         }
 
         .widget {
@@ -74,12 +103,6 @@
             gap: 10px;
         }
 
-        .section h3 {
-            margin: 0;
-            font-size: 20px;
-            font-weight: 600;
-        }
-
         textarea {
             width: 100%;
             height: 200px;
@@ -95,7 +118,7 @@
             background-color: #61E294;
             color: black;
             border: none;
-            padding: 10px 15px;
+            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
@@ -138,56 +161,20 @@
             border-bottom: 1px dashed #ccc;
         }
 
-        /* Theme switcher styles */
-        .theme-switcher {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 10px;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .theme-switcher button {
-            margin: 0 5px;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 400;
-        }
-
-        /* Button color options */
-        .button-color-options {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .color-button {
-            width: 40px;
-            height: 40px;
+        .checkmark,
+        .xmark {
+            width: 15px; /* Smaller size */
+            height: 15px; /* Smaller size */
             border: none;
-            border-radius: 50%;
+            background: none;
             cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .color-button:hover {
-            transform: scale(1.1);
-        }
-
-        .left-side,
-        .right-side {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            font-size: 12px; /* Adjusted size */
         }
     </style>
 </head>
 <body class="light-theme">
-    <!-- Theme switcher -->
-    <div class="theme-switcher">
+    <!-- Collapsible theme switcher -->
+    <div id="theme-switcher" class="theme-switcher">
         <button onclick="changeTheme('light')" style="background-color: #f7f7f7; color: black;">Light</button>
         <button onclick="changeTheme('dark')" style="background-color: #1e1e1e; color: #f7f7f7;">Dark</button>
     </div>
@@ -201,6 +188,7 @@
         <button class="color-button" style="background-color: #DFB7CC;" onclick="changeButtonColor('#DFB7CC')"></button>
     </div>
 
+    <!-- Content areas -->
     <div class="left-side">
         <div class="widget">
             <h3>Notepad</h3>
@@ -264,12 +252,14 @@
                 taskText.textContent = task;
 
                 const completeButton = document.createElement('button');
+                completeButton.classList.add('checkmark');
                 completeButton.textContent = '✔️';
                 completeButton.onclick = () => {
                     taskText.style.textDecoration = taskText.style.textDecoration === 'line-through' ? 'none' : 'line-through';
                 };
 
                 const deleteButton = document.createElement('button');
+                deleteButton.classList.add('xmark');
                 deleteButton.textContent = '❌';
                 deleteButton.onclick = () => {
                     tasks.splice(index, 1);
