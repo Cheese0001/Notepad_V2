@@ -16,7 +16,7 @@
             --button-hover-color: #7BCDBA;
         }
 
-        /* Dark theme variables */
+/* Dark theme variables */
         body.dark-theme {
             --background-color: #1e1e1e;
             --text-color: #ffffff;
@@ -25,7 +25,7 @@
             --button-hover-color: #4d4d4d;
         }
 
-        /* Global Styles */
+/* Global Styles */
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -67,7 +67,7 @@
             font-size: 12px;
         }
 
-        /* Theme Toggle Button */
+/* Theme Toggle Button */
         button {
             background-color: var(--button-color);
             color: var(--button-text-color);
@@ -214,16 +214,16 @@
         </div>
     </div>
 
-    <script>
+<script>
         // Collapsible functionality
         document.querySelectorAll('.collapsible').forEach(button => {
             button.addEventListener('click', () => {
                 const content = button.nextElementSibling;
                 content.classList.toggle('hidden');
-            });
-        });
+});
+});
 
-        // Timezone Update Functionality
+// Timezone Update Functionality
         function updateTimezones() {
             const now = new Date();
             document.getElementById('timezone-pacific').textContent = `Pacific Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`;
@@ -232,7 +232,7 @@
             document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
             document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
 
-            // Store timezones in localStorage
+// Store timezones in localStorage
             const timezones = {
                 pacific: now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }),
                 mountain: now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' }),
@@ -241,9 +241,9 @@
                 philippines: now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })
             };
             localStorage.setItem('timezones', JSON.stringify(timezones));
-        }
+}
 
-        // Retrieve stored timezones on page load
+// Retrieve stored timezones on page load
         const storedTimezones = JSON.parse(localStorage.getItem('timezones'));
         if (storedTimezones) {
             document.getElementById('timezone-pacific').textContent = `Pacific Time: ${storedTimezones.pacific}`;
@@ -251,25 +251,25 @@
             document.getElementById('timezone-central').textContent = `Central Time: ${storedTimezones.central}`;
             document.getElementById('timezone-eastern').textContent = `Eastern Time: ${storedTimezones.eastern}`;
             document.getElementById('timezone-philippines').textContent = `Philippines Time: ${storedTimezones.philippines}`;
-        }
+}
 
         setInterval(updateTimezones, 1000);
         updateTimezones(); // Initial update
 
-        // Notepad functionality
+// Notepad functionality
         const notepad = document.getElementById('notepad');
         notepad.value = localStorage.getItem('notepad') || ''; // Load saved notes
         notepad.addEventListener('input', () => {
             localStorage.setItem('notepad', notepad.value); // Save notes
         });
 
-        // Clear notepad
+// Clear notepad
         document.getElementById('clear-notes').addEventListener('click', () => {
             notepad.value = '';
             localStorage.removeItem('notepad');
-        });
+});
 
-        // Task Manager functionality
+// Task Manager functionality
         const taskList = document.getElementById('task-list');
         let tasks = JSON.parse(localStorage.getItem('tasks')) || []; // Load saved tasks
 
@@ -285,7 +285,7 @@
                 taskText.addEventListener('input', () => {
                     tasks[index].text = taskText.textContent;
                     localStorage.setItem('tasks', JSON.stringify(tasks));
-                });
+});
 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.textContent = 'Delete';
@@ -293,7 +293,7 @@
                     tasks.splice(index, 1);
                     localStorage.setItem('tasks', JSON.stringify(tasks));
                     renderTasks();
-                });
+});
 
                 const toggleBtn = document.createElement('button');
                 toggleBtn.textContent = task.completed ? 'Undo' : 'Complete';
@@ -301,35 +301,35 @@
                     task.completed = !task.completed;
                     localStorage.setItem('tasks', JSON.stringify(tasks));
                     renderTasks();
-                });
+});
 
                 li.appendChild(taskText);
                 li.appendChild(toggleBtn);
                 li.appendChild(deleteBtn);
                 taskList.appendChild(li);
-            }); 
-        }
+}); 
+}
 
         renderTasks(); // Initial render of tasks
 
-        // Add task
-        document.getElementById('add-task').addEventListener('click', () => {
+// Add task
+document.getElementById('add-task').addEventListener('click', () => {
             const taskInput = document.getElementById('new-task');
             if (taskInput.value.trim() !== '') {
                 tasks.push({ text: taskInput.value.trim(), completed: false });
                 localStorage.setItem('tasks', JSON.stringify(tasks));
                 taskInput.value = '';
                 renderTasks();
-            }
-        });
+}
+});
 
-        // Clear all tasks
+// Clear all tasks
         document.getElementById('clear-tasks').addEventListener('click', () => {
             tasks = [];
             localStorage.setItem('tasks', JSON.stringify(tasks));
             renderTasks();
-        });
-        // Theme toggle functionality
+});
+// Theme toggle functionality
 document.getElementById('theme-toggle').addEventListener('click', () => {
     const isDarkMode = document.body.classList.toggle('dark-theme');
     // Save the current theme to localStorage
@@ -346,6 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-    </script>
+</script>
 </body>
 </html>
