@@ -3,193 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>Notepad & Task Manager with Timezones</title>
-    <style>
-       body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f7f7f7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100vh;
-    gap: 20px;
-    overflow-x: hidden;
-   font-family: 'Poppins', sans-serif;
-    font-size: 14px; /* Base font size */
-}
-
-/* Additional font customization for headings */
-h3 {
-    font-size: 1.5rem; /* Smaller size for headings */
-    font-weight: 600;
-    color: #9799CA;
-}
-       .timezone-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .timezone {
-            background-color: #7BCDBA;
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin: 5px;
-    font-size: 12px; /* Adjust the size of timezone text */
-
-        }
-
-        .widget {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 90%;
-            max-width: 600px;
-        }
-
-        .section {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .section h3 {
-            color: #9799CA;
-            margin: 0;
-        }
-
-        textarea {
-            width: 100%;
-            height: 100px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 10px;
-            resize: both; /* Allow resizing */
-        }
-
-        button {
-            background-color: #61E294;
-            color: black;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        button:hover {
-            background-color: #7BCDBA;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-
-        ul li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-             font-size: 10px; /* Adjust the font size for each task item */
-        }
-
-        ul li:last-child {
-            border-bottom: none;
-        }
-        <ul id="task-list"></ul>
-         }
-
-        .task-text {
-            flex: 1;
-            margin-right: 10px;
-              font-size: 10px; /* Adjusted font size for task text */
-        }
-
-        .task-text[contenteditable="true"] {
-            border-bottom: 1px dashed #ccc;
-        }
-
-        .task-text.completed {
-            text-decoration: line-through;
-            color: #aaa; /* Change color to indicate completed status */
-        }
-
-        /* Collapsible section styles */
-        .collapsible {
-            cursor: pointer;
-            background-color: #61E294;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .collapsible:focus {
-            outline: none;
-        }
-
-        .collapsible-content {
-            display: block;
-        }
-
-        .collapsible-content.hidden {
-            display: none;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .widget {
-                width: 95%;
-                padding: 15px;
-            }
-            textarea {
-                height: 80px;
-                font-size: 14px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="timezone-container">
-        <div class="timezone" id="timezone-pacific">Pacific Time: </div>
-        <div class="timezone" id="timezone-mountain">Mountain Time: </div>
-        <div class="timezone" id="timezone-central">Central Time: </div>
-        <div class="timezone" id="timezone-eastern">Eastern Time: </div>
-        <div class="timezone" id="timezone-philippines">Philippines Time: </div>
+    <div class="theme-container">
+        <button class="theme-toggle" id="theme-toggle">Toggle Theme</button>
     </div>
 
-    <div class="widget">
-        <!-- Collapsible Notepad Section -->
-        <button class="collapsible">Notepad</button>
-        <div class="collapsible-content" id="notepad-section">
+    <div class="color-palette-container" id="color-palette-container">
+        <button class="color-button" data-color="#93B9CF">Purple</button>
+        <button class="color-button" data-color="#9DA8C4">Light Purple</button>
+        <button class="color-button" data-color="#C6B0C8">Lavender</button>
+        <button class="color-button" data-color="#D0B0BD">Pink</button>
+        <button class="color-button" data-color="#DFB7CC">Hot Pink</button>
+    </div>
+
+    <div class="timezone-container" id="timezone-container"></div>
+
+    <div class="widget-container">
+        <div class="notepad-container" id="notepad-container">
             <div class="section">
                 <h3>Notepad</h3>
                 <textarea id="notepad"></textarea>
                 <button id="clear-notes">Clear Notes</button>
             </div>
+            <div class="font-size-slider">
+                <label for="font-size">Font Size:</label>
+                <input type="range" id="font-size" min="10" max="30" value="16">
+            </div>
         </div>
 
-        <!-- Collapsible Task Manager Section -->
-        <button class="collapsible">Task Manager</button>
-        <div class="collapsible-content" id="task-manager-section">
+        <div class="task-container" id="task-container">
             <div class="section">
                 <h3>Task Manager</h3>
                 <input type="text" id="new-task" placeholder="Enter a task...">
@@ -200,173 +45,6 @@ h3 {
         </div>
     </div>
 
-    <script>
-        // Collapsible functionality
-        document.querySelectorAll('.collapsible').forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                content.classList.toggle('hidden');
-            });
-        });
-
-        // Timezone Update Functionality
-        function updateTimezones() {
-            const now = new Date();
-            document.getElementById('timezone-pacific').textContent = `Pacific Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`;
-            document.getElementById('timezone-mountain').textContent = `Mountain Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' })}`;
-            document.getElementById('timezone-central').textContent = `Central Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' })}`;
-            document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
-            document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
-        }
-        setInterval(updateTimezones, 1000);
-
-        // Notepad Functionality
-        const notepad = document.getElementById('notepad');
-        const clearNotesButton = document.getElementById('clear-notes');
-
-        // Load saved notes
-        notepad.value = localStorage.getItem('notepad') || '';
-
-        // Save notes on input
-        notepad.addEventListener('input', () => {
-            localStorage.setItem('notepad', notepad.value);
-        });
-
-        // Clear notes
-        clearNotesButton.addEventListener('click', () => {
-            notepad.value = '';
-            localStorage.removeItem('notepad');
-        });
-
-        // Task Manager Functionality
-        const taskList = document.getElementById('task-list');
-        const newTaskInput = document.getElementById('new-task');
-        const addTaskButton = document.getElementById('add-task');
-        const clearTasksButton = document.getElementById('clear-tasks');
-
-        // Load saved tasks
-        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        function renderTasks() {
-            taskList.innerHTML = '';
-            tasks.forEach((task, index) => {
-                const li = document.createElement('li');
-                const taskText = document.createElement('div');
-                taskText.textContent = task;
-                taskText.className = 'task-text';
-                taskText.contentEditable = true;
-
-                // Toggle completion status
-                taskText.addEventListener('click', () => {
-                    taskText.classList.toggle('completed');
-                    tasks[index] = taskText.textContent;
-                    localStorage.setItem('tasks', JSON.stringify(tasks));
-                });
-
-                // Style for completed tasks
-                if (taskText.classList.contains('completed')) {
-                    taskText.style.textDecoration = 'line-through';
-                    taskText.style.color = '#aaa'; // Change color to indicate completion
-                }
-
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = '❌';
-                deleteButton.addEventListener('click', () => {
-                    tasks.splice(index, 1);
-                    localStorage.setItem('tasks', JSON.stringify(tasks));
-                    renderTasks();
-                });
-
-                li.appendChild(taskText);
-                li.appendChild(deleteButton);
-                taskList.appendChild(li);
-            });
-        }
-        renderTasks();
-
-        addTaskButton.addEventListener('click', () => {
-            const newTask = newTaskInput.value.trim();
-            if (newTask) {
-                tasks.push(newTask);
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                newTaskInput.value = '';
-                renderTasks();
-            }
-        });
-
-        clearTasksButton.addEventListener('click', () => {
-            localStorage.removeItem('tasks');
-            tasks.length = 0; // Clear the tasks array
-            renderTasks();
-        });
-        // Select the notepad and the font size slider
-const notepad = document.getElementById('notepad');
-const fontSizeSlider = document.getElementById('font-size');
-
-// Function to set font size based on slider value
-fontSizeSlider.addEventListener('input', () => {
-    const fontSize = fontSizeSlider.value + 'px';
-    notepad.style.fontSize = fontSize;
-
-    // Save the font size in local storage
-    localStorage.setItem('notepadFontSize', fontSize);
-});
-
-// Load the saved font size from local storage when the page loads
-document.addEventListener('DOMContentLoaded', () => {
-    const savedFontSize = localStorage.getItem('notepadFontSize');
-    if (savedFontSize) {
-        notepad.style.fontSize = savedFontSize;
-        fontSizeSlider.value = parseInt(savedFontSize, 10); // Adjust slider to match font size
-    }
-});
-        // Select the elements needed
-const newTaskInput = document.getElementById('new-task');
-const addTaskButton = document.getElementById('add-task');
-const taskList = document.getElementById('task-list');
-
-// Function to create a new task item
-addTaskButton.addEventListener('click', () => {
-    const taskText = newTaskInput.value.trim();
-    if (taskText) {
-        // Create a new list item
-        const taskItem = document.createElement('li');
-
-        // Create a span to hold the task text
-        const taskSpan = document.createElement('span');
-        taskSpan.textContent = taskText;
-        taskSpan.classList.add('task-text');
-
-        // Create the checkmark button
-        const checkButton = document.createElement('button');
-        checkButton.textContent = '✔';
-        checkButton.style.background = 'none';
-        checkButton.style.border = 'none';
-        checkButton.style.color = 'green';
-        checkButton.style.cursor = 'pointer';
-        checkButton.addEventListener('click', () => {
-            taskSpan.classList.toggle('completed'); // Toggle the completed class
-            if (taskSpan.classList.contains('completed')) {
-                checkButton.textContent = '✖'; // Change to cross button when completed
-                checkButton.style.color = 'red';
-            } else {
-                checkButton.textContent = '✔'; // Change back to checkmark when not completed
-                checkButton.style.color = 'green';
-            }
-        });
-
-        // Append elements to the list item
-        taskItem.appendChild(taskSpan);
-        taskItem.appendChild(checkButton);
-
-        // Append the new task item to the task list
-        taskList.appendChild(taskItem);
-
-        // Clear the input field after adding the task
-        newTaskInput.value = '';
-    }
-});
-
-
-    </script>
+    <script src="scripts.js"></script>
 </body>
 </html>
