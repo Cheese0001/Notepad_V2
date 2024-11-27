@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>Notepad & Task Manager with Timezones</title>
-    
     <button id="theme-toggle">Toggle Theme</button>
     <style>
-          :root {
+        :root {
             --background-color: #f7f7f7;
             --text-color: #000000;
             --button-color: #61E294;
@@ -16,7 +15,7 @@
             --button-hover-color: #7BCDBA;
         }
 
-/* Dark theme variables */
+        /* Dark theme variables */
         body.dark-theme {
             --background-color: #1e1e1e;
             --text-color: #ffffff;
@@ -25,7 +24,7 @@
             --button-hover-color: #4d4d4d;
         }
 
-/* Global Styles */
+        /* Global Styles */
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
@@ -67,7 +66,7 @@
             font-size: 12px;
         }
 
-/* Theme Toggle Button */
+        /* Theme Toggle Button */
         button {
             background-color: var(--button-color);
             color: var(--button-text-color);
@@ -171,7 +170,7 @@
             display: none;
         }
 
-/* Responsive Design */
+        /* Responsive Design */
         @media (max-width: 768px) {
             .widget {
                 width: 95%;
@@ -179,56 +178,29 @@
             }
             textarea {
                 height: 80px;
-}
-/* Task Text Color */
-.task-text {
-    color: var(--text-color); /* Default text color */
-    flex: 1;
-    margin-right: 10px;
-    font-size: 12px;
-}
+            }
+        }
 
-/* Dark theme task text */
-body.dark-theme .task-text {
-    color: var(--text-color); /* Ensures task text is visible in dark mode */
-}
+        /* Font size control buttons */
+        .font-size-controls {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
 
-/* Completed task text */
-.task-text.completed {
-    text-decoration: line-through;
-    color: #aaa;
-}
-        }/* Font size control buttons */
-.font-size-controls {
-    display: flex;
-    gap: 5px;
-    margin-bottom: 10px;
-}
+        .font-size-controls button {
+            background-color: #7BCDBA;
+            color: black;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
 
-.font-size-controls button {
-    background-color: #7BCDBA;
-    color: black;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.font-size-controls button:hover {
-    background-color: #61E294;
-}
-
-/* Styling the notepad text area */
-textarea {
-    width: 100%;
-    height: 100px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 12px;
-    resize: both;
-}
+        .font-size-controls button:hover {
+            background-color: #61E294;
+        }
     </style>
 </head>
 <body>
@@ -245,19 +217,13 @@ textarea {
         <div class="collapsible-content" id="notepad-section">
             <div class="section">
                 <h3>Notepad</h3>
+                <div class="font-size-controls">
+                    <button id="decrease-font">A-</button>
+                    <button id="increase-font">A+</button>
+                </div>
                 <textarea id="notepad"></textarea>
                 <button id="clear-notes">Clear Notes</button>
             </div>
-<div class="section">
-    <h3>Notepad</h3>
-    <div class="font-size-controls">
-        <button id="decrease-font">A-</button>
-        <button id="increase-font">A+</button>
-    </div>
-    <textarea id="notepad"></textarea>
-    <button id="clear-notes">Clear Notes</button>
-</div>
-
         </div>
 
         <button class="collapsible">Task Manager</button>
@@ -273,157 +239,94 @@ textarea {
     </div>
 
 <script>
-        // Collapsible functionality
-        document.querySelectorAll('.collapsible').forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                content.classList.toggle('hidden');
-});
+// Collapsible functionality
+document.querySelectorAll('.collapsible').forEach(button => {
+    button.addEventListener('click', () => {
+        const content = button.nextElementSibling;
+        content.classList.toggle('hidden');
+    });
 });
 
 // Timezone Update Functionality
-        function updateTimezones() {
-            const now = new Date();
-            document.getElementById('timezone-pacific').textContent = `Pacific Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`;
-            document.getElementById('timezone-mountain').textContent = `Mountain Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' })}`;
-            document.getElementById('timezone-central').textContent = `Central Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' })}`;
-            document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
-            document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
+function updateTimezones() {
+    const now = new Date();
+    document.getElementById('timezone-pacific').textContent = `Pacific Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`;
+    document.getElementById('timezone-mountain').textContent = `Mountain Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' })}`;
+    document.getElementById('timezone-central').textContent = `Central Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' })}`;
+    document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
+    document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
 
-// Store timezones in localStorage
-            const timezones = {
-                pacific: now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }),
-                mountain: now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' }),
-                central: now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' }),
-                eastern: now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' }),
-                philippines: now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })
-            };
-            localStorage.setItem('timezones', JSON.stringify(timezones));
+    // Store timezones in localStorage
+    const timezones = {
+        pacific: now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' }),
+        mountain: now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' }),
+        central: now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' }),
+        eastern: now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' }),
+        philippines: now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })
+    };
+
+    localStorage.setItem('timezones', JSON.stringify(timezones));
 }
 
-// Retrieve stored timezones on page load
-        const storedTimezones = JSON.parse(localStorage.getItem('timezones'));
-        if (storedTimezones) {
-            document.getElementById('timezone-pacific').textContent = `Pacific Time: ${storedTimezones.pacific}`;
-            document.getElementById('timezone-mountain').textContent = `Mountain Time: ${storedTimezones.mountain}`;
-            document.getElementById('timezone-central').textContent = `Central Time: ${storedTimezones.central}`;
-            document.getElementById('timezone-eastern').textContent = `Eastern Time: ${storedTimezones.eastern}`;
-            document.getElementById('timezone-philippines').textContent = `Philippines Time: ${storedTimezones.philippines}`;
-}
+// Update timezones every minute
+setInterval(updateTimezones, 60000);
+updateTimezones();  // Initial call to set timezones right away
 
-        setInterval(updateTimezones, 1000);
-        updateTimezones(); // Initial update
+// Theme toggle
+const themeToggle = document.getElementById("theme-toggle");
+themeToggle.addEventListener("click", () => {
+    document.body.classList.toggle("dark-theme");
+});
 
-// Notepad functionality
-        const notepad = document.getElementById('notepad');
-        notepad.value = localStorage.getItem('notepad') || ''; // Load saved notes
-        notepad.addEventListener('input', () => {
-            localStorage.setItem('notepad', notepad.value); // Save notes
+// Font size control for notepad
+const notepad = document.getElementById('notepad');
+const increaseFontButton = document.getElementById('increase-font');
+const decreaseFontButton = document.getElementById('decrease-font');
+
+increaseFontButton.addEventListener('click', () => {
+    let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
+    notepad.style.fontSize = (currentFontSize + 2) + 'px';
+});
+
+decreaseFontButton.addEventListener('click', () => {
+    let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
+    notepad.style.fontSize = (currentFontSize - 2) + 'px';
+});
+
+// Clear Notepad
+document.getElementById('clear-notes').addEventListener('click', () => {
+    notepad.value = '';
+});
+
+// Task Manager
+const taskList = document.getElementById('task-list');
+const newTaskInput = document.getElementById('new-task');
+const addTaskButton = document.getElementById('add-task');
+const clearTasksButton = document.getElementById('clear-tasks');
+
+addTaskButton.addEventListener('click', () => {
+    const taskText = newTaskInput.value.trim();
+    if (taskText) {
+        const taskItem = document.createElement('li');
+        taskItem.innerHTML = `<span class="task-text" contenteditable="true">${taskText}</span><button class="delete-task">Delete</button>`;
+        taskList.appendChild(taskItem);
+        newTaskInput.value = '';
+
+        // Delete task functionality
+        taskItem.querySelector('.delete-task').addEventListener('click', () => {
+            taskList.removeChild(taskItem);
         });
 
-// Clear notepad
-        document.getElementById('clear-notes').addEventListener('click', () => {
-            notepad.value = '';
-            localStorage.removeItem('notepad');
-});
-
-// Task Manager functionality
-        const taskList = document.getElementById('task-list');
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || []; // Load saved tasks
-
-        function renderTasks() {
-            taskList.innerHTML = '';
-            tasks.forEach((task, index) => {
-                const li = document.createElement('li');
-                const taskText = document.createElement('span');
-                taskText.contentEditable = true;
-                taskText.classList.add('task-text');
-                taskText.textContent = task.text;
-                if (task.completed) taskText.classList.add('completed');
-                taskText.addEventListener('input', () => {
-                    tasks[index].text = taskText.textContent;
-                    localStorage.setItem('tasks', JSON.stringify(tasks));
-});
-
-                const deleteBtn = document.createElement('button');
-                deleteBtn.textContent = 'Delete';
-                deleteBtn.addEventListener('click', () => {
-                    tasks.splice(index, 1);
-                    localStorage.setItem('tasks', JSON.stringify(tasks));
-                    renderTasks();
-});
-
-                const toggleBtn = document.createElement('button');
-                toggleBtn.textContent = task.completed ? 'Undo' : 'Complete';
-                toggleBtn.addEventListener('click', () => {
-                    task.completed = !task.completed;
-                    localStorage.setItem('tasks', JSON.stringify(tasks));
-                    renderTasks();
-});
-
-                li.appendChild(taskText);
-                li.appendChild(toggleBtn);
-                li.appendChild(deleteBtn);
-                taskList.appendChild(li);
-}); 
-}
-
-        renderTasks(); // Initial render of tasks
-
-// Add task
-document.getElementById('add-task').addEventListener('click', () => {
-            const taskInput = document.getElementById('new-task');
-            if (taskInput.value.trim() !== '') {
-                tasks.push({ text: taskInput.value.trim(), completed: false });
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                taskInput.value = '';
-                renderTasks();
-}
+        // Toggle task completion
+        taskItem.querySelector('.task-text').addEventListener('click', function () {
+            this.classList.toggle('completed');
+        });
+    }
 });
 
 // Clear all tasks
-        document.getElementById('clear-tasks').addEventListener('click', () => {
-            tasks = [];
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            renderTasks();
-});
-// Theme toggle functionality
-document.getElementById('theme-toggle').addEventListener('click', () => {
-    const isDarkMode = document.body.classList.toggle('dark-theme');
-    // Save the current theme to localStorage
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-});
-
-// Check stored theme preference on page load
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-    } else {
-        document.body.classList.remove('dark-theme');
-    }
-}); // Font size control functionality
-const notepad = document.getElementById('notepad');
-let fontSize = 14; // Default font size in pixels
-
-// Load saved font size from localStorage
-if (localStorage.getItem('fontSize')) {
-    fontSize = parseInt(localStorage.getItem('fontSize'));
-    notepad.style.fontSize = fontSize + 'px';
-}
-
-// Increase font size
-document.getElementById('increase-font').addEventListener('click', () => {
-    fontSize = Math.min(24, fontSize + 2); // Set a maximum font size of 24px
-    notepad.style.fontSize = fontSize + 'px';
-    localStorage.setItem('fontSize', fontSize); // Save font size to localStorage
-});
-
-// Decrease font size
-document.getElementById('decrease-font').addEventListener('click', () => {
-    fontSize = Math.max(10, fontSize - 2); // Set a minimum font size of 10px
-    notepad.style.fontSize = fontSize + 'px';
-    localStorage.setItem('fontSize', fontSize); // Save font size to localStorage
+clearTasksButton.addEventListener('click', () => {
+    taskList.innerHTML = '';
 });
 </script>
 </body>
