@@ -12,7 +12,7 @@
             gap: 20px;
             overflow-x: hidden;
             color: var(--text-color);
-            font-size: 12px;
+            font-size: 10px;
 } 
  .timezone-container {
             display: flex;
