@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>Notepad & Task Manager with Timezones</title>
+    <button id="theme-toggle">Toggle Theme</button>
     <style>
           :root {
             --background-color: #f7f7f7;
@@ -305,7 +306,7 @@
                 li.appendChild(toggleBtn);
                 li.appendChild(deleteBtn);
                 taskList.appendChild(li);
-            });
+            }); 
         }
 
         renderTasks(); // Initial render of tasks
@@ -326,7 +327,10 @@
             tasks = [];
             localStorage.setItem('tasks', JSON.stringify(tasks));
             renderTasks();
-        });
+        }); document.getElementById('theme-toggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+});
+
     </script>
 </body>
 </html>
