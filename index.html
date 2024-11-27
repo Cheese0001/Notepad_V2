@@ -54,6 +54,8 @@
             max-width: 600px;
             display: flex;
             flex-direction: column;
+            resize: both;
+            overflow: hidden;
         }
 
         .section {
@@ -163,7 +165,7 @@
     <div class="timezone-container" id="timezone-container"></div>
 
     <div class="widget-container">
-        <div class="notepad-container">
+        <div class="notepad-container" id="notepad-container">
             <div class="section">
                 <h3>Notepad</h3>
                 <textarea id="notepad"></textarea>
@@ -175,7 +177,7 @@
             </div>
         </div>
 
-        <div class="task-container">
+        <div class="task-container" id="task-container">
             <div class="section">
                 <h3>Task Manager</h3>
                 <input type="text" id="new-task" placeholder="Enter a task...">
@@ -235,6 +237,35 @@
         const fontSizeInput = document.getElementById('font-size');
         fontSizeInput.addEventListener('input', () => {
             notepad.style.fontSize = `${fontSizeInput.value}px`;
+        });
+
+        // Task manager functionality
+        const addTaskButton = document.getElementById('add-task');
+        const newTaskInput = document.getElementById('new-task');
+        const taskList = document.getElementById('task-list');
+        const clearTasksButton = document.getElementById('clear-tasks');
+
+        addTaskButton.addEventListener('click', () => {
+            const taskText = newTaskInput.value.trim();
+            if (taskText) {
+                const taskItem = document.createElement('li');
+                taskItem.innerHTML = `
+                    <span class="task-text" contenteditable="true">${taskText}</span>
+                    <button class="color-button" onclick="this.parentElement.remove()">Delete</button>
+                `;
+                taskList.appendChild(taskItem);
+                newTaskInput.value = ''; // Clear the input after adding
+            }
+        });
+
+        clearTasksButton.addEventListener('click', () => {
+            taskList.innerHTML = ''; // Clear all tasks
+        });
+
+        // Clear notepad functionality
+        const clearNotesButton = document.getElementById('clear-notes');
+        clearNotesButton.addEventListener('click', () => {
+            notepad.value = ''; // Clear the notepad
         });
     </script>
 </body>
