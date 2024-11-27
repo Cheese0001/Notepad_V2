@@ -19,6 +19,7 @@
             gap: 20px;
             overflow-x: hidden;
             transition: background-color 0.3s ease;
+            font-size: 10px;
         }
 
         .dark-theme {
@@ -84,6 +85,13 @@
             padding: 10px;
             font-size: 16px;
             resize: none;
+            color: black;
+        }
+
+        .dark-theme textarea {
+            color: white; /* Ensures text is visible in dark mode */
+            background-color: #444; /* Slightly darker background */
+            border: 1px solid #555;
         }
 
         .font-size-slider {
@@ -107,8 +115,17 @@
             margin-right: 5px;
         }
 
+        .dark-theme button {
+            background-color: #555;
+            color: white;
+        }
+
         button:hover {
             background-color: #7BCDBA;
+        }
+
+        .dark-theme button:hover {
+            background-color: #444;
         }
 
         ul {
@@ -201,108 +218,31 @@
         </div>
     </div>
 
-    <script>
-        // Timezone update function
-        function updateTimezones() {
-            const timezones = {
-                "Pacific Time": "America/Los_Angeles",
-                "Mountain Time": "America/Denver",
-                "Central Time": "America/Chicago",
-                "Eastern Time": "America/New_York",
-                "Philippines Time": "Asia/Manila"
-            };
+   <script>
+    // Existing code...
 
-            const timezoneContainer = document.getElementById('timezone-container');
-            timezoneContainer.innerHTML = ''; // Clear previous content
+    // Notepad functionality with local storage
+    const notepad = document.getElementById('notepad');
+    const clearNotesButton = document.getElementById('clear-notes');
 
-            for (let [label, zone] of Object.entries(timezones)) {
-                const timezoneDiv = document.createElement('div');
-                timezoneDiv.classList.add('timezone');
-                timezoneDiv.id = `timezone-${label.toLowerCase().replace(/\s+/g, '-')}`;
+    // Save the content of the notepad to local storage
+    notepad.addEventListener('input', () => {
+        localStorage.setItem('notepadContent', notepad.value);
+    });
 
-                function updateClock() {
-                    const date = new Date().toLocaleTimeString('en-US', { timeZone: zone, hour12: false });
-                    timezoneDiv.textContent = `${label}: ${date}`;
-                }
-
-                setInterval(updateClock, 1000);
-                updateClock(); // Initial update
-                timezoneContainer.appendChild(timezoneDiv);
-            }
+    // Load the saved content from local storage when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedContent = localStorage.getItem('notepadContent');
+        if (savedContent) {
+            notepad.value = savedContent;
         }
+    });
 
-        updateTimezones();
-
-        // Theme toggle functionality
-        const themeToggle = document.getElementById('theme-toggle');
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
-        });
-
-        // Load theme from local storage
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.add('dark-theme');
-        }
-
-        // Font size adjustment functionality with local storage
-        const notepad = document.getElementById('notepad');
-        const fontSizeInput = document.getElementById('font-size');
-        fontSizeInput.addEventListener('input', () => {
-            notepad.style.fontSize = `${fontSizeInput.value}px`;
-            localStorage.setItem('fontSize', fontSizeInput.value);
-        });
-
-        // Load font size from local storage
-        const savedFontSize = localStorage.getItem('fontSize');
-        if (savedFontSize) {
-            fontSizeInput.value = savedFontSize;
-            notepad.style.fontSize = `${savedFontSize}px`;
-        }
-
-        // Task manager functionality
-        const addTaskButton = document.getElementById('add-task');
-        const newTaskInput = document.getElementById('new-task');
-        const taskList = document.getElementById('task-list');
-        const clearTasksButton = document.getElementById('clear-tasks');
-
-        addTaskButton.addEventListener('click', () => {
-            const taskText = newTaskInput.value.trim();
-            if (taskText) {
-                const taskItem = document.createElement('li');
-                taskItem.innerHTML = `
-                    <input type="checkbox" class="task-check">
-                    <span class="task-text" contenteditable="true">${taskText}</span>
-                    <button class="delete-task">X</button>
-                `;
-
-                // Add event listeners for task check and delete
-                taskItem.querySelector('.task-check').addEventListener('change', (e) => {
-                    if (e.target.checked) {
-                        taskItem.querySelector('.task-text').classList.add('completed');
-                    } else {
-                        taskItem.querySelector('.task-text').classList.remove('completed');
-                    }
-                });
-
-                taskItem.querySelector('.delete-task').addEventListener('click', () => {
-                    taskList.removeChild(taskItem);
-                });
-
-                taskList.appendChild(taskItem);
-                newTaskInput.value = ''; // Clear input field
-            }
-        });
-
-        clearTasksButton.addEventListener('click', () => {
-            taskList.innerHTML = '';
-        });
-
-        // Clear notes functionality
-        const clearNotesButton = document.getElementById('clear-notes');
-        clearNotesButton.addEventListener('click', () => {
-            notepad.value = '';
-        });
-    </script>
+    // Clear the notepad content and remove it from local storage
+    clearNotesButton.addEventListener('click', () => {
+        notepad.value = '';
+        localStorage.removeItem('notepadContent');
+    });
+</script>
 </body>
 </html>
