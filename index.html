@@ -15,89 +15,73 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            height: 100vh;
-            padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
-        .light-theme {
-            background-color: #f7f7f7;
+        .timezone-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .timezone {
+            background-color: #7BCDBA;
             color: black;
-        }
-
-        .dark-theme {
-            background-color: #1e1e1e;
-            color: #f7f7f7;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 5px;
         }
 
         .theme-switcher {
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ccc;
+            align-items: center;
+            background-color: #61E294;
             border-radius: 10px;
+            padding: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 200px;
-        }
-
-        .theme-switcher button {
-            padding: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 400;
-        }
-
-        .button-color-options {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
             margin-bottom: 20px;
-        }
-
-        .color-button {
-            width: 30px;
-            height: 30px;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
-        .color-button:hover {
-            transform: scale(1.1);
-        }
-
-        .left-side,
-        .right-side {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+            width: 90%;
             max-width: 600px;
         }
 
+        .collapsible {
+            cursor: pointer;
+            background-color: #61E294;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .collapsible-content {
+            display: block;
+        }
+
+        .collapsible-content.hidden {
+            display: none;
+        }
+
         .widget {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .section {
             background: white;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            flex: 1;
-            transition: background-color 0.3s;
-        }
-
-        .light-theme .widget {
-            background: white;
-        }
-
-        .dark-theme .widget {
-            background: #2a2a2a;
-        }
-
-        .section {
-            margin-bottom: 20px;
+            width: 48%;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -105,13 +89,16 @@
 
         textarea {
             width: 100%;
-            height: 200px;
+            height: 100px;
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 10px;
             font-size: 16px;
-            resize: vertical;
-            font-family: 'Poppins', sans-serif;
+            resize: none;
+        }
+
+        input[type="range"] {
+            width: 100%;
         }
 
         button {
@@ -121,10 +108,8 @@
             padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 400;
+            font-size: 12px;
+            margin: 2px;
         }
 
         button:hover {
@@ -152,53 +137,70 @@
 
         .task-text {
             flex: 1;
+            font-size: 10px;
             margin-right: 10px;
-            font-size: 10px; /* Updated font size */
-            font-weight: 400;
         }
 
         .task-text[contenteditable="true"] {
             border-bottom: 1px dashed #ccc;
         }
 
-        .checkmark,
-        .xmark {
-            width: 15px; /* Smaller size */
-            height: 15px; /* Smaller size */
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-size: 12px; /* Adjusted size */
+        .task-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .task-buttons button {
+            padding: 2px 5px;
+            font-size: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .widget {
+                flex-direction: column;
+            }
+
+            .section {
+                width: 100%;
+            }
+
+            textarea {
+                height: 80px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
-<body class="light-theme">
-    <!-- Collapsible theme switcher -->
-    <div id="theme-switcher" class="theme-switcher">
-        <button onclick="changeTheme('light')" style="background-color: #f7f7f7; color: black;">Light</button>
-        <button onclick="changeTheme('dark')" style="background-color: #1e1e1e; color: #f7f7f7;">Dark</button>
+<body>
+    <div class="timezone-container">
+        <div class="timezone" id="timezone-pacific">Pacific Time: </div>
+        <div class="timezone" id="timezone-mountain">Mountain Time: </div>
+        <div class="timezone" id="timezone-central">Central Time: </div>
+        <div class="timezone" id="timezone-eastern">Eastern Time: </div>
+        <div class="timezone" id="timezone-philippines">Philippines Time: </div>
     </div>
 
-    <!-- Button color options -->
-    <div class="button-color-options">
-        <button class="color-button" style="background-color: #93B9CF;" onclick="changeButtonColor('#93B9CF')"></button>
-        <button class="color-button" style="background-color: #9DA8C4;" onclick="changeButtonColor('#9DA8C4')"></button>
-        <button class="color-button" style="background-color: #C6B0C8;" onclick="changeButtonColor('#C6B0C8')"></button>
-        <button class="color-button" style="background-color: #D0B0BD;" onclick="changeButtonColor('#D0B0BD')"></button>
-        <button class="color-button" style="background-color: #DFB7CC;" onclick="changeButtonColor('#DFB7CC')"></button>
-    </div>
-
-    <!-- Content areas -->
-    <div class="left-side">
-        <div class="widget">
-            <h3>Notepad</h3>
-            <textarea id="notepad"></textarea>
-            <button id="clear-notes">Clear Notes</button>
+    <div class="theme-switcher">
+        <button class="collapsible">Theme Switcher</button>
+        <div class="collapsible-content hidden">
+            <button id="light-theme">Light Theme</button>
+            <button id="dark-theme">Dark Theme</button>
         </div>
     </div>
 
-    <div class="right-side">
-        <div class="widget">
+    <div class="widget">
+        <!-- Notepad Section -->
+        <div class="section" id="notepad-section">
+            <h3>Notepad</h3>
+            <textarea id="notepad"></textarea>
+            <button id="clear-notes">Clear Notes</button>
+            <label for="resize">Font Size:</label>
+            <input type="range" id="resize" min="10" max="30" step="2" value="16">
+        </div>
+
+        <!-- Task Manager Section -->
+        <div class="section" id="task-manager-section">
             <h3>Task Manager</h3>
             <input type="text" id="new-task" placeholder="Enter a task...">
             <button id="add-task">Add Task</button>
@@ -208,86 +210,106 @@
     </div>
 
     <script>
-        // Theme switching function
-        function changeTheme(theme) {
-            document.body.className = theme + '-theme';
+        // Real-time timezone update
+        function updateTimezones() {
+            const now = new Date();
+            document.getElementById('timezone-pacific').textContent = `Pacific Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`;
+            document.getElementById('timezone-mountain').textContent = `Mountain Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' })}`;
+            document.getElementById('timezone-central').textContent = `Central Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' })}`;
+            document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
+            document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
         }
+        setInterval(updateTimezones, 1000);
 
-        // Button color changing function
-        function changeButtonColor(color) {
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(button => {
-                if (!button.classList.contains('collapsible')) {
-                    button.style.backgroundColor = color;
-                }
-            });
-        }
+        // Theme Switcher Functionality
+        const lightTheme = document.getElementById('light-theme');
+        const darkTheme = document.getElementById('dark-theme');
 
-        // Load saved notes from local storage
+        lightTheme.addEventListener('click', () => {
+            document.body.style.backgroundColor = '#f7f7f7';
+            document.querySelectorAll('button').forEach(button => button.style.backgroundColor = '#61E294');
+            document.querySelectorAll('textarea').forEach(textarea => textarea.style.backgroundColor = '#ffffff');
+        });
+
+        darkTheme.addEventListener('click', () => {
+            document.body.style.backgroundColor = '#2c2c2c';
+            document.querySelectorAll('button').forEach(button => button.style.backgroundColor = '#444');
+            document.querySelectorAll('textarea').forEach(textarea => textarea.style.backgroundColor = '#333');
+        });
+
+        // Resizing the notepad text
+        const resizeInput = document.getElementById('resize');
         const notepad = document.getElementById('notepad');
+        resizeInput.addEventListener('input', () => {
+            notepad.style.fontSize = `${resizeInput.value}px`;
+        });
+
+        // Load and save data in local storage
+        const notepadTextarea = document.getElementById('notepad');
         const clearNotesButton = document.getElementById('clear-notes');
-        notepad.value = localStorage.getItem('notepad') || '';
-        notepad.addEventListener('input', () => {
-            localStorage.setItem('notepad', notepad.value);
+        notepadTextarea.value = localStorage.getItem('notepad') || '';
+
+        notepadTextarea.addEventListener('input', () => {
+            localStorage.setItem('notepad', notepadTextarea.value);
         });
 
         clearNotesButton.addEventListener('click', () => {
-            notepad.value = '';
+            notepadTextarea.value = '';
             localStorage.removeItem('notepad');
         });
 
-        // Task Manager functionality
         const taskList = document.getElementById('task-list');
-        const newTaskInput = document.getElementById('new-task');
         const addTaskButton = document.getElementById('add-task');
+        const newTaskInput = document.getElementById('new-task');
         const clearTasksButton = document.getElementById('clear-tasks');
+
+        // Load and display tasks from local storage
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-        function renderTasks() {
-            taskList.innerHTML = '';
-            tasks.forEach((task, index) => {
-                const li = document.createElement('li');
-                const taskText = document.createElement('span');
-                taskText.classList.add('task-text');
-                taskText.textContent = task;
-
-                const completeButton = document.createElement('button');
-                completeButton.classList.add('checkmark');
-                completeButton.textContent = '✔️';
-                completeButton.onclick = () => {
-                    taskText.style.textDecoration = taskText.style.textDecoration === 'line-through' ? 'none' : 'line-through';
-                };
-
-                const deleteButton = document.createElement('button');
-                deleteButton.classList.add('xmark');
-                deleteButton.textContent = '❌';
-                deleteButton.onclick = () => {
-                    tasks.splice(index, 1);
-                    localStorage.setItem('tasks', JSON.stringify(tasks));
-                    renderTasks();
-                };
-
-                li.append(taskText, completeButton, deleteButton);
-                taskList.appendChild(li);
-            });
-        }
+        tasks.forEach(task => {
+            addTaskToDOM(task);
+        });
 
         addTaskButton.addEventListener('click', () => {
-            if (newTaskInput.value.trim() !== '') {
-                tasks.push(newTaskInput.value.trim());
+            const taskText = newTaskInput.value.trim();
+            if (taskText) {
+                const task = { text: taskText, completed: false };
+                tasks.push(task);
                 localStorage.setItem('tasks', JSON.stringify(tasks));
+                addTaskToDOM(task);
                 newTaskInput.value = '';
-                renderTasks();
             }
         });
 
-        clearTasksButton.addEventListener('click', () => {
-            tasks.length = 0;
-            localStorage.removeItem('tasks');
-            renderTasks();
-        });
+        function addTaskToDOM(task) {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span class="task-text" contenteditable="true">${task.text}</span>
+                <div class="task-buttons">
+                    <button onclick="toggleTaskCompletion(this)">Complete</button>
+                    <button onclick="removeTask(this)">Delete</button>
+                </div>
+            `;
+            taskList.appendChild(li);
+        }
 
-        renderTasks();
+        function toggleTaskCompletion(button) {
+            const li = button.parentElement.parentElement;
+            const taskTextElement = li.querySelector('.task-text');
+            taskTextElement.style.textDecoration = taskTextElement.style.textDecoration === 'line-through' ? 'none' : 'line-through';
+        }
+
+        function removeTask(button) {
+            const li = button.parentElement.parentElement;
+            const index = Array.from(taskList.children).indexOf(li);
+            tasks.splice(index, 1);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            li.remove();
+        }
+
+        clearTasksButton.addEventListener('click', () => {
+            taskList.innerHTML = '';
+            localStorage.removeItem('tasks');
+        });
     </script>
 </body>
 </html>
