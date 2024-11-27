@@ -1,89 +1,105 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notepad & Task Manager</title>
-    <style>
-        /* General Styles */
-        body {
+ <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notepad, Task Manager, & Timezones</title>
+     <style>
+         /* General Styles */
+         body {
             font-family: 'Poppins', sans-serif;
-            padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        button {
-            padding: 10px 15px;
-            margin: 5px;
-            cursor: pointer;
-        }
-
+             padding: 20px;
+             transition: background-color 0.3s, color 0.3s;
+}
+             padding: 10px 15px;
+             margin: 5px;
+             cursor: pointer;
+            border: none;
+            border-radius: 5px;
+}
         /* Dark Theme Styles */
+        .dark-theme { 
+                    background-color: #333;
+            color: #fff;
+ }
+         textarea {
+             width: 100%;
+            height: 200px;
+margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+ }
+   ul {
+                list-style-type: none;
+            padding: 0;
+ }
+         #task-list li {
+            margin: 10px 0;
+             display: flex;
+             justify-content: space-between;
+            align-items: center;
+ }
+          .completed {
+             text-decoration: line-through;
+             color: grey;
+ }
+ 
+
+        #current-time {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+   button:hover {
+ background-color: #45a049;
+  }
+  
+          /* Task Manager Styles */
+        #task-list {
+padding: 0;
+/* Dark Theme Styles */
         .dark-theme {
-            background-color: #333;
+            background-color: #222;
+            color: #f5f5f5;
+        }
+        
+          .dark-theme textarea, .dark-theme input {
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #666;
+        }
+                #increase-font, #decrease-font {
+            margin-top: 10px;
+   }
+   dark-theme button {
+            background-color: #555;
             color: #fff;
         }
+             </style>
+ </head>
 
-        textarea {
-            width: 100%;
-            height: 200px;
-            margin-top: 10px;
-            padding: 10px;
-        }
-
-        #task-list li {
-            list-style-type: none;
-            margin: 8px 0;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .completed {
-            text-decoration: line-through;
-            color: grey;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        /* Task Manager Styles */
-        #task-list {
-            padding: 0;
-        }
-
-        button {
-            margin-bottom: 10px;
-        }
-
-        #increase-font, #decrease-font {
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-
-    <!-- Theme Toggle Button -->
+         <body>
+ <!-- Theme Toggle -->
     <button id="theme-toggle">Toggle Theme</button>
 
-    <!-- Notepad Section -->
-    <section id="notepad-section">
+    <!-- Current Time and Timezone -->
+    <div id="timezone">
+        <h2>Current Time</h2>
+        <select id="timezone-select"></select>
+        <div id="current-time"></div>
+    </div>
+         <section id="notepad-section">
         <h3>Notepad</h3>
         <textarea id="notepad" placeholder="Write your notes here..."></textarea>
         <button id="clear-notes">Clear Notes</button>
-        <div>
+
+                <div>
             <button id="increase-font">+</button>
             <button id="decrease-font">-</button>
         </div>
-    </section>
-
-    <!-- Task Manager Section -->
+        
+            </section>
+         <!-- Task Manager Section -->
     <section id="task-manager-section">
         <h3>Task Manager</h3>
         <input type="text" id="new-task" placeholder="New task...">
@@ -91,40 +107,42 @@
         <ul id="task-list"></ul>
         <button id="clear-tasks">Clear All Tasks</button>
     </section>
-
-    <script>
-        // Theme toggle and persistence
-        const themeToggle = document.getElementById("theme-toggle");
+         <script>
+        // Theme Toggle with Persistence
+        const themeToggle = document.getElementById('theme-toggle');
         const currentTheme = localStorage.getItem('theme');
         if (currentTheme === 'dark') {
-            document.body.classList.add("dark-theme");
+            document.body.classList.add('dark-theme');
         }
 
-        themeToggle.addEventListener("click", () => {
-            document.body.classList.toggle("dark-theme");
-            // Save theme to localStorage
-            if (document.body.classList.contains("dark-theme")) {
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+        });
+        
+         // Save theme to localStorage
+                    if (document.body.classList.contains("dark-theme")) {
                 localStorage.setItem('theme', 'dark');
             } else {
                 localStorage.setItem('theme', 'light');
             }
-        });
-
-        // Notepad Persistence
+         });
+        
+          // Notepad Persistence
         const notepad = document.getElementById('notepad');
-
-        // Load notes from localStorage if available
         const savedNotes = localStorage.getItem('notepad');
         if (savedNotes) {
             notepad.value = savedNotes;
         }
-
-        // Save notes to localStorage
         notepad.addEventListener('input', () => {
             localStorage.setItem('notepad', notepad.value);
         });
 
-        // Font size control for notepad
+        document.getElementById('clear-notes').addEventListener('click', () => {
+            notepad.value = '';
+            localStorage.removeItem('notepad');
+        });
+          // Font size control for notepad
         const increaseFontButton = document.getElementById('increase-font');
         const decreaseFontButton = document.getElementById('decrease-font');
 
@@ -138,56 +156,43 @@
             notepad.style.fontSize = (currentFontSize - 2) + 'px';
         });
 
-        // Clear Notepad
-        document.getElementById('clear-notes').addEventListener('click', () => {
-            notepad.value = '';
-            localStorage.removeItem('notepad');
-        });
-
-        // Task Manager Persistence
-        const taskList = document.getElementById('task-list');
+ const taskList = document.getElementById('task-list');
         const newTaskInput = document.getElementById('new-task');
         const addTaskButton = document.getElementById('add-task');
         const clearTasksButton = document.getElementById('clear-tasks');
 
-        // Load tasks from localStorage if available
         const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
         savedTasks.forEach(task => {
             const taskItem = createTaskElement(task.text, task.completed);
             taskList.appendChild(taskItem);
         });
 
-        // Add new task
         addTaskButton.addEventListener('click', () => {
             const taskText = newTaskInput.value.trim();
             if (taskText) {
                 const taskItem = createTaskElement(taskText, false);
                 taskList.appendChild(taskItem);
                 newTaskInput.value = '';
-
-                // Save tasks to localStorage
                 saveTasks();
             }
         });
 
-        // Delete task functionality
         taskList.addEventListener('click', (e) => {
             if (e.target.classList.contains('delete-task')) {
                 const taskItem = e.target.parentElement;
                 taskList.removeChild(taskItem);
                 saveTasks();
-            }
-        });
-
-        // Toggle task completion
-        taskList.addEventListener('click', (e) => {
-            if (e.target.classList.contains('task-text')) {
+            } else if (e.target.classList.contains('task-text')) {
                 e.target.classList.toggle('completed');
                 saveTasks();
             }
         });
 
-        // Save tasks to localStorage
+        clearTasksButton.addEventListener('click', () => {
+            taskList.innerHTML = '';
+            localStorage.removeItem('tasks');
+        });
+
         function saveTasks() {
             const tasks = [];
             taskList.querySelectorAll('li').forEach(taskItem => {
@@ -198,18 +203,46 @@
             localStorage.setItem('tasks', JSON.stringify(tasks));
         }
 
-        // Clear all tasks
-        clearTasksButton.addEventListener('click', () => {
-            taskList.innerHTML = '';
-            localStorage.removeItem('tasks');
-        });
-
-        // Helper function to create task element
         function createTaskElement(taskText, completed) {
             const taskItem = document.createElement('li');
-            taskItem.innerHTML = `<span class="task-text ${completed ? 'completed' : ''}" contenteditable="true">${taskText}</span><button class="delete-task">Delete</button>`;
+            taskItem.innerHTML = `<span class="task-text ${completed ? 'completed' : ''}">${taskText}</span>
+                                  <button class="delete-task">Delete</button>`;
             return taskItem;
         }
+
+        // Timezone Feature
+        const timezoneSelect = document.getElementById('timezone-select');
+        const currentTimeDisplay = document.getElementById('current-time');
+
+        const timezones = Intl.supportedValuesOf('timeZone');
+        timezones.forEach(tz => {
+            const option = document.createElement('option');
+            option.value = tz;
+            option.textContent = tz;
+            timezoneSelect.appendChild(option);
+        });
+
+        timezoneSelect.value = localStorage.getItem('selectedTimezone') || Intl.DateTimeFormat().resolvedOptions().timeZone;
+        updateTime();
+
+        timezoneSelect.addEventListener('change', () => {
+            localStorage.setItem('selectedTimezone', timezoneSelect.value);
+            updateTime();
+        });
+
+        function updateTime() {
+            const selectedZone = timezoneSelect.value;
+            const now = new Date();
+            const formatter = new Intl.DateTimeFormat('en-US', {
+                timeZone: selectedZone,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+            });
+            currentTimeDisplay.textContent = `Current time in ${selectedZone}: ${formatter.format(now)}`;
+        }
+
+        setInterval(updateTime, 1000);
     </script>
 </body>
 </html>
