@@ -112,6 +112,8 @@ h3 {
         ul li:last-child {
             border-bottom: none;
         }
+        <ul id="task-list"></ul>
+         }
 
         .task-text {
             flex: 1;
@@ -296,6 +298,75 @@ h3 {
             tasks.length = 0; // Clear the tasks array
             renderTasks();
         });
+        // Select the notepad and the font size slider
+const notepad = document.getElementById('notepad');
+const fontSizeSlider = document.getElementById('font-size');
+
+// Function to set font size based on slider value
+fontSizeSlider.addEventListener('input', () => {
+    const fontSize = fontSizeSlider.value + 'px';
+    notepad.style.fontSize = fontSize;
+
+    // Save the font size in local storage
+    localStorage.setItem('notepadFontSize', fontSize);
+});
+
+// Load the saved font size from local storage when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const savedFontSize = localStorage.getItem('notepadFontSize');
+    if (savedFontSize) {
+        notepad.style.fontSize = savedFontSize;
+        fontSizeSlider.value = parseInt(savedFontSize, 10); // Adjust slider to match font size
+    }
+});
+        // Select the elements needed
+const newTaskInput = document.getElementById('new-task');
+const addTaskButton = document.getElementById('add-task');
+const taskList = document.getElementById('task-list');
+
+// Function to create a new task item
+addTaskButton.addEventListener('click', () => {
+    const taskText = newTaskInput.value.trim();
+    if (taskText) {
+        // Create a new list item
+        const taskItem = document.createElement('li');
+
+        // Create a span to hold the task text
+        const taskSpan = document.createElement('span');
+        taskSpan.textContent = taskText;
+        taskSpan.classList.add('task-text');
+
+        // Create the checkmark button
+        const checkButton = document.createElement('button');
+        checkButton.textContent = '✔';
+        checkButton.style.background = 'none';
+        checkButton.style.border = 'none';
+        checkButton.style.color = 'green';
+        checkButton.style.cursor = 'pointer';
+        checkButton.addEventListener('click', () => {
+            taskSpan.classList.toggle('completed'); // Toggle the completed class
+            if (taskSpan.classList.contains('completed')) {
+                checkButton.textContent = '✖'; // Change to cross button when completed
+                checkButton.style.color = 'red';
+            } else {
+                checkButton.textContent = '✔'; // Change back to checkmark when not completed
+                checkButton.style.color = 'green';
+            }
+        });
+
+        // Append elements to the list item
+        taskItem.appendChild(taskSpan);
+        taskItem.appendChild(checkButton);
+
+        // Append the new task item to the task list
+        taskList.appendChild(taskItem);
+
+        // Clear the input field after adding the task
+        newTaskInput.value = '';
+    }
+});
+
+
     </script>
 </body>
 </html>
