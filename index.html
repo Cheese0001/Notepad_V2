@@ -5,218 +5,191 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Manager with Timezones</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f7f7f7;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            gap: 20px;
-        }
+     body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    gap: 20px;
+    overflow-x: hidden;
+}
 
-        .timezone-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
+.timezone-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 
-        .timezone {
-            background-color: #7BCDBA;
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+.timezone {
+    background-color: #7BCDBA;
+    color: black;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 5px;
+}
 
-        .widget {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 90%;
-            max-width: 600px;
-        }
+.widget {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+}
 
-        .section {
-            margin-bottom: 20px;
-        }
+.section {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
-        .section h3 {
-            color: #9799CA;
-        }
+.section h3 {
+    color: #9799CA;
+    margin: 0;
+}
 
-        textarea {
-            width: 100%;
-            height: 100px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 16px;
-            resize: none;
-        }
+textarea {
+    width: 100%;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 16px;
+    resize: none;
+}
 
-        button {
-            background-color: #61E294;
-            color: black;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
+button {
+    background-color: #61E294;
+    color: black;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
 
-        button:hover {
-            background-color: #7BCDBA;
-        }
+button:hover {
+    background-color: #7BCDBA;
+}
 
-        ul {
-            list-style: none;
-            padding: 0;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
+ul {
+    list-style: none;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
 
-        ul li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
+ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
 
-        ul li:last-child {
-            border-bottom: none;
-        }
+ul li:last-child {
+    border-bottom: none;
+}
 
-        .task-text {
-            flex: 1;
-            margin-right: 10px;
-        }
+.task-text {
+    flex: 1;
+    margin-right: 10px;
+}
 
-        .task-text[contenteditable="true"] {
-            border-bottom: 1px dashed #ccc;
-        }
+.task-text[contenteditable="true"] {
+    border-bottom: 1px dashed #ccc;
+}
+
+/* Collapsible section styles */
+.collapsible {
+    cursor: pointer;
+    background-color: #61E294;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.collapsible:focus {
+    outline: none;
+}
+
+.collapsible-content {
+    display: block;
+}
+
+.collapsible-content.hidden {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .widget {
+        width: 95%;
+        padding: 15px;
+    }
+    textarea {
+        height: 80px;
+        font-size: 14px;
+    }
+}
+
     </style>
 </head>
 <body>
-
-<div class="timezone-container">
-    <div class="timezone" id="timezone-pacific">Pacific Time: </div>
-    <div class="timezone" id="timezone-mountain">Mountain Time: </div>
-    <div class="timezone" id="timezone-central">Central Time: </div>
-    <div class="timezone" id="timezone-eastern">Eastern Time: </div>
-    <div class="timezone" id="timezone-philippines">Philippines Time: </div>
-</div>
-
-<div class="widget">
-    <!-- Notepad Section -->
-    <div class="section">
-        <h3>Notepad</h3>
-        <textarea id="notepad"></textarea>
-        <button id="clear-notes">Clear Notes</button>
+    <div class="timezone-container">
+        <div class="timezone" id="timezone-pacific">Pacific Time: </div>
+        <div class="timezone" id="timezone-mountain">Mountain Time: </div>
+        <div class="timezone" id="timezone-central">Central Time: </div>
+        <div class="timezone" id="timezone-eastern">Eastern Time: </div>
+        <div class="timezone" id="timezone-philippines">Philippines Time: </div>
     </div>
 
-    <!-- Task Manager Section -->
-    <div class="section">
-        <h3>Task Manager</h3>
-        <input type="text" id="new-task" placeholder="Enter a task...">
-        <button id="add-task">Add Task</button>
-        <ul id="task-list"></ul>
-        <button id="clear-tasks">Clear All Tasks</button>
+    <div class="widget">
+        <!-- Collapsible Notepad Section -->
+        <button class="collapsible">Notepad</button>
+        <div class="collapsible-content" id="notepad-section">
+            <div class="section">
+                <h3>Notepad</h3>
+                <textarea id="notepad"></textarea>
+                <button id="clear-notes">Clear Notes</button>
+            </div>
+        </div>
+
+        <!-- Collapsible Task Manager Section -->
+        <button class="collapsible">Task Manager</button>
+        <div class="collapsible-content" id="task-manager-section">
+            <div class="section">
+                <h3>Task Manager</h3>
+                <input type="text" id="new-task" placeholder="Enter a task...">
+                <button id="add-task">Add Task</button>
+                <ul id="task-list"></ul>
+                <button id="clear-tasks">Clear All Tasks</button>
+            </div>
+        </div>
     </div>
-</div>
 
-<script>
-    // Timezone Update Functionality
-    function updateTimezones() {
-        const now = new Date();
-        document.getElementById('timezone-pacific').textContent = `Pacific Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`;
-        document.getElementById('timezone-mountain').textContent = `Mountain Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' })}`;
-        document.getElementById('timezone-central').textContent = `Central Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' })}`;
-        document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
-        document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
-    }
-    setInterval(updateTimezones, 1000);
-
-    // Notepad Functionality
-    const notepad = document.getElementById('notepad');
-    const clearNotesButton = document.getElementById('clear-notes');
-
-    // Load saved notes
-    notepad.value = localStorage.getItem('notepad') || '';
-
-    // Save notes on input
-    notepad.addEventListener('input', () => {
-        localStorage.setItem('notepad', notepad.value);
-    });
-
-    // Clear notes
-    clearNotesButton.addEventListener('click', () => {
-        notepad.value = '';
-        localStorage.removeItem('notepad');
-    });
-
-    // Task Manager Functionality
-    const taskList = document.getElementById('task-list');
-    const newTaskInput = document.getElementById('new-task');
-    const addTaskButton = document.getElementById('add-task');
-    const clearTasksButton = document.getElementById('clear-tasks');
-
-    // Load saved tasks
-    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    function renderTasks() {
-        taskList.innerHTML = '';
-        tasks.forEach((task, index) => {
-            const li = document.createElement('li');
-            const taskText = document.createElement('div');
-            taskText.textContent = task;
-            taskText.className = 'task-text';
-            taskText.contentEditable = true;
-
-            taskText.addEventListener('input', () => {
-                tasks[index] = taskText.textContent;
-                localStorage.setItem('tasks', JSON.stringify(tasks));
+    <script>
+        // Collapsible functionality
+        document.querySelectorAll('.collapsible').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                content.classList.toggle('hidden');
             });
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.addEventListener('click', () => {
-                tasks.splice(index, 1);
-                localStorage.setItem('tasks', JSON.stringify(tasks));
-                renderTasks();
-            });
-
-            li.appendChild(taskText);
-            li.appendChild(deleteButton);
-            taskList.appendChild(li);
         });
-    }
-    renderTasks();
-
-    // Add new task
-    addTaskButton.addEventListener('click', () => {
-        const task = newTaskInput.value.trim();
-        if (task) {
-            tasks.push(task);
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            renderTasks();
-            newTaskInput.value = '';
-        }
-    });
-
-    // Clear all tasks
-    clearTasksButton.addEventListener('click', () => {
-        tasks.length = 0;
-        localStorage.removeItem('tasks');
-        renderTasks();
-    });
-</script>
-
+    </script>
 </body>
 </html>
 
