@@ -45,7 +45,7 @@ body {
 }
 
 .notepad-container, .task-container {
-    background: white;
+  background: white;
     border-radius: 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -53,8 +53,8 @@ body {
     max-width: 600px;
     display: flex;
     flex-direction: column;
-    resize: both;
     overflow: auto;
+    resize: none; /* The container is not resizable */
 }
 
 .section {
@@ -76,13 +76,14 @@ textarea {
     border-radius: 10px;
     padding: 10px;
     font-size: 16px;
-    resize: none;
+    resize: both; /* Allows the notepad (textarea) to be resizable */
     color: black;
+    overflow: auto; /* Ensures content overflow is handled */
 }
 
 .dark-theme textarea {
-    color: white;
-    background-color: #444;
+ color: white; /* Ensures text is visible in dark mode */
+    background-color: #444; /* Slightly darker background */
     border: 1px solid #555;
 }
 
