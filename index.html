@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Manager with Timezones</title>
     <style>
+        /* Existing CSS */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -194,12 +195,64 @@
         // Update time zones every second
         setInterval(updateTimezones, 1000);
 
-        // Collapsible functionality
-        document.querySelectorAll('.collapsible').forEach(button => {
-            button.addEventListener('click', () => {
-                const content = button.nextElementSibling;
-                content.classList.toggle('hidden');
+        // Save and load notepad data to localStorage
+        const notepad = document.getElementById('notepad');
+        notepad.value = localStorage.getItem('notepadContent') || '';
+
+        notepad.addEventListener('input', () => {
+            localStorage.setItem('notepadContent', notepad.value);
+        });
+
+        document.getElementById('clear-notes').addEventListener('click', () => {
+            notepad.value = '';
+            localStorage.removeItem('notepadContent');
+        });
+
+        // Save and load tasks to localStorage
+        const taskList = document.getElementById('task-list');
+        const newTaskInput = document.getElementById('new-task');
+
+        function loadTasks() {
+            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            taskList.innerHTML = '';
+            tasks.forEach(task => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="task-text" contenteditable="true">${task}</span>
+                    <button class="remove-task">❌</button>
+                `;
+                taskList.appendChild(li);
             });
+        }
+
+        loadTasks();
+
+        document.getElementById('add-task').addEventListener('click', () => {
+            const newTask = newTaskInput.value.trim();
+            if (newTask) {
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                tasks.push(newTask);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                loadTasks();
+                newTaskInput.value = '';
+            }
+        });
+
+        document.getElementById('clear-tasks').addEventListener('click', () => {
+            localStorage.removeItem('tasks');
+            loadTasks();
+        });
+
+        // Add event listener for task removal
+        taskList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-task')) {
+                const taskItem = e.target.parentElement;
+                const taskText = taskItem.querySelector('.task-text').textContent;
+                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                const updatedTasks = tasks.filter(task => task !== taskText);
+                localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+                loadTasks();
+            }
         });
     </script>
 </body>
