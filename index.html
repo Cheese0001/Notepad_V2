@@ -7,6 +7,27 @@
     <title>Notepad & Task Manager with Timezones</title>
     <button id="theme-toggle">Toggle Theme</button>
     <style>
+  /* Dark theme task text color */
+        body.dark-theme .task-text {
+            color: #ffffff; /* White color for tasks in dark mode */
+        }
+
+        /* Dark theme completed task color */
+        body.dark-theme .task-text.completed {
+            color: #aaa; /* Light grey color for completed tasks in dark mode */
+            text-decoration: line-through;
+        }
+
+        /* Light theme task text color */
+        body:not(.dark-theme) .task-text {
+            color: black; /* Black color for tasks in light mode */
+        }
+
+        /* Light theme completed task color */
+        body:not(.dark-theme) .task-text.completed {
+            color: #aaa; /* Light grey color for completed tasks in light mode */
+            text-decoration: line-through;
+        }
         :root {
             --background-color: #f7f7f7;
             --text-color: #000000;
@@ -200,7 +221,8 @@
 
         .font-size-controls button:hover {
             background-color: #61E294;
-        }
+        } 
+        
     </style>
 </head>
 <body>
