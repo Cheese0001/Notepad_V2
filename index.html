@@ -3,32 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>Notepad & Task Manager with Timezones</title>
     <style>
-       body {
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f7f7f7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100vh;
-    gap: 20px;
-    overflow-x: hidden;
-   font-family: 'Poppins', sans-serif;
-    font-size: 14px; /* Base font size */
-}
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            gap: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
-/* Additional font customization for headings */
-h3 {
-    font-size: 1.5rem; /* Smaller size for headings */
-    font-weight: 600;
-    color: #9799CA;
-}
-       .timezone-container {
+        .light-theme {
+            background-color: #f7f7f7;
+            color: black;
+        }
+
+        .dark-theme {
+            background-color: #1e1e1e;
+            color: #f7f7f7;
+        }
+
+        .timezone-container {
             display: flex;
             gap: 10px;
             margin-top: 20px;
@@ -44,8 +45,6 @@ h3 {
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
             margin: 5px;
-    font-size: 12px; /* Adjust the size of timezone text */
-
         }
 
         .widget {
@@ -55,6 +54,15 @@ h3 {
             padding: 20px;
             width: 90%;
             max-width: 600px;
+            transition: background-color 0.3s;
+        }
+
+        .light-theme .widget {
+            background: white;
+        }
+
+        .dark-theme .widget {
+            background: #2a2a2a;
         }
 
         .section {
@@ -65,7 +73,6 @@ h3 {
         }
 
         .section h3 {
-            color: #9799CA;
             margin: 0;
         }
 
@@ -75,8 +82,8 @@ h3 {
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 10px;
-            font-size: 10px;
-            resize: both; /* Allow resizing */
+            font-size: 16px;
+            resize: none;
         }
 
         button {
@@ -87,6 +94,7 @@ h3 {
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
+            transition: background-color 0.3s;
         }
 
         button:hover {
@@ -106,7 +114,6 @@ h3 {
             align-items: center;
             padding: 10px;
             border-bottom: 1px solid #eee;
-             font-size: 10px; /* Adjust the font size for each task item */
         }
 
         ul li:last-child {
@@ -116,56 +123,63 @@ h3 {
         .task-text {
             flex: 1;
             margin-right: 10px;
-              font-size: 10px; /* Adjusted font size for task text */
         }
 
         .task-text[contenteditable="true"] {
             border-bottom: 1px dashed #ccc;
         }
 
-        .task-text.completed {
-            text-decoration: line-through;
-            color: #aaa; /* Change color to indicate completed status */
-        }
-
-        /* Collapsible section styles */
-        .collapsible {
-            cursor: pointer;
-            background-color: #61E294;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            text-align: center;
+        /* Theme switcher styles */
+        .theme-switcher {
+            display: flex;
+            justify-content: center;
             margin-bottom: 10px;
         }
 
-        .collapsible:focus {
-            outline: none;
+        .theme-switcher button {
+            margin: 0 5px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .collapsible-content {
-            display: block;
+        /* Button color options */
+        .button-color-options {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .collapsible-content.hidden {
-            display: none;
+        .color-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .widget {
-                width: 95%;
-                padding: 15px;
-            }
-            textarea {
-                height: 80px;
-                font-size: 14px;
-            }
+        .color-button:hover {
+            transform: scale(1.1);
         }
     </style>
 </head>
-<body>
+<body class="light-theme">
+    <!-- Theme switcher -->
+    <div class="theme-switcher">
+        <button onclick="changeTheme('light')" style="background-color: #f7f7f7; color: black;">Light</button>
+        <button onclick="changeTheme('dark')" style="background-color: #1e1e1e; color: #f7f7f7;">Dark</button>
+    </div>
+
+    <!-- Button color options -->
+    <div class="button-color-options">
+        <button class="color-button" style="background-color: #93B9CF;" onclick="changeButtonColor('#93B9CF')"></button>
+        <button class="color-button" style="background-color: #9DA8C4;" onclick="changeButtonColor('#9DA8C4')"></button>
+        <button class="color-button" style="background-color: #C6B0C8;" onclick="changeButtonColor('#C6B0C8')"></button>
+        <button class="color-button" style="background-color: #D0B0BD;" onclick="changeButtonColor('#D0B0BD')"></button>
+        <button class="color-button" style="background-color: #DFB7CC;" onclick="changeButtonColor('#DFB7CC')"></button>
+    </div>
+
     <div class="timezone-container">
         <div class="timezone" id="timezone-pacific">Pacific Time: </div>
         <div class="timezone" id="timezone-mountain">Mountain Time: </div>
@@ -199,6 +213,21 @@ h3 {
     </div>
 
     <script>
+        // Theme switching function
+        function changeTheme(theme) {
+            document.body.className = theme + '-theme';
+        }
+
+        // Button color changing function
+        function changeButtonColor(color) {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (!button.classList.contains('collapsible')) {
+                    button.style.backgroundColor = color;
+                }
+            });
+        }
+
         // Collapsible functionality
         document.querySelectorAll('.collapsible').forEach(button => {
             button.addEventListener('click', () => {
@@ -207,43 +236,26 @@ h3 {
             });
         });
 
-        // Timezone Update Functionality
-        function updateTimezones() {
-            const now = new Date();
-            document.getElementById('timezone-pacific').textContent = `Pacific Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`;
-            document.getElementById('timezone-mountain').textContent = `Mountain Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' })}`;
-            document.getElementById('timezone-central').textContent = `Central Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' })}`;
-            document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
-            document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
-        }
-        setInterval(updateTimezones, 1000);
-
-        // Notepad Functionality
+        // Load saved notes from local storage
         const notepad = document.getElementById('notepad');
         const clearNotesButton = document.getElementById('clear-notes');
-
-        // Load saved notes
         notepad.value = localStorage.getItem('notepad') || '';
-
-        // Save notes on input
         notepad.addEventListener('input', () => {
             localStorage.setItem('notepad', notepad.value);
         });
 
-        // Clear notes
         clearNotesButton.addEventListener('click', () => {
             notepad.value = '';
             localStorage.removeItem('notepad');
         });
 
-        // Task Manager Functionality
+        // Task Manager functionality
         const taskList = document.getElementById('task-list');
         const newTaskInput = document.getElementById('new-task');
         const addTaskButton = document.getElementById('add-task');
         const clearTasksButton = document.getElementById('clear-tasks');
-
-        // Load saved tasks
         const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
         function renderTasks() {
             taskList.innerHTML = '';
             tasks.forEach((task, index) => {
@@ -252,39 +264,33 @@ h3 {
                 taskText.textContent = task;
                 taskText.className = 'task-text';
                 taskText.contentEditable = true;
-
-                // Toggle completion status
-                taskText.addEventListener('click', () => {
-                    taskText.classList.toggle('completed');
+                taskText.addEventListener('input', () => {
                     tasks[index] = taskText.textContent;
                     localStorage.setItem('tasks', JSON.stringify(tasks));
                 });
 
-                // Style for completed tasks
-                if (taskText.classList.contains('completed')) {
-                    taskText.style.textDecoration = 'line-through';
-                    taskText.style.color = '#aaa'; // Change color to indicate completion
-                }
-
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = '❌';
-                deleteButton.addEventListener('click', () => {
+                deleteButton.onclick = () => {
                     tasks.splice(index, 1);
                     localStorage.setItem('tasks', JSON.stringify(tasks));
                     renderTasks();
-                });
+                };
 
-                li.appendChild(taskText);
-                li.appendChild(deleteButton);
+                const completeButton = document.createElement('button');
+                completeButton.textContent = '✔️';
+                completeButton.onclick = () => {
+                    taskText.style.textDecoration = taskText.style.textDecoration === 'line-through' ? 'none' : 'line-through';
+                };
+
+                li.append(taskText, completeButton, deleteButton);
                 taskList.appendChild(li);
             });
         }
-        renderTasks();
 
         addTaskButton.addEventListener('click', () => {
-            const newTask = newTaskInput.value.trim();
-            if (newTask) {
-                tasks.push(newTask);
+            if (newTaskInput.value.trim() !== '') {
+                tasks.push(newTaskInput.value.trim());
                 localStorage.setItem('tasks', JSON.stringify(tasks));
                 newTaskInput.value = '';
                 renderTasks();
@@ -292,10 +298,12 @@ h3 {
         });
 
         clearTasksButton.addEventListener('click', () => {
+            tasks.length = 0;
             localStorage.removeItem('tasks');
-            tasks.length = 0; // Clear the tasks array
             renderTasks();
         });
+
+        renderTasks();
     </script>
 </body>
 </html>
