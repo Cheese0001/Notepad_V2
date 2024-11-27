@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Manager with Timezones</title>
     <style>
-        /* Existing CSS */
         body {
             font-family: 'Arial', sans-serif;
             margin: 0;
@@ -66,7 +65,7 @@
             border-radius: 10px;
             padding: 10px;
             font-size: 16px;
-            resize: none;
+            resize: both; /* Allow resizing */
         }
 
         button {
@@ -109,6 +108,11 @@
 
         .task-text[contenteditable="true"] {
             border-bottom: 1px dashed #ccc;
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+            color: #aaa; /* Change color to indicate completed status */
         }
 
         /* Collapsible section styles */
@@ -182,6 +186,14 @@
     </div>
 
     <script>
+        // Collapsible functionality
+        document.querySelectorAll('.collapsible').forEach(button => {
+            button.addEventListener('click', () => {
+                const content = button.nextElementSibling;
+                content.classList.toggle('hidden');
+            });
+        });
+
         // Timezone Update Functionality
         function updateTimezones() {
             const now = new Date();
@@ -191,68 +203,85 @@
             document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
             document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
         }
-
-        // Update time zones every second
         setInterval(updateTimezones, 1000);
 
-        // Save and load notepad data to localStorage
+        // Notepad Functionality
         const notepad = document.getElementById('notepad');
-        notepad.value = localStorage.getItem('notepadContent') || '';
+        const clearNotesButton = document.getElementById('clear-notes');
 
+        // Load saved notes
+        notepad.value = localStorage.getItem('notepad') || '';
+
+        // Save notes on input
         notepad.addEventListener('input', () => {
-            localStorage.setItem('notepadContent', notepad.value);
+            localStorage.setItem('notepad', notepad.value);
         });
 
-        document.getElementById('clear-notes').addEventListener('click', () => {
+        // Clear notes
+        clearNotesButton.addEventListener('click', () => {
             notepad.value = '';
-            localStorage.removeItem('notepadContent');
+            localStorage.removeItem('notepad');
         });
 
-        // Save and load tasks to localStorage
+        // Task Manager Functionality
         const taskList = document.getElementById('task-list');
         const newTaskInput = document.getElementById('new-task');
+        const addTaskButton = document.getElementById('add-task');
+        const clearTasksButton = document.getElementById('clear-tasks');
 
-        function loadTasks() {
-            const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        // Load saved tasks
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        function renderTasks() {
             taskList.innerHTML = '';
-            tasks.forEach(task => {
+            tasks.forEach((task, index) => {
                 const li = document.createElement('li');
-                li.innerHTML = `
-                    <span class="task-text" contenteditable="true">${task}</span>
-                    <button class="remove-task">❌</button>
-                `;
+                const taskText = document.createElement('div');
+                taskText.textContent = task;
+                taskText.className = 'task-text';
+                taskText.contentEditable = true;
+
+                // Toggle completion status
+                taskText.addEventListener('click', () => {
+                    taskText.classList.toggle('completed');
+                    tasks[index] = taskText.textContent;
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                });
+
+                // Style for completed tasks
+                if (taskText.classList.contains('completed')) {
+                    taskText.style.textDecoration = 'line-through';
+                    taskText.style.color = '#aaa'; // Change color to indicate completion
+                }
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = '❌';
+                deleteButton.addEventListener('click', () => {
+                    tasks.splice(index, 1);
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    renderTasks();
+                });
+
+                li.appendChild(taskText);
+                li.appendChild(deleteButton);
                 taskList.appendChild(li);
             });
         }
+        renderTasks();
 
-        loadTasks();
-
-        document.getElementById('add-task').addEventListener('click', () => {
+        addTaskButton.addEventListener('click', () => {
             const newTask = newTaskInput.value.trim();
             if (newTask) {
-                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
                 tasks.push(newTask);
                 localStorage.setItem('tasks', JSON.stringify(tasks));
-                loadTasks();
                 newTaskInput.value = '';
+                renderTasks();
             }
         });
 
-        document.getElementById('clear-tasks').addEventListener('click', () => {
+        clearTasksButton.addEventListener('click', () => {
             localStorage.removeItem('tasks');
-            loadTasks();
-        });
-
-        // Add event listener for task removal
-        taskList.addEventListener('click', (e) => {
-            if (e.target.classList.contains('remove-task')) {
-                const taskItem = e.target.parentElement;
-                const taskText = taskItem.querySelector('.task-text').textContent;
-                const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-                const updatedTasks = tasks.filter(task => task !== taskText);
-                localStorage.setItem('tasks', JSON.stringify(updatedTasks));
-                loadTasks();
-            }
+            tasks.length = 0; // Clear the tasks array
+            renderTasks();
         });
     </script>
 </body>
