@@ -1,9 +1,37 @@
-/* General Styles */
-body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    transition: background-color 0.3s, color 0.3s;
-}
+     /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            gap: 20px;
+            overflow-x: hidden;
+            color: var(--text-color);
+            font-size: 12px;
+} 
+ .timezone-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .timezone {
+            background-color: #7BCDBA;
+            color: black;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 5px;
+            font-size: 12px;
+        }
 
 button {
     padding: 10px 15px;
