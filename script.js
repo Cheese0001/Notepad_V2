@@ -131,4 +131,32 @@ function saveTasks() {
         });
     });
     localStorage.setItem('tasks', JSON.stringify(tasks));
+} // Function to save the current theme to local storage
+function saveThemeToLocalStorage(theme) {
+    localStorage.setItem('selectedTheme', theme);
 }
+
+// Function to save the current color palette to local storage
+function saveColorPaletteToLocalStorage(color) {
+    localStorage.setItem('selectedColor', color);
+}
+
+// Event listener for the theme toggle button
+document.getElementById('theme-toggle').addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    const theme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+    saveThemeToLocalStorage(theme);
+});
+
+// Event listeners for color palette buttons
+const colorButtons = document.querySelectorAll('.color-button');
+colorButtons.forEach(button => {
+    button.addEventListener('click', (e) => {
+        const color = e.target.dataset.color;
+        document.querySelectorAll('button').forEach(btn => {
+            btn.style.backgroundColor = color;
+        });
+        saveColorPaletteToLocalStorage(color);
+    });
+});
+
