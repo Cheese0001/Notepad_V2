@@ -1,248 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notepad & Task Manager with Timezones</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f7f7f7;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            gap: 20px;
-            overflow-x: hidden;
-            transition: background-color 0.3s ease;
-            font-size: 10px;
-        }
+const taskInput = document.getElementById('new-task');
+const addTaskButton = document.getElementById('add-task');
+const taskList = document.getElementById('task-list');
+const clearTasksButton = document.getElementById('clear-tasks');
 
-        .dark-theme {
-            background-color: #333;
-            color: white;
-        }
-
-        .theme-container, .timezone-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .timezone {
-            background-color: #7BCDBA;
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin: 5px;
-        }
-
-        .widget-container {
-            display: flex;
-            width: 100%;
-            justify-content: space-around;
-            gap: 20px;
-        }
-
-        .notepad-container, .task-container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 45%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            resize: both;
-            overflow: auto;
-        }
-
-        .section {
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .section h3 {
-            color: #9799CA;
-            margin: 0;
-        }
-
-        textarea {
-            width: 100%;
-            height: 100px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 10px;
-            font-size: 16px;
-            resize: none;
-            color: black;
-        }
-
-        .dark-theme textarea {
-            color: white; /* Ensures text is visible in dark mode */
-            background-color: #444; /* Slightly darker background */
-            border: 1px solid #555;
-        }
-
-        .font-size-slider {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .font-size-slider label {
-            margin-right: 10px;
-        }
-
-        button {
-            background-color: #61E294;
-            color: black;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-right: 5px;
-        }
-
-        .dark-theme button {
-            background-color: #555;
-            color: white;
-        }
-
-        button:hover {
-            background-color: #7BCDBA;
-        }
-
-        .dark-theme button:hover {
-            background-color: #444;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-
-        ul li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        ul li:last-child {
-            border-bottom: none;
-        }
-
-        .task-text {
-            flex: 1;
-            margin-right: 10px;
-        }
-
-        .task-text[contenteditable="true"] {
-            border-bottom: 1px dashed #ccc;
-        }
-
-        .theme-toggle {
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            background-color: #333;
-            color: white;
-            border: none;
-        }
-
-        .theme-toggle:hover {
-            background-color: #555;
-        }
-
-        .color-button {
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-            background-color: #61E294;
-        }
-
-        .color-button:hover {
-            opacity: 0.8;
-        }
-
-        .completed {
-            text-decoration: line-through;
-            color: #999;
-        }
-    </style>
-</head>
-<body>
-    <div class="theme-container">
-        <button class="theme-toggle" id="theme-toggle">Toggle Theme</button>
-    </div>
-
-    <div class="timezone-container" id="timezone-container"></div>
-
-    <div class="widget-container">
-        <div class="notepad-container" id="notepad-container">
-            <div class="section">
-                <h3>Notepad</h3>
-                <textarea id="notepad"></textarea>
-                <button id="clear-notes">Clear Notes</button>
-            </div>
-            <div class="font-size-slider">
-                <label for="font-size">Font Size:</label>
-                <input type="range" id="font-size" min="10" max="30" value="16">
-            </div>
-        </div>
-
-        <div class="task-container" id="task-container">
-            <div class="section">
-                <h3>Task Manager</h3>
-                <input type="text" id="new-task" placeholder="Enter a task...">
-                <button id="add-task">Add Task</button>
-                <ul id="task-list"></ul>
-                <button id="clear-tasks">Clear All Tasks</button>
-            </div>
-        </div>
-    </div>
-
-   <script>
-    // Existing code...
-
-    // Notepad functionality with local storage
-    const notepad = document.getElementById('notepad');
-    const clearNotesButton = document.getElementById('clear-notes');
-
-    // Save the content of the notepad to local storage
-    notepad.addEventListener('input', () => {
-        localStorage.setItem('notepadContent', notepad.value);
+// Load saved tasks from local storage
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    savedTasks.forEach(task => {
+        addTaskToList(task);
     });
+});
 
-    // Load the saved content from local storage when the page loads
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedContent = localStorage.getItem('notepadContent');
-        if (savedContent) {
-            notepad.value = savedContent;
-        }
-    });
+// Add task to the list and local storage
+addTaskButton.addEventListener('click', () => {
+    if (taskInput.value.trim() !== '') {
+        const newTask = taskInput.value.trim();
+        addTaskToList(newTask);
 
-    // Clear the notepad content and remove it from local storage
-    clearNotesButton.addEventListener('click', () => {
-        notepad.value = '';
-        localStorage.removeItem('notepadContent');
-    });
-</script>
-</body>
-</html>
+        // Save task to local storage
+        const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        tasks.push(newTask);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+
+        taskInput.value = ''; // Clear the input field
+    }
+});
+
+// Function to add a task to the list
+function addTaskToList(task) {
+    const taskItem = document.createElement('li');
+    taskItem.innerHTML = `
+        <span class="task-text" contenteditable="true">${task}</span>
+        <button onclick="deleteTask(this)">❌</button>
+    `;
+    taskList.appendChild(taskItem);
+}
+
+// Delete a task
+function deleteTask(button) {
+    const taskItem = button.parentElement;
+    taskItem.remove();
+
+    // Remove the task from local storage
+    const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    const taskIndex = Array.from(taskList.children).indexOf(taskItem);
+    tasks.splice(taskIndex, 1);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Clear all tasks
+clearTasksButton.addEventListener('click', () => {
+    taskList.innerHTML = '';
+    localStorage.removeItem('tasks');
+});
