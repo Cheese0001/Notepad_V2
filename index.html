@@ -5,147 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Manager with Timezones</title>
     <style>
-     body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f7f7f7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100vh;
-    gap: 20px;
-    overflow-x: hidden;
-}
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            gap: 20px;
+            overflow-x: hidden;
+        }
 
-.timezone-container {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+        .timezone-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-.timezone {
-    background-color: #7BCDBA;
-    color: black;
-    padding: 10px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    margin: 5px;
-}
+        .timezone {
+            background-color: #7BCDBA;
+            color: black;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin: 5px;
+        }
 
-.widget {
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 90%;
-    max-width: 600px;
-}
+        .widget {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+        }
 
-.section {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+        .section {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-.section h3 {
-    color: #9799CA;
-    margin: 0;
-}
+        .section h3 {
+            color: #9799CA;
+            margin: 0;
+        }
 
-textarea {
-    width: 100%;
-    height: 100px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 16px;
-    resize: none;
-}
+        textarea {
+            width: 100%;
+            height: 100px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 16px;
+            resize: none;
+        }
 
-button {
-    background-color: #61E294;
-    color: black;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-}
+        button {
+            background-color: #61E294;
+            color: black;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
 
-button:hover {
-    background-color: #7BCDBA;
-}
+        button:hover {
+            background-color: #7BCDBA;
+        }
 
-ul {
-    list-style: none;
-    padding: 0;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-}
+        ul {
+            list-style: none;
+            padding: 0;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
 
-ul li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-}
+        ul li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
 
-ul li:last-child {
-    border-bottom: none;
-}
+        ul li:last-child {
+            border-bottom: none;
+        }
 
-.task-text {
-    flex: 1;
-    margin-right: 10px;
-}
+        .task-text {
+            flex: 1;
+            margin-right: 10px;
+        }
 
-.task-text[contenteditable="true"] {
-    border-bottom: 1px dashed #ccc;
-}
+        .task-text[contenteditable="true"] {
+            border-bottom: 1px dashed #ccc;
+        }
 
-/* Collapsible section styles */
-.collapsible {
-    cursor: pointer;
-    background-color: #61E294;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    border: none;
-    text-align: center;
-    margin-bottom: 10px;
-}
+        /* Collapsible section styles */
+        .collapsible {
+            cursor: pointer;
+            background-color: #61E294;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            text-align: center;
+            margin-bottom: 10px;
+        }
 
-.collapsible:focus {
-    outline: none;
-}
+        .collapsible:focus {
+            outline: none;
+        }
 
-.collapsible-content {
-    display: block;
-}
+        .collapsible-content {
+            display: block;
+        }
 
-.collapsible-content.hidden {
-    display: none;
-}
+        .collapsible-content.hidden {
+            display: none;
+        }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .widget {
-        width: 95%;
-        padding: 15px;
-    }
-    textarea {
-        height: 80px;
-        font-size: 14px;
-    }
-}
-
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .widget {
+                width: 95%;
+                padding: 15px;
+            }
+            textarea {
+                height: 80px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -182,6 +181,19 @@ ul li:last-child {
     </div>
 
     <script>
+        // Timezone Update Functionality
+        function updateTimezones() {
+            const now = new Date();
+            document.getElementById('timezone-pacific').textContent = `Pacific Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Los_Angeles' })}`;
+            document.getElementById('timezone-mountain').textContent = `Mountain Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Denver' })}`;
+            document.getElementById('timezone-central').textContent = `Central Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/Chicago' })}`;
+            document.getElementById('timezone-eastern').textContent = `Eastern Time: ${now.toLocaleTimeString('en-US', { timeZone: 'America/New_York' })}`;
+            document.getElementById('timezone-philippines').textContent = `Philippines Time: ${now.toLocaleTimeString('en-US', { timeZone: 'Asia/Manila' })}`;
+        }
+
+        // Update time zones every second
+        setInterval(updateTimezones, 1000);
+
         // Collapsible functionality
         document.querySelectorAll('.collapsible').forEach(button => {
             button.addEventListener('click', () => {
@@ -192,4 +204,3 @@ ul li:last-child {
     </script>
 </body>
 </html>
-
