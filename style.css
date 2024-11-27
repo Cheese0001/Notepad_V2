@@ -1,98 +1,60 @@
 /* General Styles */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f7f7f7;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Dark Theme */
-body.dark-theme {
-    background-color: #333;
-    color: white;
-}
-
-/* Widgets Layout */
-.widget-container {
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
-    width: 100%;
-    max-width: 1200px;
-}
-
-/* Notepad Styles */
-.notepad-container {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    flex: 1;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button {
+    padding: 10px 15px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+/* Dark Theme Styles */
+.dark-theme {
+    background-color: #333;
+    color: #fff;
 }
 
 textarea {
     width: 100%;
     height: 200px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: vertical;
+    margin-top: 10px;
+    padding: 10px;
 }
 
-body.dark-theme textarea {
-    background-color: #444;
-    color: white;
-}
-
-/* Task Manager Styles */
-.task-container {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    flex: 1;
-}
-
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-li {
+#task-list li {
+    list-style-type: none;
+    margin: 10px 0;
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 5px;
-    border-bottom: 1px solid #ccc;
 }
 
-/* Buttons */
+.completed {
+    text-decoration: line-through;
+    color: grey;
+}
+
 button {
-    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
 button:hover {
-    opacity: 0.9;
+    background-color: #45a049;
 }
 
-/* Color Palette */
-.color-palette {
-    display: flex;
-    gap: 10px;
+/* Task Manager Styles */
+#task-list {
+    padding: 0;
 }
 
-.color-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: none;
+button {
+    margin-bottom: 10px;
+}
+
+#increase-font, #decrease-font {
+    margin-top: 10px;
 }
