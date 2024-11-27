@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Manager with Timezones</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -16,8 +16,28 @@
             align-items: center;
             justify-content: flex-start;
             height: 100vh;
-            overflow-x: hidden;
             gap: 20px;
+            overflow-x: hidden;
+        }
+
+        .theme-switcher {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .theme-switcher button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            background-color: #93B9CF; /* Light blue */
+            color: black;
+        }
+
+        .theme-switcher button:hover {
+            background-color: #9DA8C4; /* Grey-blue */
         }
 
         .timezone-container {
@@ -29,7 +49,7 @@
         }
 
         .timezone {
-            background-color: #7BCDBA;
+            background-color: #C6B0C8; /* Lavender */
             color: black;
             padding: 10px;
             border-radius: 10px;
@@ -38,156 +58,94 @@
             margin: 5px;
         }
 
-        .theme-switcher-container {
+        .container {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-bottom: 10px;
-        }
-
-        .theme-switcher {
-            cursor: pointer;
-            background-color: #61E294;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-size: 14px;
-            display: inline-block;
-        }
-
-        .theme-switcher:hover {
-            background-color: #7BCDBA;
-        }
-
-        .widget-container {
-            display: flex;
-            flex-direction: row;
             gap: 20px;
-            width: 90%;
+            width: 100%;
             max-width: 1200px;
-            justify-content: space-between;
         }
 
-        .notepad-container, .task-container {
+        .notepad-container,
+        .task-container {
+            flex: 1;
             background: white;
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            width: 48%; /* Adjusted width to prevent overlap */
-            position: relative;
+            overflow: auto;
             resize: both;
-            overflow: hidden;
-            min-width: 300px; /* Prevents shrinking too small */
+            min-width: 300px;
         }
 
-        .task-container {
-            width: 48%; /* Adjusted for balance */
-        }
-
-        .section h3 {
-            color: #9799CA;
-            margin: 0;
-        }
-
-        textarea {
+        .notepad {
             width: 100%;
+            height: 100px;
             border: 1px solid #ccc;
             border-radius: 10px;
             padding: 10px;
-            font-size: 16px;
-            resize: none;
+            font-size: 14px;
+            resize: both;
+            font-family: 'Poppins', sans-serif;
+            color: #D0B0BD; /* Pinkish */
+        }
+
+        .task {
+            font-size: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            color: #DFB7CC; /* Light pink */
         }
 
         button {
-            background-color: #61E294;
+            background-color: #61E294; /* Green */
             color: black;
             border: none;
-            padding: 10px 15px;
+            padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
-            margin-top: 10px;
+            font-size: 12px;
         }
 
         button:hover {
-            background-color: #7BCDBA;
+            background-color: #7BCDBA; /* Teal */
         }
 
-        .collapsible {
-            cursor: pointer;
-            background-color: #61E294;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: none;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-
-        .collapsible:focus {
-            outline: none;
-        }
-
-        .collapsible-content {
-            display: block;
-        }
-
-        .collapsible-content.hidden {
-            display: none;
-        }
-
-        .task-list {
-            list-style: none;
+        .check-btn, .delete-btn {
+            font-size: 10px;
+            width: 20px;
+            height: 20px;
             padding: 0;
-            margin: 0;
-            border: 1px solid #ccc;
-            border-radius: 10px;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
-        .task-list li {
+        /* Theme Styling */
+        .light-theme {
+            background-color: #f7f7f7;
+            color: black;
+        }
+
+        .dark-theme {
+            background-color: #1e1e1e;
+            color: white;
+        }
+
+        .task-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .task-list li:last-child {
-            border-bottom: none;
-        }
-
-        .task-text {
-            flex: 1;
-            margin-right: 10px;
-            font-size: 10px;
-        }
-
-        .task-text[contenteditable="true"] {
-            border-bottom: 1px dashed #ccc;
-        }
-
-        /* Styling for buttons within tasks */
-        .task-button {
-            font-size: 10px;
-            padding: 5px 10px;
-        }
-
-        /* Resizable handle for dragging */
-        .resize-handle {
-            width: 15px;
-            height: 15px;
-            background-color: #61E294;
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            cursor: nwse-resize;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
         }
     </style>
 </head>
 <body>
+    <div class="theme-switcher">
+        <button onclick="switchTheme('light')">Light Theme</button>
+        <button onclick="switchTheme('dark')">Dark Theme</button>
+    </div>
+
     <div class="timezone-container">
         <div class="timezone" id="timezone-pacific">Pacific Time: </div>
         <div class="timezone" id="timezone-mountain">Mountain Time: </div>
@@ -196,133 +154,69 @@
         <div class="timezone" id="timezone-philippines">Philippines Time: </div>
     </div>
 
-    <div class="theme-switcher-container">
-        <button class="theme-switcher" id="light-theme">Light Theme</button>
-        <button class="theme-switcher" id="dark-theme">Dark Theme</button>
-    </div>
-
-    <div class="widget-container">
-        <div class="notepad-container">
-            <div class="section">
-                <h3>Notepad</h3>
-                <textarea id="notepad"></textarea>
-                <button id="clear-notes">Clear Notes</button>
-                <div class="resize-handle" id="notepad-resize"></div>
-            </div>
+    <div class="container">
+        <div class="notepad-container" id="notepad-container">
+            <h3>Notepad</h3>
+            <textarea class="notepad" id="notepad"></textarea>
+            <button id="clear-notes">Clear Notes</button>
         </div>
 
-        <div class="task-container">
-            <div class="section">
-                <h3>Task Manager</h3>
-                <input type="text" id="new-task" placeholder="Enter a task...">
-                <button id="add-task">Add Task</button>
-                <ul id="task-list" class="task-list"></ul>
-                <button id="clear-tasks">Clear All Tasks</button>
-            </div>
+        <div class="task-container" id="task-container">
+            <h3>Task Manager</h3>
+            <input type="text" id="new-task" placeholder="Enter a task...">
+            <button id="add-task">Add Task</button>
+            <div id="task-list"></div>
+            <button id="clear-tasks">Clear All Tasks</button>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Real-time timezone updates
-            function updateTimezones() {
-                const timezones = [
-                    { id: 'timezone-pacific', offset: -8 },
-                    { id: 'timezone-mountain', offset: -7 },
-                    { id: 'timezone-central', offset: -6 },
-                    { id: 'timezone-eastern', offset: -5 },
-                    { id: 'timezone-philippines', offset: 8 }
-                ];
-                
-                timezones.forEach(zone => {
-                    const now = new Date();
-                    const localTime = new Date(now.getTime() + (zone.offset * 60 * 60 * 1000));
-                    document.getElementById(zone.id).textContent = `${zone.id.split('-')[1].toUpperCase()} Time: ${localTime.toLocaleTimeString()}`;
-                });
+        // Theme switcher function
+        function switchTheme(theme) {
+            document.body.classList.remove('light-theme', 'dark-theme');
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.add('light-theme');
             }
-            
-            setInterval(updateTimezones, 1000);
-            updateTimezones(); // Initial call to set the time right away
+        }
 
-            // Theme switching
-            document.getElementById('light-theme').addEventListener('click', () => {
-                document.body.style.backgroundColor = '#f7f7f7';
-                document.querySelectorAll('.task-container, .notepad-container').forEach(container => {
-                    container.style.backgroundColor = 'white';
-                    container.style.color = 'black';
-                });
-                document.querySelectorAll('.theme-switcher').forEach(btn => {
-                    btn.style.backgroundColor = '#61E294';
-                    btn.style.color = 'white';
-                });
-            });
-
-            document.getElementById('dark-theme').addEventListener('click', () => {
-                document.body.style.backgroundColor = '#2C2C2C';
-                document.querySelectorAll('.task-container, .notepad-container').forEach(container => {
-                    container.style.backgroundColor = '#444';
-                    container.style.color = 'white';
-                });
-                document.querySelectorAll('.theme-switcher').forEach(btn => {
-                    btn.style.backgroundColor = '#444';
-                    btn.style.color = 'white';
-                });
-            });
-
-            // Resize feature for notepad
-            const notepadContainer = document.querySelector('.notepad-container');
-            const resizeHandle = document.getElementById('notepad-resize');
-            resizeHandle.addEventListener('mousedown', (e) => {
-                e.preventDefault();
-                document.addEventListener('mousemove', resize);
-                document.addEventListener('mouseup', () => {
-                    document.removeEventListener('mousemove', resize);
-                });
-            });
-
-            function resize(e) {
-                let width = e.clientX - notepadContainer.getBoundingClientRect().left;
-                let height = e.clientY - notepadContainer.getBoundingClientRect().top;
-                if (width > 200 && height > 200) {
-                    notepadContainer.style.width = `${width}px`;
-                    notepadContainer.style.height = `${height}px`;
-                    document.querySelector('.widget-container').style.width = `${Math.max(width, 600)}px`;
-                }
-            }
-
-            // Task functionality
+        // Task manager functions
+        document.getElementById('add-task').addEventListener('click', () => {
             const taskInput = document.getElementById('new-task');
-            const taskList = document.getElementById('task-list');
+            if (taskInput.value.trim() !== '') {
+                const taskList = document.getElementById('task-list');
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item';
+                taskItem.innerHTML = `
+                    <span>${taskInput.value}</span>
+                    <div>
+                        <button class="check-btn" onclick="markAsComplete(this)">✓</button>
+                        <button class="delete-btn" onclick="deleteTask(this)">✕</button>
+                    </div>
+                `;
+                taskList.appendChild(taskItem);
+                taskInput.value = '';
+            }
+        });
 
-            document.getElementById('add-task').addEventListener('click', () => {
-                const taskText = taskInput.value.trim();
-                if (taskText) {
-                    const taskItem = document.createElement('li');
-                    taskItem.innerHTML = `
-                        <span class="task-text" contenteditable="true">${taskText}</span>
-                        <button class="task-button" onclick="this.parentElement.querySelector('.task-text').style.textDecoration = 'line-through'">✓</button>
-                        <button class="task-button" onclick="this.parentElement.remove()">✗</button>
-                    `;
-                    taskList.appendChild(taskItem);
-                    taskInput.value = '';
-                }
-            });
+        document.getElementById('clear-tasks').addEventListener('click', () => {
+            document.getElementById('task-list').innerHTML = '';
+        });
 
-            document.getElementById('clear-tasks').addEventListener('click', () => {
-                taskList.innerHTML = '';
-            });
+        function markAsComplete(button) {
+            const taskItem = button.parentElement.parentElement;
+            taskItem.querySelector('span').style.textDecoration = 'line-through';
+            button.style.display = 'none';
+        }
 
-            // Note saving functionality
-            const notepad = document.getElementById('notepad');
-            notepad.addEventListener('input', () => {
-                localStorage.setItem('notepadContent', notepad.value);
-            });
-            notepad.value = localStorage.getItem('notepadContent') || '';
+        function deleteTask(button) {
+            button.parentElement.parentElement.remove();
+        }
 
-            document.getElementById('clear-notes').addEventListener('click', () => {
-                notepad.value = '';
-                localStorage.removeItem('notepadContent');
-            });
+        // Clear notes function
+        document.getElementById('clear-notes').addEventListener('click', () => {
+            document.getElementById('notepad').value = '';
         });
     </script>
 </body>
