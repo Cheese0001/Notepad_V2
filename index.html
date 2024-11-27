@@ -6,7 +6,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <title>Notepad & Task Manager with Timezones</title>
     <style>
-          :root {
+        :root {
             --background-color: #f7f7f7;
             --text-color: #000000;
             --button-color: #61E294;
@@ -22,30 +22,28 @@
         }
 
         /* Global Styles */
-       body {
-           
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f7f7f7;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100vh;
-    gap: 20px;
-    overflow-x: hidden;
-   font-family: 'Poppins', sans-serif;
-    font-size: 14px; /* Base font size */
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            gap: 20px;
+            overflow-x: hidden;
+            font-size: 14px; /* Base font size */
+        }
 
-/* Additional font customization for headings */
-h3 {
-    font-size: 1.5rem; /* Smaller size for headings */
-    font-weight: 600;
-    color: #9799CA;
-}
-       .timezone-container {
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #9799CA;
+        }
+
+        .timezone-container {
             display: flex;
             gap: 10px;
             margin-top: 20px;
@@ -61,11 +59,23 @@ h3 {
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             text-align: center;
             margin: 5px;
-    font-size: 12px; /* Adjust the size of timezone text */
-
+            font-size: 12px;
         }
- <!-- Theme Toggle Button -->
-    <button id="theme-toggle">Toggle Dark/Light Theme</button>
+
+        /* Theme Toggle Button */
+        button {
+            background-color: var(--button-color);
+            color: var(--button-text-color);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #7BCDBA;
+        }
 
         .widget {
             background: white;
@@ -95,56 +105,7 @@ h3 {
             border-radius: 10px;
             padding: 10px;
             font-size: 10px;
-            resize: both; /* Allow resizing */
-        }
-
-        button {
-            background-color: #61E294;
-            color: black;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        button:hover {
-            background-color: #7BCDBA;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-
-        ul li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-             font-size: 10px; /* Adjust the font size for each task item */
-        }
-
-        ul li:last-child {
-            border-bottom: none;
-        }
-
-        .task-text {
-            flex: 1;
-            margin-right: 10px;
-              font-size: 10px; /* Adjusted font size for task text */
-        }
-
-        .task-text[contenteditable="true"] {
-            border-bottom: 1px dashed #ccc;
-        }
-
-        .task-text.completed {
-            text-decoration: line-through;
-            color: #aaa; /* Change color to indicate completed status */
+            resize: both;
         }
 
         /* Collapsible section styles */
@@ -177,13 +138,13 @@ h3 {
                 width: 95%;
                 padding: 15px;
             }
+
             textarea {
                 height: 80px;
                 font-size: 14px;
             }
         }
     </style>
-    
 </head>
 <body>
     <div class="timezone-container">
@@ -195,7 +156,6 @@ h3 {
     </div>
 
     <div class="widget">
-        <!-- Collapsible Notepad Section -->
         <button class="collapsible">Notepad</button>
         <div class="collapsible-content" id="notepad-section">
             <div class="section">
@@ -205,7 +165,6 @@ h3 {
             </div>
         </div>
 
-        <!-- Collapsible Task Manager Section -->
         <button class="collapsible">Task Manager</button>
         <div class="collapsible-content" id="task-manager-section">
             <div class="section">
@@ -217,6 +176,9 @@ h3 {
             </div>
         </div>
     </div>
+
+    <!-- Theme Toggle Button -->
+    <button id="theme-toggle">Toggle Dark/Light Theme</button>
 
     <script>
         // Collapsible functionality
@@ -299,40 +261,30 @@ h3 {
                 taskList.appendChild(li);
             });
         }
+
         renderTasks();
 
+        // Add new task
         addTaskButton.addEventListener('click', () => {
-            const newTask = newTaskInput.value.trim();
-            if (newTask) {
-                tasks.push(newTask);
+            if (newTaskInput.value.trim()) {
+                tasks.push(newTaskInput.value.trim());
                 localStorage.setItem('tasks', JSON.stringify(tasks));
                 newTaskInput.value = '';
                 renderTasks();
             }
         });
 
+        // Clear all tasks
         clearTasksButton.addEventListener('click', () => {
             localStorage.removeItem('tasks');
-            tasks.length = 0; // Clear the tasks array
             renderTasks();
-        }); document.addEventListener('DOMContentLoaded', () => {
-    const themeToggle = document.getElementById('theme-toggle');
-    const currentTheme = localStorage.getItem('theme') || 'light';
+        });
 
-    // Apply saved theme
-    if (currentTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-    }
-
-    // Toggle theme on button click
-    themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('dark-theme');
-
-        // Save the theme preference
-        const newTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
-        localStorage.setItem('theme', newTheme);
-    });
-});
+        // Theme Toggle Functionality
+        const themeToggleButton = document.getElementById('theme-toggle');
+        themeToggleButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+        });
     </script>
 </body>
 </html>
