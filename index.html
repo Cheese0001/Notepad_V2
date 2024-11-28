@@ -290,6 +290,64 @@ function updateTimezone() {
     document.getElementById('usEastern').textContent = `US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })}`;
     document.getElementById('phPhilippines').textContent = `PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })}`;
 }
+// Save template button click
+const saveTemplateButton = document.getElementById('saveTemplateButton');
+const loadTemplateButton = document.getElementById('loadTemplateButton');
+const templateListModal = document.getElementById('templateListModal');
+const templates = JSON.parse(localStorage.getItem('templates')) || [];
+const templateList = document.getElementById('templateList');  // Dropdown/modal for templates
+
+// Save current note and tasks as a template
+saveTemplateButton.addEventListener('click', () => {
+    const templateName = prompt("Enter a name for your template:");
+    if (templateName) {
+        const newTemplate = {
+            name: templateName,
+            noteContent: notepad.value,
+            tasks: tasks
+        };
+        templates.push(newTemplate);
+        localStorage.setItem('templates', JSON.stringify(templates));
+        alert("Template saved!");
+    }
+});
+
+// Load selected template into notepad and task list
+loadTemplateButton.addEventListener('click', () => {
+    templateListModal.style.display = 'block'; // Show modal
+    renderTemplateList();  // Show templates in the list
+});
+
+// Render the template list in the modal or dropdown
+function renderTemplateList() {
+    templateList.innerHTML = ''; // Clear any existing list
+    templates.forEach((template, index) => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${template.name} (Saved: ${template.savedAt})`;
+        listItem.addEventListener('click', () => {
+            loadTemplate(template);  // Load the selected template
+            templateListModal.style.display = 'none';  // Close the modal
+        });
+        templateList.appendChild(listItem);
+    });
+}
+
+// Load the selected template into the notepad and task list
+function loadTemplate(template) {
+    notepad.value = template.noteContent;
+    tasks = template.tasks;
+    renderTasks();  // Render tasks from the loaded template
+}
+
+// Render tasks in the task list
+function renderTasks() {
+    taskContainer.innerHTML = ''; // Clear task list
+    tasks.forEach(task => {
+        const taskElement = document.createElement('li');
+        taskElement.textContent = task;
+        taskContainer.appendChild(taskElement);
+    });
+}
 
 updateTimezone();
 setInterval(updateTimezone, 1000);
