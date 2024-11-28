@@ -144,6 +144,14 @@ font-size: 16px; / Default font size */
 <div class="notepad-container" id="notepadContainer">
 <textarea id="notepad" placeholder="Write your notes here..."></textarea>
 </div>
+  <!-- Template Sidebar or Section -->
+<div id="magicalNotesSidebar" style="visibility: hidden;">
+  <h3>Saved Templates</h3>
+  <ul id="templateList"></ul> <!-- Where the templates will be listed -->
+
+  <button id="saveTemplateButton">Save Current Note as Template</button> <!-- Button to save the current note as a template -->
+</div>
+
 
 <!-- Task List -->
 <div class="task-container">
@@ -294,5 +302,6 @@ document.getElementById('phPhilippines').textContent = PH Philippines: ${date.to
 updateTimezone();
 setInterval(updateTimezone, 1000);
 </script>
+<script src="MagicalNotes.js"></script>
 </body>
 </html>
