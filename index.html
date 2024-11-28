@@ -189,9 +189,6 @@
             <button class="button" onclick="addTask()">Add Task</button>
             <button class="button" onclick="clearTasks()">Clear All Tasks</button>
             <div class="task-resize-handle" id="task-resize-handle"></div>
-            <button id="increase-task-font" class="button">Increase Task Font</button>
-<button id="decrease-task-font" class="button">Decrease Task Font</button>
-
         </div>
 
         <!-- Font Color Customization -->
@@ -240,41 +237,20 @@
             }
         }
 
-       // Update Task List
-function updateTaskList() {
-    const taskList = document.getElementById('task-list');
-    taskList.innerHTML = '';
-    tasks.forEach((task, index) => {
-        const li = document.createElement('li');
-        
-        // Set the font size for the task item, for example 20px
-        li.style.fontSize = '20px';  // Change this value to your preferred font size
-
-        li.innerHTML = `
-            <span style="text-decoration: ${task.completed ? 'line-through' : 'none'}">${task.text}</span>
-            <button class="button" onclick="toggleTaskCompletion(${index})">✓</button>
-            <button class="button" onclick="deleteTask(${index})">X</button>
-        `;
-        taskList.appendChild(li);
-    });
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-} let taskFontSize = 20; // Initial font size for tasks
-
-// Increase task font size
-document.getElementById('increase-task-font').addEventListener('click', function() {
-    taskFontSize += 2; // Increase by 2px
-    updateTaskList();  // Re-render tasks with the new font size
-});
-
-// Decrease task font size
-document.getElementById('decrease-task-font').addEventListener('click', function() {
-    if (taskFontSize > 10) {  // Minimum font size
-        taskFontSize -= 2; // Decrease by 2px
-        updateTaskList();  // Re-render tasks with the new font size
-    }
-});
-
-
+        // Update Task List
+        function updateTaskList() {
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span style="text-decoration: ${task.completed ? 'line-through' : 'none'}; font-size: 18px;">${task.text}</span>
+                    <button class="button" onclick="toggleTaskCompletion(${index})">✓</button>
+                    <button class="button" onclick="deleteTask(${index})">X</button>
+                `;
+                taskList.appendChild(li);
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
         }
 
         // Toggle Task Completion
@@ -295,67 +271,52 @@ document.getElementById('decrease-task-font').addEventListener('click', function
             updateTaskList();
         }
 
-        // Resize Notepad and Task Container
-        let resizeHandle = document.getElementById('resize-handle');
-        let taskResizeHandle = document.getElementById('task-resize-handle');
-        let notepadContainer = document.getElementById('notepad-container');
-        let taskContainer = document.getElementById('task-container');
+        // Resize Handlers
+        const resizeHandle = document.getElementById('resize-handle');
+        const notepadContainer = document.getElementById('notepad-container');
+        let isResizing = false;
 
-        resizeHandle.addEventListener('mousedown', startResizeNotepad);
-        taskResizeHandle.addEventListener('mousedown', startResizeTask);
+        resizeHandle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.addEventListener('mousemove', handleResize);
+            document.addEventListener('mouseup', () => {
+                isResizing = false;
+                document.removeEventListener('mousemove', handleResize);
+            });
+        });
 
-        function startResizeNotepad(e) {
-            e.preventDefault();
-            window.addEventListener('mousemove', resizeNotepad);
-            window.addEventListener('mouseup', stopResize);
+        function handleResize(e) {
+            if (isResizing) {
+                const width = e.clientX - notepadContainer.offsetLeft;
+                const height = e.clientY - notepadContainer.offsetTop;
+                notepadContainer.style.width = `${width}px`;
+                notepadContainer.style.height = `${height}px`;
+            }
         }
 
-        function startResizeTask(e) {
-            e.preventDefault();
-            window.addEventListener('mousemove', resizeTask);
-            window.addEventListener('mouseup', stopResize);
-        }
-
-        function resizeNotepad(e) {
-            notepadContainer.style.width = e.clientX - notepadContainer.getBoundingClientRect().left + 'px';
-            notepadContainer.style.height = e.clientY - notepadContainer.getBoundingClientRect().top + 'px';
-        }
-
-        function resizeTask(e) {
-            taskContainer.style.width = e.clientX - taskContainer.getBoundingClientRect().left + 'px';
-            taskContainer.style.height = e.clientY - taskContainer.getBoundingClientRect().top + 'px';
-        }
-
-        function stopResize() {
-            window.removeEventListener('mousemove', resizeNotepad);
-            window.removeEventListener('mousemove', resizeTask);
-            window.removeEventListener('mouseup', stopResize);
-        }
-
-        // Update Time Zones
+        // Time Zone Calculation
         function updateTimeZones() {
-            let pacificTime = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
-            let mountainTime = new Date().toLocaleString('en-US', { timeZone: 'America/Denver' });
-            let centralTime = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' });
-            let philippinesTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
+            const currentDate = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
 
-            let pacificDiff = new Date().getHours() - new Date(pacificTime).getHours();
-            let mountainDiff = new Date().getHours() - new Date(mountainTime).getHours();
-            let centralDiff = new Date().getHours() - new Date(centralTime).getHours();
+            function calculateTime(zoneOffset) {
+                const date = new Date(currentDate.getTime() + zoneOffset * 60 * 60 * 1000);
+                return date.toLocaleTimeString('en-US', options);
+            }
 
-            document.getElementById('pacific').textContent = pacificTime;
-            document.getElementById('mountain').textContent = mountainTime;
-            document.getElementById('central').textContent = centralTime;
-            document.getElementById('philippines').textContent = philippinesTime;
+            document.getElementById('pacific').textContent = calculateTime(-8);
+            document.getElementById('mountain').textContent = calculateTime(-7);
+            document.getElementById('central').textContent = calculateTime(-6);
+            document.getElementById('philippines').textContent = calculateTime(8);
 
-            document.getElementById('pacific-diff').textContent = `(Diff: ${pacificDiff} hours)`;
-            document.getElementById('mountain-diff').textContent = `(Diff: ${mountainDiff} hours)`;
-            document.getElementById('central-diff').textContent = `(Diff: ${centralDiff} hours)`;
+            document.getElementById('pacific-diff').textContent = ` (${currentDate.getHours() + 8}hrs ahead of Pacific)`;
+            document.getElementById('mountain-diff').textContent = ` (${currentDate.getHours() + 9}hrs ahead of Mountain)`;
+            document.getElementById('central-diff').textContent = ` (${currentDate.getHours() + 10}hrs ahead of Central)`;
         }
 
-        setInterval(updateTimeZones, 1000);
-        updateTimeZones();  // Initialize time zones
-
+        // Initialize
+        updateTimeZones();
+        setInterval(updateTimeZones, 60000);  // Update every minute
     </script>
 </body>
 </html>
