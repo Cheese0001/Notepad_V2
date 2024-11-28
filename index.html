@@ -157,6 +157,8 @@ button:hover {
 
 .template-item {
   padding: 5px;
+  display: flex;
+  justify-content: space-between;
   cursor: pointer;
 }
 
@@ -172,6 +174,17 @@ button:hover {
   border: none;
   cursor: pointer;
   border-radius: 5px;
+}
+
+.delete-button {
+  background-color: #E57373;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 5px;
+  border-radius: 5px;
+  margin-left: 10px;
 }
 </style>
 </head>
@@ -244,7 +257,7 @@ themeToggle.addEventListener('click', () => {
 const notepad = document.getElementById('notepad');
 const increaseFontSize = document.getElementById('increaseFontSize');
 const decreaseFontSize = document.getElementById('decreaseFontSize');
-let fontSize = 16; // Initial font size for the notepad
+let fontSize = 16;
 
 increaseFontSize.addEventListener('click', () => {
   fontSize += 2;
@@ -272,6 +285,15 @@ saveTemplateButton.addEventListener('click', () => {
     const newTemplate = document.createElement('li');
     newTemplate.textContent = templateText;
     newTemplate.classList.add('template-item');
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.classList.add('delete-button');
+    deleteButton.addEventListener('click', () => {
+      newTemplate.remove();
+    });
+
+    newTemplate.appendChild(deleteButton);
     templateList.appendChild(newTemplate);
     notepad.value = ''; // Clear the notepad after saving the template
   }
