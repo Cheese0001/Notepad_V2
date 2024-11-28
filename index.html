@@ -20,6 +20,17 @@ body {
     background-repeat: no-repeat;
     transition: background-color 0.3s ease;
 }
+    /* Footer Styles */
+footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: #9DA8C4; /* You can adjust the color here */
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10; /* Ensure it stays on top */
+}
 .timezone-container {
     display: flex;
     justify-content: space-between;
@@ -130,17 +141,6 @@ button:hover {
     cursor: pointer;
 }
 
-/* Footer Styles */
-footer {
-    position: fixed;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    color: #9DA8C4; /* You can adjust the color here */
-    font-size: 14px;
-    font-weight: 500;
-    z-index: 10; /* Ensure it stays on top */
-}
 </style>
 </head>
 <body>
@@ -253,6 +253,7 @@ addTaskButton.addEventListener('click', () => {
         tasks.push({ text: taskText, completed: false });
         taskInput.value = '';
         renderTasks();
+    }
 });
 
 
@@ -304,12 +305,11 @@ function updateTimezone() {
 
 updateTimezone();
 setInterval(updateTimezone, 60000);
+    
 </script>
-
 <!-- Footer -->
 <footer>
     Made by Shemida G
 </footer>
-
 </body>
 </html>
