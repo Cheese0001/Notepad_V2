@@ -65,6 +65,11 @@
         saveTemplateButton.addEventListener('click', () => {
             const templateName = prompt("Enter a name for your template:");
             if (templateName) {
+                // Check if the template name already exists
+                if (templates.some(template => template.name === templateName)) {
+                    alert("Template name already exists. Choose a different name.");
+                    return;
+                }
                 const newTemplate = {
                     name: templateName,
                     noteContent: notepad.value,
