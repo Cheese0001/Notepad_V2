@@ -1,293 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notepad & Task Tracker Widget</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        /* Base Styles */
-        body {
-            font-family: 'Press Start 2P', sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* Theme Styles */
-        .dark-theme {
-            background-color: #2e2e2e;
-            color: white;
-        }
-
-        .light-theme {
-            background-color: #ffffff;
-            color: #333;
-        }
-
-        /* General Container */
-        .container {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin: 10px;
-            padding: 15px;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 10px;
-        }
-
-        /* Notepad & Task Containers */
-        .notepad-container, .task-container {
-            background-color: #f5f5f5;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            padding: 10px;
-            position: relative;
-        }
-
-        /* Time Zone */
-        .time-zone-container {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .time-zone-box {
-            background-color: #e0c3fc;
-            border-radius: 5px;
-            padding: 10px;
-            width: 20%;
-            text-align: center;
-        }
-
-        /* Buttons */
-        .button {
-            background-color: #D0B0BD;
-            border: none;
-            color: white;
-            padding: 5px 10px;
-            font-size: 1rem;
-            margin: 5px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .button:hover {
-            background-color: #DFB7CC;
-        }
-
-        .resize-handle {
-            width: 15px;
-            height: 15px;
-            background-color: #9DA8C4;
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            cursor: se-resize;
-        }
-
-        /* Font Size */
-        .large-font {
-            font-size: 24px;
-        }
-
-        /* Task Container */
-        .task-resize-handle {
-            width: 15px;
-            height: 15px;
-            background-color: #9DA8C4;
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            cursor: se-resize;
-        }
-
-        #notepad, #task-input {
-            background-color: #F8E1F4;
-            border: 1px solid #D1B0D9;
-            color: #5A4F5C;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            width: 100%;
-        }
-
-        /* Resizable */
-        #task-container {
-            resize: both;
-            overflow: auto;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notepad Widget</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 20px;
+      background-color: #f0f0f0;
+      color: #333;
+    }
+    .notepad-container {
+      width: 300px;
+      height: 200px;
+      resize: both;
+      overflow: auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    textarea {
+      width: 100%;
+      height: 100%;
+      border: none;
+      resize: none;
+      outline: none;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
-    <div class="theme-button" onclick="toggleTheme()">Toggle Theme</div>
 
-    <div id="mainContainer" class="container">
-        <!-- Time Zone Container -->
-        <div class="time-zone-container">
-            <div class="time-zone-box" id="pacific-time">
-                US Pacific: <span id="pacific"></span> <span id="pacific-diff"></span>
-            </div>
-            <div class="time-zone-box" id="mountain-time">
-                US Mountain: <span id="mountain"></span> <span id="mountain-diff"></span>
-            </div>
-            <div class="time-zone-box" id="central-time">
-                US Central: <span id="central"></span> <span id="central-diff"></span>
-            </div>
-            <div class="time-zone-box" id="philippines-time">
-                Philippines: <span id="philippines"></span>
-            </div>
-        </div>
+<div class="notepad-container">
+  <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+</div>
 
-        <!-- Notepad Container -->
-        <div class="notepad-container" id="notepad-container">
-            <textarea id="notepad" placeholder="Write your notes here..." rows="10"></textarea>
-            <div class="resize-handle" id="resize-handle"></div>
-        </div>
+<script>
+  const notepad = document.getElementById('notepad');
 
-        <button id="increase-font" class="button">+</button>
-        <button id="decrease-font" class="button">-</button>
+  // Load saved data from local storage
+  notepad.value = localStorage.getItem('notepadData') || '';
 
-        <!-- Task Container -->
-        <div class="task-container" id="task-container">
-            <input type="text" id="task-input" placeholder="Enter task">
-            <ul id="task-list"></ul>
-            <button class="button" onclick="addTask()">Add Task</button>
-            <button class="button" onclick="clearTasks()">Clear All Tasks</button>
-            <div class="task-resize-handle" id="task-resize-handle"></div>
-        </div>
+  // Save data to local storage whenever text changes
+  notepad.addEventListener('input', () => {
+    localStorage.setItem('notepadData', notepad.value);
+  });
+</script>
 
-        <div class="toggle-container">
-            <button class="button" onclick="changeFontColor('purple')">Purple Font</button>
-            <button class="button" onclick="changeFontColor('pink')">Pink Font</button>
-            <button class="button" onclick="changeFontColor('brown')">Brown Font</button>
-        </div>
-    </div>
-
-    <script>
-        let isDarkMode = localStorage.getItem('theme') === 'dark';
-        let currentFontColor = 'purple';
-        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        let savedNotepad = localStorage.getItem('notepad') || '';
-
-        // Toggle Theme
-        function toggleTheme() {
-            isDarkMode = !isDarkMode;
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-            document.body.className = isDarkMode ? 'dark-theme' : 'light-theme';
-            document.getElementById('mainContainer').className = isDarkMode ? 'container dark-theme' : 'container light-theme';
-        }
-
-        // Font Color Change
-        function changeFontColor(color) {
-            currentFontColor = color;
-            document.getElementById('notepad').style.color = color;
-            document.getElementById('task-container').style.color = color;
-        }
-
-        // Save Notepad Content
-        document.getElementById('notepad').addEventListener('input', function() {
-            localStorage.setItem('notepad', this.value);
-        });
-
-        document.getElementById('notepad').value = savedNotepad;
-
-        // Add Task
-        function addTask() {
-            const taskText = document.getElementById('task-input').value;
-            if (taskText) {
-                tasks.push({ text: taskText, completed: false });
-                updateTaskList();
-                document.getElementById('task-input').value = '';
-            }
-        }
-
-        // Update Task List
-        function updateTaskList() {
-            const taskList = document.getElementById('task-list');
-            taskList.innerHTML = '';
-            tasks.forEach((task, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span style="text-decoration: ${task.completed ? 'line-through' : 'none'}; font-size: 18px;">${task.text}</span>
-                    <button class="button" onclick="toggleTaskCompletion(${index})">✓</button>
-                    <button class="button" onclick="removeTask(${index})">X</button>
-                `;
-                taskList.appendChild(li);
-            });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-        }
-
-        // Toggle Task Completion
-        function toggleTaskCompletion(index) {
-            tasks[index].completed = !tasks[index].completed;
-            updateTaskList();
-        }
-
-        // Remove Task
-        function removeTask(index) {
-            tasks.splice(index, 1);
-            updateTaskList();
-        }
-
-        // Clear Tasks
-        function clearTasks() {
-            tasks = [];
-            updateTaskList();
-        }
-
-        // Resize Functionality (both containers)
-        const resizeHandles = document.querySelectorAll('.resize-handle');
-        resizeHandles.forEach(handle => {
-            handle.addEventListener('mousedown', (e) => {
-                document.addEventListener('mousemove', onMouseMove);
-                document.addEventListener('mouseup', () => {
-                    document.removeEventListener('mousemove', onMouseMove);
-                });
-
-                function onMouseMove(e) {
-                    const container = handle.parentElement;
-                    container.style.width = e.pageX - container.offsetLeft + 'px';
-                    container.style.height = e.pageY - container.offsetTop + 'px';
-                }
-            });
-        });
-
-        // Initialize
-        updateTaskList();
-        toggleTheme();
-
-        // Time Zone Calculation (for US Pacific, Mountain, Central, and Philippines)
-        function updateTimeZones() {
-            const timeZones = {
-                pacific: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
-                mountain: new Date().toLocaleString('en-US', { timeZone: 'America/Denver' }),
-                central: new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }),
-                Eastern: new Date().toLocaleString('en-US', { timeZone: 'America/Newyork' }),
-                philippines: new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }),
-            };
-
-            const pacificOffset = new Date().getHours() - new Date(timeZones.pacific).getHours();
-            const mountainOffset = new Date().getHours() - new Date(timeZones.mountain).getHours();
-            const centralOffset = new Date().getHours() - new Date(timeZones.central).getHours();
-
-            document.getElementById('pacific').innerText = timeZones.pacific;
-            document.getElementById('mountain').innerText = timeZones.mountain;
-            document.getElementById('central').innerText = timeZones.central;
-            document.getElementById('philippines').innerText = timeZones.philippines;
-
-            document.getElementById('pacific-diff').innerText = ` (UTC ${pacificOffset})`;
-            document.getElementById('mountain-diff').innerText = ` (UTC ${mountainOffset})`;
-            document.getElementById('central-diff').innerText = ` (UTC ${centralOffset})`;
-        }
-
-        updateTimeZones();
-        setInterval(updateTimeZones, 60000);  // Update every minute
-    </script>
 </body>
 </html>
