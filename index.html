@@ -81,6 +81,17 @@
             font-size: 0.8em;
             color: #888;
         }
+        .timezone-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .timezone {
+            flex: 1;
+            margin: 0 10px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -88,16 +99,12 @@
     <button id="theme-toggle">Toggle Theme</button>
 
     <!-- Current Time and Timezone -->
-    <div id="timezone" class="container pastel-pink">
-        <h2>Current Time</h2>
-        <select id="timezone-select">
-            <option value="America/Los_Angeles">US Pacific</option>
-            <option value="America/Denver">US Mountain</option>
-            <option value="America/Chicago">US Central</option>
-            <option value="America/New_York">US Eastern</option>
-            <option value="Asia/Manila">Philippines</option>
-        </select>
-        <div id="current-time"></div>
+    <div class="timezone-container">
+        <div id="pacific-time" class="timezone pastel-pink">US Pacific: <span id="pacific-time-display"></span></div>
+        <div id="mountain-time" class="timezone pastel-purple">US Mountain: <span id="mountain-time-display"></span></div>
+        <div id="central-time" class="timezone pastel-brown">US Central: <span id="central-time-display"></span></div>
+        <div id="eastern-time" class="timezone pastel-blue">US Eastern: <span id="eastern-time-display"></span></div>
+        <div id="philippines-time" class="timezone pastel-green">Philippines: <span id="philippines-time-display"></span></div>
     </div>
 
     <!-- Notepad Section -->
@@ -222,43 +229,35 @@
         }
 
         // Timezone Feature
-        const timezoneSelect = document.getElementById('timezone-select');
-        const currentTimeDisplay = document.getElementById('current-time');
-
-        const timezones = [
-            { name: 'US Pacific', zone: 'America/Los_Angeles' },
-            { name: 'US Mountain', zone: 'America/Denver' },
-            { name: 'US Central', zone: 'America/Chicago' },
-            { name: 'US Eastern', zone: 'America/New_York' },
-            { name: 'Philippines', zone: 'Asia/Manila' }
-        ];
-
-        timezones.forEach(tz => {
-            const option = document.createElement('option');
-            option.value = tz.zone;
-            option.textContent = tz.name;
-            timezoneSelect.appendChild(option);
-        });
-
-        timezoneSelect.value = localStorage.getItem('selectedTimezone') || Intl.DateTimeFormat().resolvedOptions().timeZone;
-        updateTime();
-
-        timezoneSelect.addEventListener('change', () => {
-            localStorage.setItem('selectedTimezone', timezoneSelect.value);
-            updateTime();
-        });
-
         function updateTime() {
-            const selectedZone = timezoneSelect.value;
-[_{{{CITATION{{{_1{](https://github.com/davinyvidal/Notepad-Browser/tree/1395e466534584183691d59939f10861884c04b4/file%2Ffile.php)
             const now = new Date();
-            const formatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: selectedZone,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
+            const timezones = [
+                { id: 'pacific-time-display', zone: 'America/Los_Angeles' },
+                { id: 'mountain-time-display', zone: 'America/Denver' },
+                { id: 'central-time-display', zone: 'America/Chicago' },
+                { id: 'eastern-time-display', zone: 'America/New_York' },
+                { id: 'philippines-time-display', zone: 'Asia/Manila' }
+            ];
+
+            timezones.for[_{{{CITATION{{{_1{](https://github.com/davinyvidal/Notepad-Browser/tree/1395e466534584183691d59939f10861884c04b4/file%2Ffile.php)
+                                                          const now = new Date();
+            const timezones = [
+                { id: 'pacific-time-display', zone: 'America/Los_Angeles' },
+                { id: 'mountain-time-display', zone: 'America/Denver' },
+                { id: 'central-time-display', zone: 'America/Chicago' },
+                { id: 'eastern-time-display', zone: 'America/New_York' },
+                { id: 'philippines-time-display', zone: 'Asia/Manila' }
+            ];
+
+            timezones.forEach(tz => {
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: tz.zone,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                });
+                document.getElementById(tz.id).textContent = formatter.format(now);
             });
-            currentTimeDisplay.textContent = `Current time in ${selectedZone}: ${formatter.format(now)}`;
         }
 
         setInterval(updateTime, 1000);
