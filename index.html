@@ -81,7 +81,8 @@ body, .notepad-container, .task-container {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 2px;
-    padding: 5px;
+    padding: 3px; /* Reduced padding for closer line spacing */
+    font-size: 10px; /* Font size set to 10px */
 }
 
 .task input[type="checkbox"] {
@@ -245,14 +246,13 @@ addTaskButton.addEventListener('click', () => {
 });
 
 taskList.addEventListener('click', (e) => {
-    if (e.target.tagName === 'INPUT') {
-        const index = e.target.getAttribute('data-index');
-        tasks[index].completed = e.target.checked;
-        renderTasks();
-    }
     if (e.target.classList.contains('deleteBtn')) {
         const index = e.target.getAttribute('data-index');
         tasks.splice(index, 1);
+        renderTasks();
+    } else if (e.target.type === 'checkbox') {
+        const index = e.target.getAttribute('data-index');
+        tasks[index].completed = e.target.checked;
         renderTasks();
     }
 });
@@ -264,13 +264,21 @@ clearAllButton.addEventListener('click', () => {
 
 renderTasks();
 
-// Font Color Customization
+// Font Color Customization Persistence
 const fontColorInput = document.getElementById('fontColor');
+const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4';
+fontColorInput.value = savedFontColor;
+
+document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+    el.style.color = savedFontColor;
+});
+
 fontColorInput.addEventListener('input', () => {
     const fontColor = fontColorInput.value;
     document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
         el.style.color = fontColor;
     });
+    localStorage.setItem('fontColor', fontColor);
 });
 
 // Timezone Display
