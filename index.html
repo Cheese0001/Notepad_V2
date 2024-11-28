@@ -35,13 +35,18 @@
     /* Light Mode */
     .light-theme .container {
       background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container */
-      color: #333333;
+      color: #333333; /* Light font color */
     }
 
     /* Dark Mode */
     .dark-theme .container {
       background-color: rgba(51, 51, 51, 0.8); /* Semi-transparent dark container */
-      color: #f0f0f0;
+      color: #f0f0f0; /* Light font color for dark theme */
+    }
+
+    /* Global Font Color for both Light and Dark Theme */
+    .light-theme, .dark-theme {
+      color: inherit; /* Ensure text color is inherited from container */
     }
 
     .notepad-container, .task-container {
@@ -85,16 +90,6 @@
 
     button:hover {
       background-color: #93B9CF;
-    }
-
-    .light-theme {
-      background-color: #ffffff;
-      color: #333333;
-    }
-
-    .dark-theme {
-      background-color: #333333;
-      color: #f0f0f0;
     }
 
     .font-color-picker {
