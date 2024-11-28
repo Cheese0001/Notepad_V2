@@ -38,10 +38,25 @@
             color: #333333; /* Light font color */
         }
 
+        .light-theme .notepad-container,
+        .light-theme .task-container {
+            color: #333333; /* Light theme font color */
+        }
+
         /* Dark Mode */
         .dark-theme .container {
             background-color: rgba(51, 51, 51, 0.8);
             color: #f0f0f0; /* Light font color for dark theme */
+        }
+
+        .dark-theme .notepad-container,
+        .dark-theme .task-container {
+            color: #f0f0f0; /* Light font color for dark theme */
+        }
+
+        /* Global Font Color */
+        body, .notepad-container, .task-container {
+            transition: color 0.3s ease;
         }
 
         .notepad-container, .task-container {
@@ -66,8 +81,7 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 2px;
-            padding: 3px;
-            font-size: 13px;
+            padding: 5px;
         }
 
         .task input[type="checkbox"] {
@@ -88,6 +102,17 @@
             background-color: #93B9CF;
         }
 
+        .font-color-picker {
+            margin-top: 5px;
+        }
+
+        .font-color-picker input[type="color"] {
+            width: 20px;
+            height: 20px;
+            border: none;
+            cursor: pointer;
+        }
+
         .timezone-container {
             display: flex;
             justify-content: space-between;
@@ -99,219 +124,177 @@
             border-radius: 8px;
             margin-right: 10px;
         }
-
-        /* Notepad font style */
-        .notepad-container textarea {
-            font-family: 'Quicksand', sans-serif;
-            font-size: 16px; /* Default font size */
-        }
-
-        /* Template modal styling */
-        #templateListModal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        #templateList {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            max-height: 300px;
-            overflow-y: auto;
-            width: 300px;
-        }
-
-        #templateList li {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        #templateList li:hover {
-            background-color: #e0e0e0;
-        }
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- Theme Toggle and Font Size Controls -->
-    <button id="themeToggle">Switch to Dark Mode</button>
-    <button id="increaseFontSize">+</button>
-    <button id="decreaseFontSize">-</button>
+    <div class="container">
+        <!-- Theme Toggle and Font Size Controls -->
+        <button id="themeToggle">Switch to Dark Mode</button>
+        <button id="increaseFontSize">+</button>
+        <button id="decreaseFontSize">-</button>
 
-    <!-- Save and Load Template Buttons -->
-    <button id="saveTemplateButton">Save Template</button>
-    <button id="loadTemplateButton">Load Template</button>
+        <!-- Notepad Container -->
+        <div class="notepad-container" id="notepadContainer">
+            <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+        </div>
 
-    <!-- Notepad Container -->
-    <div class="notepad-container" id="notepadContainer">
-        <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+        <!-- Task List -->
+        <div class="task-container">
+            <input type="text" id="taskInput" placeholder="Add a task" />
+            <button id="addTaskButton">Add Task</button>
+            <button id="clearAllButton">Clear All Tasks</button>
+            <ul id="taskList" class="task-list"></ul>
+        </div>
+
+        <!-- Font Color Customization -->
+        <div class="font-color-picker">
+            <label for="fontColor">Font Color: </label>
+            <input type="color" id="fontColor" value="#9DA8C4">
+        </div>
+
+        <!-- Timezone Display -->
+        <div class="timezone-container" id="timezoneContainer">
+            <div class="timezone" id="usPacific">US Pacific: Loading...</div>
+            <div class="timezone" id="usMountain">US Mountain: Loading...</div>
+            <div class="timezone" id="usCentral">US Central: Loading...</div>
+            <div class="timezone" id="usEastern">US Eastern: Loading...</div>
+            <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
+        </div>
     </div>
 
-    <!-- Task List -->
-    <div class="task-container">
-        <input type="text" id="taskInput" placeholder="Add a task" />
-        <button id="addTaskButton">Add Task</button>
-        <button id="clearAllButton">Clear All Tasks</button>
-        <ul id="taskList" class="task-list"></ul>
-    </div>
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        let isDarkMode = localStorage.getItem('theme') === 'dark';
+        document.body.classList.toggle('dark-theme', isDarkMode);
+        document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
+        document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+            el.classList.toggle('dark-theme', isDarkMode);
+        });
 
-    <!-- Timezone Display -->
-    <div class="timezone-container" id="timezoneContainer">
-        <div class="timezone" id="usPacific">US Pacific: Loading...</div>
-        <div class="timezone" id="usMountain">US Mountain: Loading...</div>
-        <div class="timezone" id="usCentral">US Central: Loading...</div>
-        <div class="timezone" id="usEastern">US Eastern: Loading...</div>
-        <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
-    </div>
-</div>
+        themeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            document.body.classList.toggle('dark-theme', isDarkMode);
+            document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
+            document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+                el.classList.toggle('dark-theme', isDarkMode);
+            });
+            themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        });
 
-<!-- Template List Modal (hidden initially) -->
-<div id="templateListModal">
-    <ul id="templateList"></ul>
-</div>
+        // Notepad Persistence
+        const notepad = document.getElementById('notepad');
+        notepad.value = localStorage.getItem('notepadText') || '';
 
-<script>
-// Theme Toggle Functionality
-const themeToggle = document.getElementById('themeToggle');
-let isDarkMode = localStorage.getItem('theme') === 'dark';
-document.body.classList.toggle('dark-theme', isDarkMode);
-document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-    el.classList.toggle('dark-theme', isDarkMode);
-});
+        notepad.addEventListener('input', () => {
+            localStorage.setItem('notepadText', notepad.value);
+        });
 
-themeToggle.addEventListener('click', () => {
-    isDarkMode = !isDarkMode;
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-    document.body.classList.toggle('dark-theme', isDarkMode);
-    document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
-    document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-        el.classList.toggle('dark-theme', isDarkMode);
-    });
-    themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-});
+        // Font Size Controls (Persistence)
+        let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
+        notepad.style.fontSize = fontSize + 'px';
 
-// Notepad Persistence
-const notepad = document.getElementById('notepad');
-notepad.value = localStorage.getItem('notepadText') || '';
+        const increaseFontSize = document.getElementById('increaseFontSize');
+        const decreaseFontSize = document.getElementById('decreaseFontSize');
 
-notepad.addEventListener('input', () => {
-    localStorage.setItem('notepadText', notepad.value);
-});
+        increaseFontSize.addEventListener('click', () => {
+            fontSize += 2;
+            localStorage.setItem('fontSize', fontSize);
+            notepad.style.fontSize = fontSize + 'px';
+        });
 
-// Task List Persistence
-const taskList = document.getElementById('taskList');
-const taskInput = document.getElementById('taskInput');
-const addTaskButton = document.getElementById('addTaskButton');
-const clearAllButton = document.getElementById('clearAllButton');
+        decreaseFontSize.addEventListener('click', () => {
+            fontSize -= 2;
+            localStorage.setItem('fontSize', fontSize);
+            notepad.style.fontSize = fontSize + 'px';
+        });
 
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        // Task List Persistence
+        const taskList = document.getElementById('taskList');
+        const taskInput = document.getElementById('taskInput');
+        const addTaskButton = document.getElementById('addTaskButton');
+        const clearAllButton = document.getElementById('clearAllButton');
 
-function renderTasks() {
-    taskList.innerHTML = '';
-    tasks.forEach((task, index) => {
-        const li = document.createElement('li');
-        li.classList.add('task');
-        li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span> <button class="deleteBtn" data-index="${index}">X</button>`;
-        taskList.appendChild(li);
-    });
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-}
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-addTaskButton.addEventListener('click', () => {
-    const taskText = taskInput.value.trim();
-    if (taskText) {
-        tasks.push({ text: taskText, completed: false });
-        taskInput.value = '';
-        renderTasks();
-    }
-});
+        function renderTasks() {
+            taskList.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.classList.add('task');
+                li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span> <button class="deleteBtn" data-index="${index}">X</button>`;
+                taskList.appendChild(li);
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
 
-taskList.addEventListener('click', (e) => {
-    if (e.target.classList.contains('deleteBtn')) {
-        const index = e.target.getAttribute('data-index');
-        tasks.splice(index, 1);
-        renderTasks();
-    } else if (e.target.type === 'checkbox') {
-        const index = e.target.getAttribute('data-index');
-        tasks[index].completed = e.target.checked;
-        renderTasks();
-    }
-});
-
-clearAllButton.addEventListener('click', () => {
-    tasks = [];
-    renderTasks();
-});
-
-renderTasks();
-
-// Save Template Functionality
-const saveTemplateButton = document.getElementById('saveTemplateButton');
-const loadTemplateButton = document.getElementById('loadTemplateButton');
-const templateListModal = document.getElementById('templateListModal');
-const templateList = document.getElementById('templateList');
-
-saveTemplateButton.addEventListener('click', () => {
-    const templateName = prompt('Enter template name:');
-    if (templateName) {
-        const template = {
-            name: templateName,
-            notepadText: notepad.value,
-            tasks: tasks
-        };
-        let savedTemplates = JSON.parse(localStorage.getItem('templates')) || [];
-        savedTemplates.push(template);
-        localStorage.setItem('templates', JSON.stringify(savedTemplates));
-        alert('Template saved successfully!');
-    }
-});
-
-loadTemplateButton.addEventListener('click', () => {
-    const savedTemplates = JSON.parse(localStorage.getItem('templates')) || [];
-    templateList.innerHTML = '';
-    savedTemplates.forEach((template, index) => {
-        const li = document.createElement('li');
-        li.textContent = template.name;
-        li.addEventListener('click', () => {
-            if (confirm(`Load template "${template.name}"?`)) {
-                notepad.value = template.notepadText;
-                tasks = template.tasks;
+        addTaskButton.addEventListener('click', () => {
+            const taskText = taskInput.value.trim();
+            if (taskText) {
+                tasks.push({ text: taskText, completed: false });
+                taskInput.value = '';
                 renderTasks();
-                templateListModal.style.display = 'none';
             }
         });
-        templateList.appendChild(li);
-    });
-    templateListModal.style.display = 'flex';
-});
 
-// Close template modal if clicked outside
-templateListModal.addEventListener('click', (e) => {
-    if (e.target === templateListModal) {
-        templateListModal.style.display = 'none';
-    }
-});
+        taskList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'INPUT') {
+                const index = e.target.getAttribute('data-index');
+                tasks[index].completed = e.target.checked;
+                renderTasks();
+            }
+            if (e.target.classList.contains('deleteBtn')) {
+                const index = e.target.getAttribute('data-index');
+                tasks.splice(index, 1);
+                renderTasks();
+            }
+        });
 
-// Timezone Display
-function updateTimezone() {
-    const date = new Date();
-    document.getElementById('usPacific').textContent = `US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}`;
-    document.getElementById('usMountain').textContent = `US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })}`;
-    document.getElementById('usCentral').textContent = `US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })}`;
-    document.getElementById('usEastern').textContent = `US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })}`;
-    document.getElementById('phPhilippines').textContent = `PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })}`;
-}
+        clearAllButton.addEventListener('click', () => {
+            tasks = [];
+            renderTasks();
+        });
 
-updateTimezone();
-setInterval(updateTimezone, 1000);
-</script>
+        renderTasks();
+
+        // Font Color Change
+        const fontColorInput = document.getElementById('fontColor');
+        const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4'; // Default color
+
+        fontColorInput.value = savedFontColor;
+        document.body.style.color = savedFontColor; // Set initial body text color
+
+        // Apply saved font color to notepad and task containers
+        document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+            el.style.color = savedFontColor;
+        });
+
+        fontColorInput.addEventListener('input', () => {
+            const color = fontColorInput.value;
+            localStorage.setItem('fontColor', color);  // Save new color
+            document.body.style.color = color;  // Update body text color
+
+            // Update font color for notepad and task containers
+            document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+                el.style.color = color;
+            });
+        });
+
+        // Timezone Display Functionality
+        function updateTimezone() {
+            const now = new Date();
+            const options = { timeZoneName: 'short', hour12: false };
+            
+            document.getElementById('usPacific').textContent = `US Pacific: ${now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', ...options })}`;
+            document.getElementById('usMountain').textContent = `US Mountain: ${now.toLocaleString('en-US', { timeZone: 'America/Denver', ...options })}`;
+            document.getElementById('usCentral').textContent = `US Central: ${now.toLocaleString('en-US', { timeZone: 'America/Chicago', ...options })}`;
+            document.getElementById('usEastern').textContent = `US Eastern: ${now.toLocaleString('en-US', { timeZone: 'America/New_York', ...options })}`;
+            document.getElementById('phPhilippines').textContent = `PH Philippines: ${now.toLocaleString('en-US', { timeZone: 'Asia/Manila', ...options })}`;
+        }
+
+        updateTimezone();
+        setInterval(updateTimezone, 60000);
+    </script>
 </body>
 </html>
