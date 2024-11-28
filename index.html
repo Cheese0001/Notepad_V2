@@ -134,6 +134,15 @@ button:hover {
 </head>
 <body>
 <div class="container">
+<!-- Timezone Display -->
+<div class="timezone-container" id="timezoneContainer">
+    <div class="timezone" id="usPacific">US Pacific: Loading...</div>
+    <div class="timezone" id="usMountain">US Mountain: Loading...</div>
+    <div class="timezone" id="usCentral">US Central: Loading...</div>
+    <div class="timezone" id="usEastern">US Eastern: Loading...</div>
+    <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
+</div>
+
 <!-- Theme Toggle and Font Size Controls -->
 <button id="themeToggle">Switch to Dark Mode</button>
 <button id="increaseFontSize">+</button>
@@ -158,14 +167,6 @@ button:hover {
     <input type="color" id="fontColor" value="#9DA8C4">
 </div>
 
-<!-- Timezone Display -->
-<div class="timezone-container" id="timezoneContainer">
-    <div class="timezone" id="usPacific">US Pacific: Loading...</div>
-    <div class="timezone" id="usMountain">US Mountain: Loading...</div>
-    <div class="timezone" id="usCentral">US Central: Loading...</div>
-    <div class="timezone" id="usEastern">US Eastern: Loading...</div>
-    <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
-</div>
 </div>
 
 <script>
@@ -241,7 +242,6 @@ addTaskButton.addEventListener('click', () => {
         tasks.push({ text: taskText, completed: false });
         taskInput.value = '';
         renderTasks();
-    }
 });
 
 taskList.addEventListener('click', (e) => {
