@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notepad Widget</title>
+  <title>Notepad and Task Tracker</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -11,43 +11,166 @@
       background-color: #f0f0f0;
       color: #333;
     }
-    .notepad-container {
+
+    .container {
+      display: flex;
+      gap: 20px;
+    }
+
+    .notepad-container, .task-container {
       width: 300px;
-      height: 200px;
-      resize: both;
-      overflow: auto;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       padding: 10px;
       background-color: #fff;
       border: 1px solid #ccc;
       border-radius: 5px;
     }
+
     textarea {
       width: 100%;
-      height: 100%;
+      height: 150px;
       border: none;
       resize: none;
       outline: none;
       font-size: 16px;
     }
+
+    .task-container input {
+      width: calc(100% - 50px);
+      padding: 5px;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .task-container button {
+      padding: 5px 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 3px;
+      background-color: #6200ea;
+      color: white;
+    }
+
+    .task-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .task-list li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+
+    .task-list li.completed {
+      text-decoration: line-through;
+      color: #aaa;
+    }
+
+    .task-buttons {
+      display: flex;
+      gap: 5px;
+    }
+
+    .clear-all {
+      margin-top: 10px;
+      width: 100%;
+      background-color: #d32f2f;
+    }
   </style>
 </head>
 <body>
 
-<div class="notepad-container">
-  <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+<div class="container">
+  <!-- Notepad -->
+  <div class="notepad-container">
+    <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+  </div>
+
+  <!-- Task Tracker -->
+  <div class="task-container">
+    <input type="text" id="taskInput" placeholder="Add a task..." />
+    <button id="addTaskButton">Add</button>
+    <ul id="taskList" class="task-list"></ul>
+    <button id="clearAllButton" class="clear-all">Clear All</button>
+  </div>
 </div>
 
 <script>
+  // Notepad Persistence
   const notepad = document.getElementById('notepad');
-
-  // Load saved data from local storage
   notepad.value = localStorage.getItem('notepadData') || '';
-
-  // Save data to local storage whenever text changes
   notepad.addEventListener('input', () => {
     localStorage.setItem('notepadData', notepad.value);
   });
+
+  // Task Tracker Logic
+  const taskInput = document.getElementById('taskInput');
+  const addTaskButton = document.getElementById('addTaskButton');
+  const taskList = document.getElementById('taskList');
+  const clearAllButton = document.getElementById('clearAllButton');
+
+  // Load tasks from local storage
+  const tasks = JSON.parse(localStorage.getItem('taskData')) || [];
+
+  const saveTasks = () => {
+    localStorage.setItem('taskData', JSON.stringify(tasks));
+  };
+
+  const renderTasks = () => {
+    taskList.innerHTML = '';
+    tasks.forEach((task, index) => {
+      const taskItem = document.createElement('li');
+      taskItem.className = task.completed ? 'completed' : '';
+      taskItem.innerHTML = `
+        <span>${task.text}</span>
+        <div class="task-buttons">
+          <button onclick="toggleComplete(${index})">✓</button>
+          <button onclick="removeTask(${index})">X</button>
+        </div>
+      `;
+      taskList.appendChild(taskItem);
+    });
+  };
+
+  const addTask = () => {
+    const taskText = taskInput.value.trim();
+    if (taskText) {
+      tasks.push({ text: taskText, completed: false });
+      saveTasks();
+      renderTasks();
+      taskInput.value = '';
+    }
+  };
+
+  const removeTask = (index) => {
+    tasks.splice(index, 1);
+    saveTasks();
+    renderTasks();
+  };
+
+  const toggleComplete = (index) => {
+    tasks[index].completed = !tasks[index].completed;
+    saveTasks();
+    renderTasks();
+  };
+
+  const clearAllTasks = () => {
+    tasks.length = 0;
+    saveTasks();
+    renderTasks();
+  };
+
+  // Attach event listeners
+  addTaskButton.addEventListener('click', addTask);
+  taskInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') addTask();
+  });
+  clearAllButton.addEventListener('click', clearAllTasks);
+
+  // Initial render
+  renderTasks();
 </script>
 
 </body>
