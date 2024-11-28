@@ -6,53 +6,32 @@
   <title>Notepad & Task Tracker</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
-    /* Base styles */
-    body {
-      font-family: 'Quicksand', sans-serif;
+    /* Ensure the background image covers the entire page */
+    html, body {
+      height: 100%; /* Make sure the body and html elements take full height */
       margin: 0;
       padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-image: url('Untitled design.jpg');  /* Set your image URL here */
-      background-size: cover;
-      background-position: no-repeat;
     }
 
+    body {
+      background-image: url('images/Untitled design (1).jpg'); /* Path to your image */
+      background-size: cover; /* This ensures the image covers the entire background */
+      background-position: center; /* Center the background image */
+      background-repeat: no-repeat; /* Prevent the image from repeating */
+    }
+
+    /* Your container styles */
     .container {
       width: 80%;
       max-width: 1000px;
       margin: auto;
       padding: 15px;
-      background-color: white;
+      background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white background */
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.3s, color 0.3s;
     }
 
-    .dark-theme {
-      background-color: #333333;
-      color: #f0f0f0;
-    }
-
-    .light-theme {
-      background-color: #ffffff;
-      color: #333333;
-    }
-
-    /* Notepad and Task Containers */
-    .notepad-container, .task-container {
-      min-width: 200px;
-      min-height: 150px;
-      margin-bottom: 5px;
-      padding: 8px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      resize: both;
-      overflow: auto;
-    }
-
+    /* Task List styling */
     .task-list {
       list-style-type: none;
       padding: 0;
@@ -61,21 +40,16 @@
     .task {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: space-between;
       margin-bottom: 8px;
       padding: 5px;
-    }
-
-    .task span {
-      text-align: left;
-      margin-left: 10px;
     }
 
     .task input[type="checkbox"] {
       margin-right: 8px;
     }
 
-    /* Button styles */
+    /* Buttons */
     button {
       padding: 8px 12px;
       border: none;
@@ -90,176 +64,124 @@
       background-color: #93B9CF;
     }
 
-    /* Delete button styling */
-    .task .delete-btn {
-      margin-left: 10px;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
-    /* Font color customization */
-    .font-color-picker {
-      margin-top: 5px;
-    }
-
-    .font-color-picker input[type="color"] {
-      width: 20px;
-      height: 20px;
-      border: none;
-      cursor: pointer;
-    }
-
-    /* Timezone display */
-    .timezone-container {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-    }
-
-    .timezone {
+    /* Notepad styling */
+    .notepad-container {
+      min-width: 200px;
+      min-height: 150px;
+      margin-bottom: 5px;
       padding: 8px;
       border-radius: 8px;
-      margin-right: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      resize: both;
+      overflow: auto;
+    }
+
+    .task-container {
+      min-width: 200px;
+      min-height: 150px;
+      margin-bottom: 5px;
+      padding: 8px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      resize: both;
+      overflow: auto;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- Theme Toggle and Font Size Controls -->
-    <button id="themeToggle">Switch to Dark Mode</button>
-    <button id="increaseFontSize">+</button>
-    <button id="decreaseFontSize">-</button>
+    <h1>Notepad & Task Tracker</h1>
 
-    <!-- Notepad Container -->
-    <div class="notepad-container" id="notepadContainer">
-      <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+    <!-- Notepad Section -->
+    <div class="notepad-container">
+      <h3>Notepad</h3>
+      <textarea id="notepad" rows="10" style="width: 100%;" placeholder="Type your notes here..."></textarea>
     </div>
 
-    <!-- Task List -->
+    <!-- Task Tracker Section -->
     <div class="task-container">
-      <input type="text" id="taskInput" placeholder="Add a task" />
-      <button id="addTaskButton">Add Task</button>
-      <button id="clearAllButton">Clear All Tasks</button>
+      <h3>Task Tracker</h3>
       <ul id="taskList" class="task-list"></ul>
+      <input type="text" id="taskInput" placeholder="Add new task" style="width: 80%; padding: 5px;">
+      <button onclick="addTask()">Add Task</button>
     </div>
-
-    <!-- Font Color Customization -->
-    <div class="font-color-picker">
-      <label for="fontColor">Font Color: </label>
-      <input type="color" id="fontColor" value="#9DA8C4">
-    </div>
-
-    <!-- Timezone Display -->
-    <div class="timezone-container" id="timezoneContainer">
-      <div class="timezone" id="usPacific">US Pacific: Loading...</div>
-      <div class="timezone" id="usMountain">US Mountain: Loading...</div>
-      <div class="timezone" id="usCentral">US Central: Loading...</div>
-      <div class="timezone" id="usEastern">US Eastern: Loading...</div>
-      <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
-    </div>
+    
+    <button onclick="saveData()">Save Data</button>
+    <button onclick="loadData()">Load Data</button>
   </div>
 
   <script>
-    // Theme Toggle Functionality
-    const themeToggle = document.getElementById('themeToggle');
-    let isDarkMode = localStorage.getItem('theme') === 'dark';
-    document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
+    // Retrieve saved data from local storage
+    function loadData() {
+      // Load notepad content
+      const notepadContent = localStorage.getItem('notepad');
+      if (notepadContent) {
+        document.getElementById('notepad').value = notepadContent;
+      }
 
-    themeToggle.addEventListener('click', () => {
-      isDarkMode = !isDarkMode;
-      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-      document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
-      themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-    });
-
-    // Notepad Persistence
-    const notepad = document.getElementById('notepad');
-    notepad.value = localStorage.getItem('notepadText') || '';
-
-    notepad.addEventListener('input', () => {
-      localStorage.setItem('notepadText', notepad.value);
-    });
-
-    // Font Size Controls (Persistence)
-    let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
-    notepad.style.fontSize = fontSize + 'px';
-
-    const increaseFontSize = document.getElementById('increaseFontSize');
-    const decreaseFontSize = document.getElementById('decreaseFontSize');
-
-    increaseFontSize.addEventListener('click', () => {
-      fontSize += 2;
-      localStorage.setItem('fontSize', fontSize);
-      notepad.style.fontSize = fontSize + 'px';
-    });
-
-    decreaseFontSize.addEventListener('click', () => {
-      fontSize -= 2;
-      localStorage.setItem('fontSize', fontSize);
-      notepad.style.fontSize = fontSize + 'px';
-    });
-
-    // Task List Persistence
-    const taskList = document.getElementById('taskList');
-    const taskInput = document.getElementById('taskInput');
-    const addTaskButton = document.getElementById('addTaskButton');
-    const clearAllButton = document.getElementById('clearAllButton');
-
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-    function renderTasks() {
-      taskList.innerHTML = '';
-      tasks.forEach((task, index) => {
+      // Load tasks
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      const taskList = document.getElementById('taskList');
+      taskList.innerHTML = ''; // Clear current tasks
+      tasks.forEach(task => {
         const li = document.createElement('li');
         li.classList.add('task');
         li.innerHTML = `
-          <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" />
-          <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span>
-          <button class="deleteBtn" data-index="${index}">X</button>
+          <span>${task}</span>
+          <button onclick="removeTask('${task}')">X</button>
         `;
         taskList.appendChild(li);
       });
+    }
+
+    // Save data to local storage
+    function saveData() {
+      // Save notepad content
+      const notepadContent = document.getElementById('notepad').value;
+      localStorage.setItem('notepad', notepadContent);
+
+      // Save tasks
+      const tasks = [];
+      const taskList = document.getElementById('taskList');
+      const taskItems = taskList.getElementsByTagName('li');
+      for (let i = 0; i < taskItems.length; i++) {
+        tasks.push(taskItems[i].getElementsByTagName('span')[0].innerText);
+      }
       localStorage.setItem('tasks', JSON.stringify(tasks));
     }
 
-    addTaskButton.addEventListener('click', () => {
-      const taskText = taskInput.value.trim();
-      if (taskText) {
-        tasks.push({ text: taskText, completed: false });
-        taskInput.value = '';
-        renderTasks();
+    // Add a new task
+    function addTask() {
+      const taskInput = document.getElementById('taskInput');
+      const taskValue = taskInput.value.trim();
+      if (taskValue) {
+        const taskList = document.getElementById('taskList');
+        const li = document.createElement('li');
+        li.classList.add('task');
+        li.innerHTML = `
+          <span>${taskValue}</span>
+          <button onclick="removeTask('${taskValue}')">X</button>
+        `;
+        taskList.appendChild(li);
+        taskInput.value = ''; // Clear input
+        saveData(); // Save data after adding task
       }
-    });
+    }
 
-    taskList.addEventListener('click', (e) => {
-      if (e.target.tagName === 'INPUT') {
-        const index = e.target.dataset.index;
-        tasks[index].completed = e.target.checked;
-        renderTasks();
-      } else if (e.target.classList.contains('deleteBtn')) {
-        const index = e.target.dataset.index;
-        tasks.splice(index, 1);
-        renderTasks();
-      }
-    });
+    // Remove a task
+    function removeTask(taskValue) {
+      const taskList = document.getElementById('taskList');
+      const tasks = Array.from(taskList.getElementsByTagName('li'));
+      tasks.forEach(task => {
+        if (task.getElementsByTagName('span')[0].innerText === taskValue) {
+          taskList.removeChild(task);
+        }
+      });
+      saveData(); // Save data after removing task
+    }
 
-    clearAllButton.addEventListener('click', () => {
-      tasks = [];
-      renderTasks();
-    });
-
-    renderTasks();
-
-    // Font Color Customization (Persistence)
-    const fontColorInput = document.getElementById('fontColor');
-    const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4';
-    document.body.style.color = savedFontColor;
-    fontColorInput.value = savedFontColor;
-
-    fontColorInput.addEventListener('input', (e) => {
-      document.body.style.color = e.target.value;
-      localStorage.setItem('fontColor', e.target.value);
-    });
+    // Load data on page load
+    window.onload = loadData;
   </script>
 </body>
 </html>
