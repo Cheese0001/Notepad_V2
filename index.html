@@ -5,11 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notepad and Task Tracker</title>
   <style>
+    :root {
+      --background-color: #f0f0f0;
+      --text-color: #333;
+      --container-bg: #fff;
+      --button-bg: #6200ea;
+      --button-color: white;
+      --completed-task-color: #aaa;
+    }
+
+    [data-theme="dark"] {
+      --background-color: #121212;
+      --text-color: #f0f0f0;
+      --container-bg: #1e1e1e;
+      --button-bg: #bb86fc;
+      --button-color: #000;
+      --completed-task-color: #555;
+    }
+
     body {
       font-family: 'Arial', sans-serif;
       margin: 20px;
-      background-color: #f0f0f0;
-      color: #333;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .container {
@@ -21,7 +40,7 @@
       width: 300px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       padding: 10px;
-      background-color: #fff;
+      background-color: var(--container-bg);
       border: 1px solid #ccc;
       border-radius: 5px;
     }
@@ -33,6 +52,8 @@
       resize: none;
       outline: none;
       font-size: 16px;
+      background-color: var(--container-bg);
+      color: var(--text-color);
     }
 
     .task-container input {
@@ -40,6 +61,9 @@
       padding: 5px;
       margin-bottom: 10px;
       font-size: 16px;
+      background-color: var(--container-bg);
+      color: var(--text-color);
+      border: 1px solid var(--text-color);
     }
 
     .task-container button {
@@ -48,8 +72,9 @@
       cursor: pointer;
       border: none;
       border-radius: 3px;
-      background-color: #6200ea;
-      color: white;
+      background-color: var(--button-bg);
+      color: var(--button-color);
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .task-list {
@@ -65,22 +90,25 @@
 
     .task-list li.completed {
       text-decoration: line-through;
-      color: #aaa;
+      color: var(--completed-task-color);
     }
 
-    .task-buttons {
-      display: flex;
-      gap: 5px;
-    }
-
-    .clear-all {
-      margin-top: 10px;
-      width: 100%;
-      background-color: #d32f2f;
+    .theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      padding: 10px;
+      font-size: 16px;
+      background-color: var(--button-bg);
+      color: var(--button-color);
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
     }
   </style>
 </head>
-<body>
+<body data-theme="light">
 
 <div class="container">
   <!-- Notepad -->
@@ -97,6 +125,9 @@
   </div>
 </div>
 
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" id="themeToggle">Toggle Theme</button>
+
 <script>
   // Notepad Persistence
   const notepad = document.getElementById('notepad');
@@ -111,7 +142,6 @@
   const taskList = document.getElementById('taskList');
   const clearAllButton = document.getElementById('clearAllButton');
 
-  // Load tasks from local storage
   const tasks = JSON.parse(localStorage.getItem('taskData')) || [];
 
   const saveTasks = () => {
@@ -162,15 +192,26 @@
     renderTasks();
   };
 
-  // Attach event listeners
   addTaskButton.addEventListener('click', addTask);
   taskInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') addTask();
   });
   clearAllButton.addEventListener('click', clearAllTasks);
 
-  // Initial render
   renderTasks();
+
+  // Theme Toggle Logic
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  body.setAttribute('data-theme', currentTheme);
+
+  themeToggle.addEventListener('click', () => {
+    const newTheme = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+    body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
 </script>
 
 </body>
