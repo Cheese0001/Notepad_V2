@@ -168,7 +168,7 @@
       localStorage.setItem('notepadText', notepad.value);
     });
 
-    // Font Size Controls
+    // Font Size Controls (Persistence)
     let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
     notepad.style.fontSize = fontSize + 'px';
 
@@ -238,15 +238,23 @@
 
     renderTasks();
 
-    // Font Color Customization
+    // Font Color Customization (Persistence)
     const fontColorInput = document.getElementById('fontColor');
-    fontColorInput.addEventListener('input', (e) => {
-      const color = e.target.value;
-      notepad.style.color = color;
-      taskList.style.color = color;
+    const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4';
+    document.body.style.color = savedFontColor;
+    fontColorInput.value = savedFontColor;
+
+    fontColorInput.addEventListener('input', () => {
+      const color = fontColorInput.value;
+      localStorage.setItem('fontColor', color);
+      document.body.style.color = color;
+      // Update font color for timezone
+      document.querySelectorAll('.timezone').forEach((zone) => {
+        zone.style.color = color;
+      });
     });
 
-    // Timezone Functionality
+    // Timezone Update Function
     function updateTimeZones() {
       const timeZones = [
         { id: 'usPacific', offset: -8 },
