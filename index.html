@@ -74,6 +74,13 @@
         .pastel-brown { background-color: #d7ccc8; }
         .pastel-blue { background-color: #bbdefb; }
         .pastel-green { background-color: #c8e6c9; }
+        .credits {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #888;
+        }
     </style>
 </head>
 <body>
@@ -112,6 +119,10 @@
         <ul id="task-list"></ul>
         <button id="clear-tasks">Clear All Tasks</button>
     </section>
+
+    <div class="credits">
+        Made by Copilot and Cheese000
+    </div>
 
     <script>
         // Theme Toggle with Persistence
@@ -239,12 +250,16 @@
 
         function updateTime() {
             const selectedZone = timezoneSelect.value;
+[_{{{CITATION{{{_1{](https://github.com/davinyvidal/Notepad-Browser/tree/1395e466534584183691d59939f10861884c04b4/file%2Ffile.php)
             const now = new Date();
             const formatter = new Intl.DateTimeFormat('en-US', {
                 timeZone: selectedZone,
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit        });
+                second: '2-digit',
+            });
+            currentTimeDisplay.textContent = `Current time in ${selectedZone}: ${formatter.format(now)}`;
+        }
 
         setInterval(updateTime, 1000);
 
