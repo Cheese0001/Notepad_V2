@@ -93,6 +93,29 @@
       color: var(--completed-task-color);
     }
 
+    .timezone-container {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .timezone {
+      background-color: var(--container-bg);
+      padding: 10px;
+      border-radius: 5px;
+      width: 100%;
+      text-align: center;
+      margin: 0 5px;
+    }
+
+    .timezone h3 {
+      margin: 0;
+    }
+
+    .timezone p {
+      margin: 5px 0;
+    }
+
     .theme-toggle {
       position: fixed;
       bottom: 20px;
@@ -122,6 +145,30 @@
     <button id="addTaskButton">Add</button>
     <ul id="taskList" class="task-list"></ul>
     <button id="clearAllButton" class="clear-all">Clear All</button>
+  </div>
+</div>
+
+<!-- Timezone Display -->
+<div class="timezone-container" id="timezoneContainer">
+  <div class="timezone" id="pacific">
+    <h3>Pacific</h3>
+    <p id="pacificTime">Loading...</p>
+    <p id="pacificDiff">Loading...</p>
+  </div>
+  <div class="timezone" id="mountain">
+    <h3>Mountain</h3>
+    <p id="mountainTime">Loading...</p>
+    <p id="mountainDiff">Loading...</p>
+  </div>
+  <div class="timezone" id="central">
+    <h3>Central</h3>
+    <p id="centralTime">Loading...</p>
+    <p id="centralDiff">Loading...</p>
+  </div>
+  <div class="timezone" id="philippines">
+    <h3>Philippines</h3>
+    <p id="philippinesTime">Loading...</p>
+    <p id="philippinesDiff">Loading...</p>
   </div>
 </div>
 
@@ -200,17 +247,45 @@
 
   renderTasks();
 
+  // Timezone Function
+  const updateTimes = () => {
+    const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const now = new Date();
+
+    const pacificTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    const mountainTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Denver' }));
+    const centralTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+    const philippinesTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+
+    document.getElementById('pacificTime').textContent = pacificTime.toLocaleTimeString('en-US', options);
+    document.getElementById('mountainTime').textContent = mountainTime.toLocaleTimeString('en-US', options);
+    document.getElementById('centralTime').textContent = centralTime.toLocaleTimeString('en-US', options);
+    document.getElementById('philippinesTime').textContent = philippinesTime.toLocaleTimeString('en-US', options);
+
+    // Calculate time difference (in hours)
+    const pacificOffset = pacificTime.getHours() - now.getHours();
+    const mountainOffset = mountainTime.getHours() - now.getHours();
+    const centralOffset = centralTime.getHours() - now.getHours();
+    const philippinesOffset = philippinesTime.getHours() - now.getHours();
+
+    document.getElementById('pacificDiff').textContent = `Pacific time difference: ${pacificOffset} hrs`;
+    document.getElementById('mountainDiff').textContent = `Mountain time difference: ${mountainOffset} hrs`;
+    document.getElementById('centralDiff').textContent = `Central time difference: ${centralOffset} hrs`;
+    document.getElementById('philippinesDiff').textContent = `Philippines time difference: ${philippinesOffset} hrs`;
+  };
+
+  setInterval(updateTimes, 60000); // Update every minute
+  updateTimes(); // Initial call to set the time on load
+
   // Theme Toggle Logic
   const themeToggle = document.getElementById('themeToggle');
-  const body = document.body;
-
-  const currentTheme = localStorage.getItem('theme') || 'light';
-  body.setAttribute('data-theme', currentTheme);
-
   themeToggle.addEventListener('click', () => {
-    const newTheme = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-    body.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+    const currentTheme = document.body.getAttribute('data-theme');
+    if (currentTheme === 'light') {
+      document.body.setAttribute('data-theme', 'dark');
+    } else {
+      document.body.setAttribute('data-theme', 'light');
+    }
   });
 </script>
 
