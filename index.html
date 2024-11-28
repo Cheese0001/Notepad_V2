@@ -112,31 +112,6 @@ button:hover {
   cursor: pointer;
 }
 
-/* Timezone Container */
-.timezone-container {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-
-.timezone {
-  padding: 8px;
-  border-radius: 8px;
-  margin-right: 10px;
-}
-
-/* Notepad textarea */
-.notepad-container textarea {
-  font-family: 'Quicksand', sans-serif;
-  font-size: 16px;
-  width: 100%;
-  height: 200px;
-  padding: 8px;
-  border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid #ccc;
-}
-
 /* Magical Notes Sidebar */
 #magicalNotesSidebar {
   position: absolute;
@@ -268,145 +243,169 @@ const decreaseFontSize = document.getElementById('decreaseFontSize');
 
 increaseFontSize.addEventListener('click', () => {
   let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
-  notepad.style.fontSize = `${currentFontSize + 2}px`;
+  notepad.style.fontSize = (currentFontSize + 2) + 'px';
 });
 
 decreaseFontSize.addEventListener('click', () => {
   let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
-  notepad.style.fontSize = `${Math.max(12, currentFontSize - 2)}px`;
+  notepad.style.fontSize = (currentFontSize - 2) + 'px';
 });
 
-// Task Management
+// Font Color Customization
+const fontColorPicker = document.getElementById('fontColor');
+fontColorPicker.addEventListener('input', (e) => {
+  notepad.style.color = e.target.value;
+});
+
+// Task List Functions
 const taskInput = document.getElementById('taskInput');
-const addTaskButton = document.getElementById('addTaskButton');
 const taskList = document.getElementById('taskList');
+const addTaskButton = document.getElementById('addTaskButton');
 const clearAllButton = document.getElementById('clearAllButton');
 
 addTaskButton.addEventListener('click', () => {
-  const taskContent = taskInput.value;
-  if (taskContent.trim()) {
-    const task = { content: taskContent, completed: false };
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-    tasks.push(task);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-    addTaskToList(task);
+  const taskText = taskInput.value;
+  if (taskText.trim() !== '') {
+    const taskItem = document.createElement('li');
+    taskItem.classList.add('task');
+    taskItem.innerHTML = `
+      <input type="checkbox">
+      <span>${taskText}</span>
+      <button class="delete-button">X</button>
+    `;
+    taskList.appendChild(taskItem);
     taskInput.value = '';
+
+    // Save tasks to localStorage
+    saveTasks();
   }
 });
 
-function addTaskToList(task) {
-  const taskItem = document.createElement('li');
-  taskItem.className = 'task';
-  const taskText = document.createElement('span');
-  taskText.textContent = task.content;
-  if (task.completed) {
-    taskText.style.textDecoration = 'line-through';
-  }
-  const checkBox = document.createElement('input');
-  checkBox.type = 'checkbox';
-  checkBox.checked = task.completed;
-  checkBox.addEventListener('change', () => {
-    task.completed = checkBox.checked;
-    taskText.style.textDecoration = task.completed ? 'line-through' : '';
-    saveTasks();
-  });
-
-  const deleteButton = document.createElement('button');
-  deleteButton.textContent = 'X';
-  deleteButton.className = 'delete-button';
-  deleteButton.addEventListener('click', () => {
-    taskItem.remove();
-    removeTask(task);
-    saveTasks();
-  });
-
-  taskItem.appendChild(checkBox);
-  taskItem.appendChild(taskText);
-  taskItem.appendChild(deleteButton);
-  taskList.appendChild(taskItem);
-}
-
-function saveTasks() {
-  const tasks = [];
-  document.querySelectorAll('.task').forEach(taskItem => {
-    const taskContent = taskItem.querySelector('span').textContent;
-    const taskCompleted = taskItem.querySelector('input[type="checkbox"]').checked;
-    tasks.push({ content: taskContent, completed: taskCompleted });
-  });
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-function removeTask(task) {
-  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  tasks = tasks.filter(t => t.content !== task.content);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
+// Clear All Tasks
 clearAllButton.addEventListener('click', () => {
   taskList.innerHTML = '';
-  localStorage.removeItem('tasks');
+  saveTasks();
 });
 
-// Load tasks from localStorage
-window.addEventListener('DOMContentLoaded', () => {
-  let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-  tasks.forEach(task => addTaskToList(task));
+// Delete Task
+taskList.addEventListener('click', (e) => {
+  if (e.target.classList.contains('delete-button')) {
+    e.target.parentElement.remove();
+    saveTasks();
+  }
 });
 
-// Sidebar for Magical Notes Templates
+// Save Tasks to localStorage
+function saveTasks() {
+  const tasks = [];
+  taskList.querySelectorAll('.task').forEach((taskItem) => {
+    tasks.push(taskItem.querySelector('span').textContent);
+  });
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Load Tasks from localStorage
+function loadTasks() {
+  const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+  tasks.forEach((taskText) => {
+    const taskItem = document.createElement('li');
+    taskItem.classList.add('task');
+    taskItem.innerHTML = `
+      <input type="checkbox">
+      <span>${taskText}</span>
+      <button class="delete-button">X</button>
+    `;
+    taskList.appendChild(taskItem);
+  });
+}
+
+// Save Note Template
 const saveTemplateButton = document.getElementById('saveTemplateButton');
-const templateList = document.getElementById('templateList');
 const magicalNotesSidebar = document.getElementById('magicalNotesSidebar');
-const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+const templateList = document.getElementById('templateList');
 
-document.getElementById('addTemplateBtn').addEventListener('click', () => {
+saveTemplateButton.addEventListener('click', () => {
+  const noteContent = notepad.value;
+  if (noteContent.trim() !== '') {
+    const templateItem = document.createElement('li');
+    templateItem.classList.add('template-item');
+    templateItem.innerHTML = `
+      <span>${noteContent}</span>
+      <button class="delete-button">X</button>
+    `;
+    templateList.appendChild(templateItem);
+
+    // Save templates to localStorage
+    saveTemplates();
+  }
+});
+
+// Load Templates from localStorage
+function loadTemplates() {
+  const templates = JSON.parse(localStorage.getItem('templates')) || [];
+  templates.forEach((templateContent) => {
+    const templateItem = document.createElement('li');
+    templateItem.classList.add('template-item');
+    templateItem.innerHTML = `
+      <span>${templateContent}</span>
+      <button class="delete-button">X</button>
+    `;
+    templateList.appendChild(templateItem);
+  });
+}
+
+// Save templates to localStorage
+function saveTemplates() {
+  const templates = [];
+  templateList.querySelectorAll('.template-item').forEach((templateItem) => {
+    templates.push(templateItem.querySelector('span').textContent);
+  });
+  localStorage.setItem('templates', JSON.stringify(templates));
+}
+
+// Delete Template
+templateList.addEventListener('click', (e) => {
+  if (e.target.classList.contains('delete-button')) {
+    e.target.parentElement.remove();
+    saveTemplates();
+  }
+});
+
+// Open Sidebar for Templates
+const addTemplateBtn = document.getElementById('addTemplateBtn');
+addTemplateBtn.addEventListener('click', () => {
   magicalNotesSidebar.style.visibility = 'visible';
 });
 
+// Close Sidebar
+const closeSidebarBtn = document.getElementById('closeSidebarBtn');
 closeSidebarBtn.addEventListener('click', () => {
   magicalNotesSidebar.style.visibility = 'hidden';
-});
-
-// Save Template
-saveTemplateButton.addEventListener('click', () => {
-  const template = { content: notepad.value };
-  let templates = JSON.parse(localStorage.getItem('templates')) || [];
-  templates.push(template);
-  localStorage.setItem('templates', JSON.stringify(templates));
-
-  const templateItem = document.createElement('li');
-  templateItem.className = 'template-item';
-  templateItem.textContent = template.content;
-  const deleteButton = document.createElement('button');
-  deleteButton.className = 'delete-button';
-  deleteButton.textContent = 'Delete';
-  deleteButton.onclick = () => {
-    templateItem.remove();
-    templates = templates.filter(t => t.content !== template.content);
-    localStorage.setItem('templates', JSON.stringify(templates));
+});function updateTimezones() {
+  const timezones = {
+    usPacific: 'America/Los_Angeles',
+    usMountain: 'America/Denver',
+    usCentral: 'America/Chicago',
+    usEastern: 'America/New_York',
+    phPhilippines: 'Asia/Manila'
   };
-  templateItem.appendChild(deleteButton);
-  templateList.appendChild(templateItem);
-});
 
-// Load Templates
-window.addEventListener('DOMContentLoaded', () => {
-  let templates = JSON.parse(localStorage.getItem('templates')) || [];
-  templates.forEach(template => {
-    const templateItem = document.createElement('li');
-    templateItem.className = 'template-item';
-    templateItem.textContent = template.content;
-    const deleteButton = document.createElement('button');
-    deleteButton.className = 'delete-button';
-    deleteButton.textContent = 'Delete';
-    deleteButton.onclick = () => {
-      templateItem.remove();
-      templates = templates.filter(t => t.content !== template.content);
-      localStorage.setItem('templates', JSON.stringify(templates));
-    };
-    templateItem.appendChild(deleteButton);
-    templateList.appendChild(templateItem);
-  });
+  for (const [id, timezone] of Object.entries(timezones)) {
+    const timezoneElement = document.getElementById(id);
+    const time = new Date().toLocaleString('en-US', { timeZone: timezone });
+    timezoneElement.textContent = `${id.replace(/([A-Z])/g, ' $1')}: ${time}`;
+  }
+}
+
+// Update timezones every minute
+setInterval(updateTimezones, 60000);
+updateTimezones(); // Initial call
+
+
+// Load stored data on page load
+document.addEventListener('DOMContentLoaded', () => {
+  loadTasks();
+  loadTemplates();
 });
 </script>
 </body>
