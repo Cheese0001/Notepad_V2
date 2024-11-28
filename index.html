@@ -4,13 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Tracker Widget</title>
-    <button id="increase-font" class="button">+</button>
-<button id="decrease-font" class="button">-</button>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
         /* Base Styles */
         body {
-            font-family: 'Star 2P', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f0f0f0;
             display: flex;
             flex-direction: column;
@@ -101,19 +100,31 @@
         /* Theme Toggle */
         .theme-button {
             position: fixed;
-            bottom: 20px;
-            left: 20px;
+            bottom: 10px;
+            left: 10px;
             padding: 10px;
             background-color: #9DA8C4;
             color: white;
             border-radius: 5px;
             cursor: pointer;
         }
+
+        /* Collapsible container for font color buttons */
+        .color-toggle-container {
+            position: absolute;
+            bottom: 40px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .color-button {
+            background-color: #9DA8C4;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
-    <div class="theme-button" onclick="toggleTheme()">Toggle Theme</div>
-
     <div id="mainContainer" class="container">
         <!-- Time Zone Container -->
         <div class="time-zone-container">
@@ -134,22 +145,31 @@
         <!-- Notepad Container -->
         <div class="notepad-container" id="notepad-container">
             <textarea id="notepad" placeholder="Write your notes here..." rows="10" style="width: 100%; font-size: 18px;"></textarea>
-            <div class="resize-handle" id="resize-handle"></div>
+        </div>
+
+        <!-- Font Size Buttons -->
+        <div class="button-container">
+            <button id="increase-font" class="button">+</button>
+            <button id="decrease-font" class="button">-</button>
         </div>
 
         <!-- Task Container -->
         <div class="task-container" id="task-container">
-            <ul id="task-list"></ul>
+            <input type="text" id="task-input" placeholder="Enter your task..." />
             <button class="button" onclick="addTask()">Add Task</button>
             <button class="button" onclick="clearTasks()">Clear All Tasks</button>
+            <ul id="task-list"></ul>
         </div>
 
-        <!-- Font Color Customization -->
-        <div class="toggle-container">
+        <!-- Font Color Customization (Collapsible) -->
+        <div class="color-toggle-container">
             <button class="button" onclick="changeFontColor('purple')">Purple Font</button>
             <button class="button" onclick="changeFontColor('pink')">Pink Font</button>
             <button class="button" onclick="changeFontColor('brown')">Brown Font</button>
         </div>
+
+        <!-- Theme Toggle -->
+        <div class="theme-button" onclick="toggleTheme()">Toggle Theme</div>
     </div>
 
     <script>
@@ -183,10 +203,11 @@
 
         // Add Task Functionality
         function addTask() {
-            const taskText = prompt("Enter task:");
+            const taskText = document.getElementById('task-input').value;
             if (taskText) {
                 tasks.push({ text: taskText, completed: false });
                 updateTaskList();
+                document.getElementById('task-input').value = '';
             }
         }
 
@@ -224,10 +245,12 @@
             updateTaskList();
         }
 
-        // Update Time Zones
+        // Update Time Zones (12-hour format)
         function updateTimeZones() {
-            const options = { timeZoneName: 'short' };
+            const options = { hour: '2-digit', minute: '2-digit', hour12: true };
             const pacific = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', ...options });
+            const mountain = new Date().toLocaleString('en-US
+
             const mountain = new Date().toLocaleString('en-US', { timeZone: 'America/Denver', ...options });
             const central = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago', ...options });
             const philippines = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', ...options });
@@ -236,40 +259,47 @@
             document.getElementById('mountain').textContent = mountain;
             document.getElementById('central').textContent = central;
             document.getElementById('philippines').textContent = philippines;
-        } document.getElementById('increase-font').addEventListener('click', function() {
-    const currentSize = parseInt(window.getComputedStyle(notepad).fontSize);
-    notepad.style.fontSize = (currentSize + 2) + 'px';
-});
-
-document.getElementById('decrease-font').addEventListener('click', function() {
-    const currentSize = parseInt(window.getComputedStyle(notepad).fontSize);
-    notepad.style.fontSize = (currentSize - 2) + 'px';
-});
-const resizeHandle = document.getElementById('resize-handle');
-let isResizing = false;
-
-resizeHandle.addEventListener('mousedown', (e) => {
-    isResizing = true;
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', () => {
-        isResizing = false;
-        document.removeEventListener('mousemove', handleMouseMove);
-    });
-});
-
-function handleMouseMove(e) {
-    if (isResizing) {
-        const newWidth = e.clientX - notepadContainer.offsetLeft;
-        const newHeight = e.clientY - notepadContainer.offsetTop;
-        notepadContainer.style.width = `${newWidth}px`;
-        notepadContainer.style.height = `${newHeight}px`;
-    }
-}
-
+        }
 
         // Initial Setup
         updateTimeZones();
         setInterval(updateTimeZones, 60000); // Update every minute
+
+        // Font Size Adjustments
+        document.getElementById('increase-font').addEventListener('click', function() {
+            const notepad = document.getElementById('notepad');
+            const currentSize = parseInt(window.getComputedStyle(notepad).fontSize);
+            notepad.style.fontSize = (currentSize + 2) + 'px';
+        });
+
+        document.getElementById('decrease-font').addEventListener('click', function() {
+            const notepad = document.getElementById('notepad');
+            const currentSize = parseInt(window.getComputedStyle(notepad).fontSize);
+            notepad.style.fontSize = (currentSize - 2) + 'px';
+        });
+
+        // Resize Notepad Container
+        const resizeHandle = document.getElementById('resize-handle');
+        let isResizing = false;
+
+        resizeHandle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', () => {
+                isResizing = false;
+                document.removeEventListener('mousemove', handleMouseMove);
+            });
+        });
+
+        function handleMouseMove(e) {
+            if (isResizing) {
+                const notepadContainer = document.getElementById('notepad-container');
+                const newWidth = e.clientX - notepadContainer.offsetLeft;
+                const newHeight = e.clientY - notepadContainer.offsetTop;
+                notepadContainer.style.width = `${newWidth}px`;
+                notepadContainer.style.height = `${newHeight}px`;
+            }
+        }
     </script>
 </body>
 </html>
