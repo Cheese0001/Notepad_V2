@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Tracker Widget</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
         /* Base Styles */
@@ -100,31 +99,19 @@
         /* Theme Toggle */
         .theme-button {
             position: fixed;
-            bottom: 10px;
-            left: 10px;
+            bottom: 20px;
+            left: 20px;
             padding: 10px;
             background-color: #9DA8C4;
             color: white;
             border-radius: 5px;
             cursor: pointer;
         }
-
-        /* Collapsible container for font color buttons */
-        .color-toggle-container {
-            position: absolute;
-            bottom: 40px;
-            left: 10px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .color-button {
-            background-color: #9DA8C4;
-            margin: 5px;
-        }
     </style>
 </head>
 <body>
+    <div class="theme-button" onclick="toggleTheme()">Toggle Theme</div>
+
     <div id="mainContainer" class="container">
         <!-- Time Zone Container -->
         <div class="time-zone-container">
@@ -147,29 +134,26 @@
             <textarea id="notepad" placeholder="Write your notes here..." rows="10" style="width: 100%; font-size: 18px;"></textarea>
         </div>
 
-        <!-- Font Size Buttons -->
-        <div class="button-container">
+        <!-- Font Size Buttons Below Notepad -->
+        <div>
             <button id="increase-font" class="button">+</button>
             <button id="decrease-font" class="button">-</button>
         </div>
 
-        <!-- Task Container -->
+        <!-- Task Input Field Above Task Buttons -->
         <div class="task-container" id="task-container">
-            <input type="text" id="task-input" placeholder="Enter your task..." />
+            <input id="task-input" type="text" placeholder="Enter task..." style="width: 100%; padding: 10px; margin-bottom: 10px;">
+            <ul id="task-list"></ul>
             <button class="button" onclick="addTask()">Add Task</button>
             <button class="button" onclick="clearTasks()">Clear All Tasks</button>
-            <ul id="task-list"></ul>
         </div>
 
-        <!-- Font Color Customization (Collapsible) -->
-        <div class="color-toggle-container">
+        <!-- Font Color Customization -->
+        <div class="toggle-container">
             <button class="button" onclick="changeFontColor('purple')">Purple Font</button>
             <button class="button" onclick="changeFontColor('pink')">Pink Font</button>
             <button class="button" onclick="changeFontColor('brown')">Brown Font</button>
         </div>
-
-        <!-- Theme Toggle -->
-        <div class="theme-button" onclick="toggleTheme()">Toggle Theme</div>
     </div>
 
     <script>
@@ -203,11 +187,11 @@
 
         // Add Task Functionality
         function addTask() {
-            const taskText = document.getElementById('task-input').value;
+            const taskText = document.getElementById('task-input').value.trim();
             if (taskText) {
                 tasks.push({ text: taskText, completed: false });
                 updateTaskList();
-                document.getElementById('task-input').value = '';
+                document.getElementById('task-input').value = ''; // Clear input field
             }
         }
 
@@ -245,12 +229,10 @@
             updateTaskList();
         }
 
-        // Update Time Zones (12-hour format)
+        // Update Time Zones
         function updateTimeZones() {
             const options = { hour: '2-digit', minute: '2-digit', hour12: true };
             const pacific = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', ...options });
-            const mountain = new Date().toLocaleString('en-US
-
             const mountain = new Date().toLocaleString('en-US', { timeZone: 'America/Denver', ...options });
             const central = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago', ...options });
             const philippines = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', ...options });
@@ -300,6 +282,7 @@
                 notepadContainer.style.height = `${newHeight}px`;
             }
         }
+
     </script>
 </body>
 </html>
