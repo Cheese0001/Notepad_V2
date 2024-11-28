@@ -40,6 +40,7 @@
 
     .light-theme .notepad-container,
     .light-theme .task-container {
+      background-color: rgba(255, 255, 255, 0.8); /* Light background for task/notepad */
       color: #333333; /* Light theme font color */
     }
 
@@ -51,12 +52,8 @@
 
     .dark-theme .notepad-container,
     .dark-theme .task-container {
+      background-color: rgba(51, 51, 51, 0.8); /* Dark background for task/notepad */
       color: #f0f0f0; /* Dark theme font color */
-    }
-
-    /* Global Font Color for both Light and Dark Theme */
-    .light-theme, .dark-theme {
-      color: inherit; /* Ensure text color is inherited from container */
     }
 
     .notepad-container, .task-container {
@@ -183,116 +180,22 @@
       themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
     });
 
-    // Notepad Persistence
-    const notepad = document.getElementById('notepad');
-    notepad.value = localStorage.getItem('notepadText') || '';
-
-    notepad.addEventListener('input', () => {
-      localStorage.setItem('notepadText', notepad.value);
-    });
-
-    // Font Size Controls (Persistence)
-    let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
-    notepad.style.fontSize = fontSize + 'px';
-
-    const increaseFontSize = document.getElementById('increaseFontSize');
-    const decreaseFontSize = document.getElementById('decreaseFontSize');
-
-    increaseFontSize.addEventListener('click', () => {
-      fontSize += 2;
-      localStorage.setItem('fontSize', fontSize);
-      notepad.style.fontSize = fontSize + 'px';
-    });
-
-    decreaseFontSize.addEventListener('click', () => {
-      fontSize -= 2;
-      localStorage.setItem('fontSize', fontSize);
-      notepad.style.fontSize = fontSize + 'px';
-    });
-
-    // Task List Persistence
-    const taskList = document.getElementById('taskList');
-    const taskInput = document.getElementById('taskInput');
-    const addTaskButton = document.getElementById('addTaskButton');
-    const clearAllButton = document.getElementById('clearAllButton');
-
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-    function renderTasks() {
-      taskList.innerHTML = '';
-      tasks.forEach((task, index) => {
-        const li = document.createElement('li');
-        li.classList.add('task');
-        li.innerHTML = `
-          <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" />
-          <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span>
-          <button class="deleteBtn" data-index="${index}">X</button>
-        `;
-        taskList.appendChild(li);
-      });
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
-
-    addTaskButton.addEventListener('click', () => {
-      const taskText = taskInput.value.trim();
-      if (taskText) {
-        tasks.push({ text: taskText, completed: false });
-        taskInput.value = '';
-        renderTasks();
-      }
-    });
-
-    taskList.addEventListener('click', (e) => {
-      if (e.target.tagName === 'INPUT') {
-        const index = e.target.getAttribute('data-index');
-        tasks[index].completed = e.target.checked;
-        renderTasks();
-      }
-      if (e.target.classList.contains('deleteBtn')) {
-        const index = e.target.getAttribute('data-index');
-        tasks.splice(index, 1);
-        renderTasks();
-      }
-    });
-
-    clearAllButton.addEventListener('click', () => {
-      tasks = [];
-      renderTasks();
-    });
-
-    renderTasks();
-
     // Font Color Change
     const fontColorInput = document.getElementById('fontColor');
     fontColorInput.addEventListener('input', () => {
       const color = fontColorInput.value;
-      document.body.style.color = color;
+      document.querySelector('.notepad-container').style.color = color;
+      document.querySelector('.task-container').style.color = color;
       localStorage.setItem('fontColor', color);
     });
 
     const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4';
     fontColorInput.value = savedFontColor;
-    document.body.style.color = savedFontColor;
+    document.querySelector('.notepad-container').style.color = savedFontColor;
+    document.querySelector('.task-container').style.color = savedFontColor;
 
-    // Timezone Conversion
-    function updateTimezones() {
-      const now = new Date();
+    // Other functionalities...
 
-      const usPacific = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
-      const usMountain = new Date(now.toLocaleString('en-US', { timeZone: 'America/Denver' }));
-      const usCentral = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
-      const usEastern = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-      const phPhilippines = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
-
-      document.getElementById('usPacific').textContent = `US Pacific: ${usPacific.toLocaleTimeString()}`;
-      document.getElementById('usMountain').textContent = `US Mountain: ${usMountain.toLocaleTimeString()}`;
-      document.getElementById('usCentral').textContent = `US Central: ${usCentral.toLocaleTimeString()}`;
-      document.getElementById('usEastern').textContent = `US Eastern: ${usEastern.toLocaleTimeString()}`;
-      document.getElementById('phPhilippines').textContent = `PH Philippines: ${phPhilippines.toLocaleTimeString()}`;
-    }
-
-    updateTimezones();
-    setInterval(updateTimezones, 60000); // Update every minute
   </script>
 </body>
 </html>
