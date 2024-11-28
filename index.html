@@ -26,35 +26,35 @@ width: 80%;
 max-width: 1000px;
 margin: auto;
 padding: 15px;
-background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container for light mode /
+background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container for light mode / */
 border-radius: 8px;
 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 transition: background-color 0.3s, color 0.3s, opacity 0.3s ease;
 }
 
-/ Light Mode /
+/* Light Mode */
 .light-theme .container {
 background-color: rgba(255, 255, 255, 0.8);
-color: #333333; / Light font color /
+color: #333333; /* Light font color */
 }
 
 .light-theme .notepad-container,
 .light-theme .task-container {
-color: #333333; / Light theme font color /
+color: #333333; /* Light theme font color */
 }
 
-/ Dark Mode /
+/* Dark Mode */
 .dark-theme .container {
 background-color: rgba(51, 51, 51, 0.8);
-color: #f0f0f0; / Light font color for dark theme /
+color: #f0f0f0; /* Light font color for dark theme */
 }
 
 .dark-theme .notepad-container,
 .dark-theme .task-container {
-color: #f0f0f0; / Light font color for dark theme /
+color: #f0f0f0; /* Light font color for dark theme */
 }
 
-/ Global Font Color /
+/* Global Font Color */
 body, .notepad-container, .task-container {
 transition: color 0.3s ease;
 }
@@ -81,8 +81,8 @@ display: flex;
 align-items: center;
 justify-content: space-between;
 margin-bottom: 2px;
-padding: 3px; / Reduced padding for closer line spacing /
-font-size: 13px; / Font size set to 13px /
+padding: 3px; /* Reduced padding for closer line spacing */
+font-size: 13px; /* Font size set to 13px */
 }
 
 .task input[type="checkbox"] {
@@ -126,55 +126,54 @@ border-radius: 8px;
 margin-right: 10px;
 }
 
-/ Change the font-family of the notepad to Quicksand /
+/* Change the font-family of the notepad to Quicksand */
 .notepad-container textarea {
 font-family: 'Quicksand', sans-serif;
-font-size: 16px; / Default font size */
+font-size: 16px; /* Default font size */
 }
 </style>
 </head>
 <body>
 <div class="container">
-<!-- Theme Toggle and Font Size Controls -->
-<button id="themeToggle">Switch to Dark Mode</button>
-<button id="increaseFontSize">+</button>
-<button id="decreaseFontSize">-</button>
+  <!-- Theme Toggle and Font Size Controls -->
+  <button id="themeToggle">Switch to Dark Mode</button>
+  <button id="increaseFontSize">+</button>
+  <button id="decreaseFontSize">-</button>
 
-<!-- Notepad Container -->
-<div class="notepad-container" id="notepadContainer">
-<textarea id="notepad" placeholder="Write your notes here..."></textarea>
-</div>
+  <!-- Notepad Container -->
+  <div class="notepad-container" id="notepadContainer">
+    <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+  </div>
+
   <!-- Template Sidebar or Section -->
-<div id="magicalNotesSidebar" style="visibility: hidden;">
-  <h3>Saved Templates</h3>
-  <ul id="templateList"></ul> <!-- Where the templates will be listed -->
+  <div id="magicalNotesSidebar" style="visibility: hidden;">
+    <h3>Saved Templates</h3>
+    <ul id="templateList"></ul> <!-- Where the templates will be listed -->
+    <button id="saveTemplateButton">Save Current Note as Template</button> <!-- Button to save the current note as a template -->
+  </div>
 
-  <button id="saveTemplateButton">Save Current Note as Template</button> <!-- Button to save the current note as a template -->
-</div>
+  <!-- Task List -->
+  <div class="task-container">
+    <input type="text" id="taskInput" placeholder="Add a task" />
+    <button id="addTaskButton">Add Task</button>
+    <button id="clearAllButton">Clear All Tasks</button>
+    <ul id="taskList" class="task-list"></ul>
+  </div>
 
+  <!-- Font Color Customization -->
+  <div class="font-color-picker">
+    <label for="fontColor">Font Color: </label>
+    <input type="color" id="fontColor" value="#9DA8C4">
+  </div>
 
-<!-- Task List -->
-<div class="task-container">
-<input type="text" id="taskInput" placeholder="Add a task" />
-<button id="addTaskButton">Add Task</button>
-<button id="clearAllButton">Clear All Tasks</button>
-<ul id="taskList" class="task-list"></ul>
-</div>
-
-<!-- Font Color Customization -->
-<div class="font-color-picker">
-<label for="fontColor">Font Color: </label>
-<input type="color" id="fontColor" value="#9DA8C4">
-</div>
-
-<!-- Timezone Display -->
-<div class="timezone-container" id="timezoneContainer">
-<div class="timezone" id="usPacific">US Pacific: Loading...</div>
-<div class="timezone" id="usMountain">US Mountain: Loading...</div>
-<div class="timezone" id="usCentral">US Central: Loading...</div>
-<div class="timezone" id="usEastern">US Eastern: Loading...</div>
-<div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
-</div>
+  <!-- Timezone Display -->
+  <div class="timezone-container" id="timezoneContainer">
+    <div class="timezone" id="usPacific">US Pacific: Loading...</div>
+    <div class="timezone" id="usMountain">US Mountain: Loading...</div>
+    <div class="timezone" id="usCentral">US Central: Loading...</div>
+    <div class="timezone" id="usEastern">US Eastern: Loading...</div>
+    <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
+  </div>
 </div>
 
 <script>
@@ -184,18 +183,18 @@ let isDarkMode = localStorage.getItem('theme') === 'dark';
 document.body.classList.toggle('dark-theme', isDarkMode);
 document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
 document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-el.classList.toggle('dark-theme', isDarkMode);
+  el.classList.toggle('dark-theme', isDarkMode);
 });
 
 themeToggle.addEventListener('click', () => {
-isDarkMode = !isDarkMode;
-localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-document.body.classList.toggle('dark-theme', isDarkMode);
-document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-el.classList.toggle('dark-theme', isDarkMode);
-});
-themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+  isDarkMode = !isDarkMode;
+  localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+  document.body.classList.toggle('dark-theme', isDarkMode);
+  document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
+  document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+    el.classList.toggle('dark-theme', isDarkMode);
+  });
+  themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
 });
 
 // Notepad Persistence
@@ -203,26 +202,7 @@ const notepad = document.getElementById('notepad');
 notepad.value = localStorage.getItem('notepadText') || '';
 
 notepad.addEventListener('input', () => {
-localStorage.setItem('notepadText', notepad.value);
-});
-
-// Font Size Controls (Persistence)
-let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
-notepad.style.fontSize = fontSize + 'px';
-
-const increaseFontSize = document.getElementById('increaseFontSize');
-const decreaseFontSize = document.getElementById('decreaseFontSize');
-
-increaseFontSize.addEventListener('click', () => {
-fontSize += 2;
-localStorage.setItem('fontSize', fontSize);
-notepad.style.fontSize = fontSize + 'px';
-});
-
-decreaseFontSize.addEventListener('click', () => {
-fontSize -= 2;
-localStorage.setItem('fontSize', fontSize);
-notepad.style.fontSize = fontSize + 'px';
+  localStorage.setItem('notepadText', notepad.value);
 });
 
 // Task List Persistence
@@ -234,74 +214,83 @@ const clearAllButton = document.getElementById('clearAllButton');
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
 function renderTasks() {
-taskList.innerHTML = '';
-tasks.forEach((task, index) => {
-const li = document.createElement('li');
-li.classList.add('task');
-li.innerHTML = <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span> <button class="deleteBtn" data-index="${index}">X</button>;
-taskList.appendChild(li);
-});
-localStorage.setItem('tasks', JSON.stringify(tasks));
+  taskList.innerHTML = '';
+  tasks.forEach((task, index) => {
+    const li = document.createElement('li');
+    li.classList.add('task');
+    li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span> <button class="deleteBtn" data-index="${index}">X</button>`;
+    taskList.appendChild(li);
+  });
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 addTaskButton.addEventListener('click', () => {
-const taskText = taskInput.value.trim();
-if (taskText) {
-tasks.push({ text: taskText, completed: false });
-taskInput.value = '';
-renderTasks();
-}
-});
-
-taskList.addEventListener('click', (e) => {
-if (e.target.classList.contains('deleteBtn')) {
-const index = e.target.getAttribute('data-index');
-tasks.splice(index, 1);
-renderTasks();
-} else if (e.target.type === 'checkbox') {
-const index = e.target.getAttribute('data-index');
-tasks[index].completed = e.target.checked;
-renderTasks();
-}
+  if (taskInput.value) {
+    tasks.push({ text: taskInput.value, completed: false });
+    taskInput.value = '';
+    renderTasks();
+  }
 });
 
 clearAllButton.addEventListener('click', () => {
-tasks = [];
-renderTasks();
+  tasks = [];
+  renderTasks();
 });
 
-renderTasks();
-
-// Font Color Customization Persistence
-const fontColorInput = document.getElementById('fontColor');
-const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4';
-fontColorInput.value = savedFontColor;
-
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-el.style.color = savedFontColor;
+taskList.addEventListener('change', (event) => {
+  if (event.target.tagName === 'INPUT') {
+    const index = event.target.getAttribute('data-index');
+    tasks[index].completed = event.target.checked;
+    renderTasks();
+  }
 });
 
-fontColorInput.addEventListener('input', () => {
-const fontColor = fontColorInput.value;
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-el.style.color = fontColor;
-});
-localStorage.setItem('fontColor', fontColor);
+taskList.addEventListener('click', (event) => {
+  if (event.target.classList.contains('deleteBtn')) {
+    const index = event.target.getAttribute('data-index');
+    tasks.splice(index, 1);
+    renderTasks();
+  }
 });
 
-// Timezone Display
-function updateTimezone() {
-const date = new Date();
-document.getElementById('usPacific').textContent = US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })};
-document.getElementById('usMountain').textContent = US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })};
-document.getElementById('usCentral').textContent = US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })};
-document.getElementById('usEastern').textContent = US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })};
-document.getElementById('phPhilippines').textContent = PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })};
+renderTasks(); // Load saved tasks
+
+// Template Sidebar & Functions
+let templates = JSON.parse(localStorage.getItem('templates')) || [];
+const templateList = document.getElementById('templateList');
+const saveTemplateButton = document.getElementById('saveTemplateButton');
+const magicalNotesSidebar = document.getElementById('magicalNotesSidebar');
+
+function renderTemplates() {
+  templateList.innerHTML = '';
+  templates.forEach((template, index) => {
+    const li = document.createElement('li');
+    li.textContent = template.name;
+    li.addEventListener('click', () => {
+      notepad.value = template.content;
+    });
+    templateList.appendChild(li);
+  });
 }
 
-updateTimezone();
-setInterval(updateTimezone, 1000);
+saveTemplateButton.addEventListener('click', () => {
+  const templateName = prompt('Enter a name for your template:');
+  if (templateName && notepad.value.trim() !== '') {
+    templates.push({ name: templateName, content: notepad.value });
+    localStorage.setItem('templates', JSON.stringify(templates));
+    renderTemplates();
+  }
+});
+
+renderTemplates();
+
+// Toggle sidebar visibility
+function toggleSidebar() {
+  magicalNotesSidebar.style.visibility = magicalNotesSidebar.style.visibility === 'hidden' ? 'visible' : 'hidden';
+}
+
+document.getElementById('toggleSidebarButton').addEventListener('click', toggleSidebar);
+
 </script>
-<script src="MagicalNotes.js"></script>
 </body>
 </html>
