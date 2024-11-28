@@ -88,6 +88,12 @@ textarea {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  padding: 10px 0;
+}
+
+.task-list li.completed {
+  text-decoration: line-through;
+  color: #aaa;
 }
 
 .task-list li button {
@@ -95,9 +101,11 @@ textarea {
   font-size: 14px;
 }
 
-.task-list li.completed {
-  text-decoration: line-through;
-  color: #aaa;
+.task-list li:after {
+  content: "";
+  display: block;
+  border-bottom: 1px solid #ccc;
+  margin-top: 10px;
 }
 
 .timezone-container {
@@ -261,7 +269,6 @@ if (storedTheme) {
 const storedFont = localStorage.getItem('font');
 if (storedFont) {
   document.getElementById("notepad").style.fontFamily = storedFont;
-  document.getElementById("fontSelect").value = storedFont;
 }
 
 // Task Management
@@ -353,13 +360,13 @@ document.getElementById('decreaseTextSize').addEventListener('click', () => {
 
 // Task text size control
 document.getElementById('increaseTaskTextSize').addEventListener('click', () => {
-  const currentSize = parseInt(window.getComputedStyle(document.getElementById('taskInput')).fontSize);
-  document.getElementById('taskInput').style.fontSize = `${currentSize + 2}px`;
+  const currentSize = parseInt(window.getComputedStyle(document.getElementById('taskList')).fontSize);
+  document.getElementById('taskList').style.fontSize = `${currentSize + 2}px`;
 });
 
 document.getElementById('decreaseTaskTextSize').addEventListener('click', () => {
-  const currentSize = parseInt(window.getComputedStyle(document.getElementById('taskInput')).fontSize);
-  document.getElementById('taskInput').style.fontSize = `${currentSize - 2}px`;
+  const currentSize = parseInt(window.getComputedStyle(document.getElementById('taskList')).fontSize);
+  document.getElementById('taskList').style.fontSize = `${currentSize - 2}px`;
 });
 </script>
 </body>
