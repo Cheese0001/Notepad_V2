@@ -54,7 +54,7 @@
         }
 
         .time-zone-box {
-            background-color: #e0c3fc;
+            background-color: #E0C3FC;
             border-radius: 5px;
             padding: 10px;
             width: 20%;
@@ -274,49 +274,31 @@
         // Resize Handlers
         const resizeHandle = document.getElementById('resize-handle');
         const notepadContainer = document.getElementById('notepad-container');
-        let isResizing = false;
+        resizeHandle.addEventListener('mousedown', function(e) {
+            const startX = e.clientX;
+            const startY = e.clientY;
+            const startWidth = notepadContainer.offsetWidth;
+            const startHeight = notepadContainer.offsetHeight;
 
-        resizeHandle.addEventListener('mousedown', (e) => {
-            isResizing = true;
-            document.addEventListener('mousemove', handleResize);
-            document.addEventListener('mouseup', () => {
-                isResizing = false;
-                document.removeEventListener('mousemove', handleResize);
-            });
-        });
-
-        function handleResize(e) {
-            if (isResizing) {
-                const width = e.clientX - notepadContainer.offsetLeft;
-                const height = e.clientY - notepadContainer.offsetTop;
+            const onMouseMove = (e) => {
+                const width = startWidth + e.clientX - startX;
+                const height = startHeight + e.clientY - startY;
                 notepadContainer.style.width = `${width}px`;
                 notepadContainer.style.height = `${height}px`;
-            }
-        }
+            };
 
-        // Time Zone Calculation
-        function updateTimeZones() {
-            const currentDate = new Date();
-            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const onMouseUp = () => {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
 
-            function calculateTime(zoneOffset) {
-                const date = new Date(currentDate.getTime() + zoneOffset * 60 * 60 * 1000);
-                return date.toLocaleTimeString('en-US', options);
-            }
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+        });
 
-            document.getElementById('pacific').textContent = calculateTime(-8);
-            document.getElementById('mountain').textContent = calculateTime(-7);
-            document.getElementById('central').textContent = calculateTime(-6);
-            document.getElementById('philippines').textContent = calculateTime(8);
-
-            document.getElementById('pacific-diff').textContent = ` (${currentDate.getHours() + 8}hrs ahead of Pacific)`;
-            document.getElementById('mountain-diff').textContent = ` (${currentDate.getHours() + 9}hrs ahead of Mountain)`;
-            document.getElementById('central-diff').textContent = ` (${currentDate.getHours() + 10}hrs ahead of Central)`;
-        }
-
-        // Initialize
-        updateTimeZones();
-        setInterval(updateTimeZones, 60000);  // Update every minute
+        // Load Initial Data
+        updateTaskList();
+        toggleTheme(); // Apply saved theme
     </script>
 </body>
 </html>
