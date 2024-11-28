@@ -298,13 +298,12 @@ fontColorInput.addEventListener('input', () => {
 // Timezone Display
 function updateTimezone() {
     const date = new Date();
-    document.getElementById('usPacific').textContent = `US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}`;
-    document.getElementById('usMountain').textContent = `US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })}`;
-    document.getElementById('usCentral').textContent = `US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })}`;
-    document.getElementById('usEastern').textContent = `US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })}`;
-    document.getElementById('phPhilippines').textContent = `PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })}`;
+    document.getElementById('usPacific').textContent = US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })};
+    document.getElementById('usMountain').textContent = US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })};
+    document.getElementById('usCentral').textContent = US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })};
+    document.getElementById('usEastern').textContent = US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })};
+    document.getElementById('phPhilippines').textContent = PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })};
 }
-
 updateTimezone();
 setInterval(updateTimezone, 60000);
        // JavaScript to dynamically add the footer text
