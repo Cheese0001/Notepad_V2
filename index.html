@@ -215,7 +215,7 @@
 </div>
 
 <script>
-  // Timezone Display Logic
+  // Function to update the timezones
   function updateTimezones() {
     const pacificTime = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles", hour: '2-digit', minute: '2-digit' });
     const mountainTime = new Date().toLocaleString("en-US", { timeZone: "America/Denver", hour: '2-digit', minute: '2-digit' });
@@ -234,9 +234,91 @@
   setInterval(updateTimezones, 60000);
   updateTimezones(); // Initial call to display the time immediately
 
-  // Notepad Font Size Adjustment Logic
-  let currentFontSize = 16;
+  // Persist theme in localStorage
+  const storedTheme = localStorage.getItem('theme');
+  if (storedTheme) {
+    document.body.setAttribute('data-theme', storedTheme);
+  }
 
+  // Persist font family in localStorage
+  const storedFont = localStorage.getItem('font');
+  if (storedFont) {
+    document.getElementById("notepad").style.fontFamily = storedFont;
+    document.getElementById("fontSelect").value = storedFont;
+  }
+
+  // Persist notepad content
+  const storedNotes = localStorage.getItem('notes');
+  if (storedNotes) {
+    document.getElementById("notepad").value = storedNotes;
+  }
+
+  // Persist task list
+  const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+  if (storedTasks) {
+    const taskList = document.getElementById("taskList");
+    storedTasks.forEach(task => {
+      const listItem = document.createElement("li");
+      listItem.textContent = task.text;
+      if (task.completed) {
+        listItem.classList.add("completed");
+      }
+      // Add complete button
+      const completeButton = document.createElement("button");
+      completeButton.textContent = "✓";
+      completeButton.addEventListener("click", () => {
+        listItem.classList.toggle("completed");
+        saveTasks();
+      });
+      listItem.appendChild(completeButton);
+
+      // Add delete button
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "X";
+      deleteButton.addEventListener("click", () => {
+        listItem.remove();
+        saveTasks();
+      });
+      listItem.appendChild(deleteButton);
+
+      taskList.appendChild(listItem);
+    });
+  }
+
+  // Save notepad content to localStorage
+  document.getElementById("notepad").addEventListener("input", () => {
+    localStorage.setItem('notes', document.getElementById("notepad").value);
+  });
+
+  // Save tasks to localStorage
+  function saveTasks() {
+    const taskList = document.getElementById("taskList");
+    const tasks = [];
+    taskList.querySelectorAll("li").forEach((taskItem) => {
+      tasks.push({
+        text: taskItem.textContent.replace(/✓|X/g, '').trim(),
+        completed: taskItem.classList.contains("completed")
+      });
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+
+  // Theme Toggle
+  document.getElementById("themeToggle").addEventListener("click", () => {
+    const currentTheme = document.body.getAttribute("data-theme");
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    document.body.setAttribute("data-theme", newTheme);
+    localStorage.setItem('theme', newTheme);
+  });
+
+  // Font Selector Logic
+  document.getElementById("fontSelect").addEventListener("change", (event) => {
+    document.getElementById("notepad").style.fontFamily = event.target.value;
+    localStorage.setItem('font', event.target.value);
+  });
+
+  // Increase and Decrease Text Size Logic
+  let currentFontSize = 16;
   document.getElementById("increaseTextSize").addEventListener("click", () => {
     currentFontSize += 2;
     document.getElementById("notepad").style.fontSize = `${currentFontSize}px`;
@@ -264,6 +346,7 @@
       completeButton.textContent = "✓";
       completeButton.addEventListener("click", () => {
         listItem.classList.toggle("completed");
+        saveTasks();
       });
       listItem.appendChild(completeButton);
 
@@ -272,30 +355,22 @@
       deleteButton.textContent = "X";
       deleteButton.addEventListener("click", () => {
         listItem.remove();
+        saveTasks();
       });
       listItem.appendChild(deleteButton);
 
       taskList.appendChild(listItem);
       taskInput.value = ""; // Clear input
+      saveTasks(); // Save the updated tasks list
     }
   });
 
   // Clear All Tasks
   document.getElementById("clearAllButton").addEventListener("click", () => {
     taskList.innerHTML = "";
+    saveTasks(); // Clear tasks from localStorage
   });
 
-  // Theme Toggle Logic
-  let isDarkMode = false;
-  document.getElementById("themeToggle").addEventListener("click", () => {
-    isDarkMode = !isDarkMode;
-    document.body.setAttribute("data-theme", isDarkMode ? "dark" : "light");
-  });
-
-  // Font Selector Logic
-  document.getElementById("fontSelect").addEventListener("change", (event) => {
-    document.getElementById("notepad").style.fontFamily = event.target.value;
-  });
 </script>
 
 </body>
