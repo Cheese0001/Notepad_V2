@@ -1,407 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notepad & Task Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
-  <style>
-    /* Global Styles */
-    body {
-      font-family: 'Quicksand', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-image: url('images/Untitled design.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      transition: background-color 0.3s ease;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notepad & Task Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Quicksand', sans-serif;
+margin: 0;
+padding: 0;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+background-image: url('images/Untitled design.jpg');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+transition: background-color 0.3s ease;
+}
 
-    .container {
-      width: 80%;
-      max-width: 1000px;
-      margin: auto;
-      padding: 15px;
-      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container for light mode */
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.3s, color 0.3s, opacity 0.3s ease;
-    }
+.container {
+width: 80%;
+max-width: 1000px;
+margin: auto;
+padding: 15px;
+background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container for light mode /
+border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+transition: background-color 0.3s, color 0.3s, opacity 0.3s ease;
+}
 
-    /* Light Mode */
-    .light-theme .container {
-      background-color: rgba(255, 255, 255, 0.8);
-      color: #333333; /* Light font color */
-    }
+/ Light Mode /
+.light-theme .container {
+background-color: rgba(255, 255, 255, 0.8);
+color: #333333; / Light font color /
+}
 
-    .light-theme .notepad-container,
-    .light-theme .task-container {
-      color: #333333; /* Light theme font color */
-    }
+.light-theme .notepad-container,
+.light-theme .task-container {
+color: #333333; / Light theme font color /
+}
 
-    /* Dark Mode */
-    .dark-theme .container {
-      background-color: rgba(51, 51, 51, 0.8);
-      color: #f0f0f0; /* Light font color for dark theme */
-    }
+/ Dark Mode /
+.dark-theme .container {
+background-color: rgba(51, 51, 51, 0.8);
+color: #f0f0f0; / Light font color for dark theme /
+}
 
-    .dark-theme .notepad-container,
-    .dark-theme .task-container {
-      color: #f0f0f0; /* Light font color for dark theme */
-    }
+.dark-theme .notepad-container,
+.dark-theme .task-container {
+color: #f0f0f0; / Light font color for dark theme /
+}
 
-    /* Notepad & Task Styles */
-    .notepad-container, .task-container {
-      min-width: 200px;
-      min-height: 150px;
-      margin-bottom: 15px;
-      padding: 8px;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      resize: both;
-      overflow: auto;
-      transition: background-color 0.3s, color 0.3s;
-    }
+/ Global Font Color /
+body, .notepad-container, .task-container {
+transition: color 0.3s ease;
+}
 
-    .task-list {
-      list-style-type: none;
-      padding: 0;
-    }
+.notepad-container, .task-container {
+min-width: 200px;
+min-height: 150px;
+margin-bottom: 15px;
+padding: 8px;
+border-radius: 8px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+resize: both;
+overflow: auto;
+transition: background-color 0.3s, color 0.3s;
+}
 
-    .task {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 2px;
-      padding: 3px; /* Reduced padding for closer line spacing */
-      font-size: 13px; /* Font size set to 13px */
-    }
+.task-list {
+list-style-type: none;
+padding: 0;
+}
 
-    .task input[type="checkbox"] {
-      margin-right: 8px;
-    }
+.task {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 2px;
+padding: 3px; / Reduced padding for closer line spacing /
+font-size: 13px; / Font size set to 13px /
+}
 
-    button {
-      padding: 8px 12px;
-      border: none;
-      cursor: pointer;
-      background-color: #9DA8C4;
-      color: white;
-      font-size: 14px;
-      border-radius: 5px;
-    }
+.task input[type="checkbox"] {
+margin-right: 8px;
+}
 
-    button:hover {
-      background-color: #93B9CF;
-    }
+button {
+padding: 8px 12px;
+border: none;
+cursor: pointer;
+background-color: #9DA8C4;
+color: white;
+font-size: 14px;
+border-radius: 5px;
+}
 
-    /* Font Color Picker */
-    .font-color-picker {
-      margin-top: 5px;
-    }
+button:hover {
+background-color: #93B9CF;
+}
 
-    .font-color-picker input[type="color"] {
-      width: 20px;
-      height: 20px;
-      border: none;
-      cursor: pointer;
-    }
+.font-color-picker {
+margin-top: 5px;
+}
 
-    /* Magical Notes Sidebar */
-    #magicalNotesSidebar {
-      position: absolute;
-      left: 0;
-      top: 50px;
-      width: 200px;
-      background-color: rgba(255, 255, 255, 0.8);
-      padding: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      visibility: hidden;
-      border-radius: 8px;
-    }
+.font-color-picker input[type="color"] {
+width: 20px;
+height: 20px;
+border: none;
+cursor: pointer;
+}
 
-    #templateList {
-      list-style-type: none;
-      padding: 0;
-    }
+.timezone-container {
+display: flex;
+justify-content: space-between;
+margin-bottom: 15px;
+}
 
-    .template-item {
-      padding: 5px;
-      display: flex;
-      justify-content: space-between;
-      cursor: pointer;
-    }
+.timezone {
+padding: 8px;
+border-radius: 8px;
+margin-right: 10px;
+}
 
-    .template-item:hover {
-      background-color: #D0B0BD;
-    }
-
-    #saveTemplateButton {
-      padding: 10px 15px;
-      margin-top: 15px;
-      background-color: #C6B0C8;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
-    .delete-button {
-      background-color: #E57373;
-      color: white;
-      border: none;
-      cursor: pointer;
-      font-size: 12px;
-      padding: 5px;
-      border-radius: 5px;
-      margin-left: 10px;
-    }
-
-    /* Close Button */
-    #closeSidebarBtn {
-      padding: 10px;
-      background-color: #C6B0C8;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-  </style>
+/ Change the font-family of the notepad to Quicksand /
+.notepad-container textarea {
+font-family: 'Quicksand', sans-serif;
+font-size: 16px; / Default font size */
+}
+</style>
 </head>
 <body>
-  <div class="container">
-    <!-- Theme Toggle and Font Size Controls -->
-    <button id="themeToggle">Switch to Dark Mode</button>
-    <button id="increaseFontSize">+</button>
-    <button id="decreaseFontSize">-</button>
-    <button id="addTemplateBtn">Add Template</button> <!-- Button for Magical Notes Sidebar -->
+<div class="container">
+<!-- Theme Toggle and Font Size Controls -->
+<button id="themeToggle">Switch to Dark Mode</button>
+<button id="increaseFontSize">+</button>
+<button id="decreaseFontSize">-</button>
 
-    <!-- Notepad Container -->
-    <div class="notepad-container" id="notepadContainer">
-      <textarea id="notepad" placeholder="Write your notes here..."></textarea>
-    </div>
+<!-- Notepad Container -->
+<div class="notepad-container" id="notepadContainer">
+<textarea id="notepad" placeholder="Write your notes here..."></textarea>
+</div>
 
-    <!-- Magical Notes Sidebar -->
-    <div id="magicalNotesSidebar">
-      <h3>Saved Templates</h3>
-      <ul id="templateList"></ul> <!-- Where the templates will be listed -->
-      <button id="saveTemplateButton">Save Current Note as Template</button> <!-- Button to save the current note as a template -->
-      <button id="closeSidebarBtn">Close</button> <!-- Close Button -->
-    </div>
+<!-- Task List -->
+<div class="task-container">
+<input type="text" id="taskInput" placeholder="Add a task" />
+<button id="addTaskButton">Add Task</button>
+<button id="clearAllButton">Clear All Tasks</button>
+<ul id="taskList" class="task-list"></ul>
+</div>
 
-    <!-- Task List -->
-    <div class="task-container">
-      <input type="text" id="taskInput" placeholder="Add a task" />
-      <button id="addTaskButton">Add Task</button>
-      <button id="clearAllButton">Clear All Tasks</button>
-      <ul id="taskList" class="task-list"></ul>
-    </div>
+<!-- Font Color Customization -->
+<div class="font-color-picker">
+<label for="fontColor">Font Color: </label>
+<input type="color" id="fontColor" value="#9DA8C4">
+</div>
 
-    <!-- Font Color Customization -->
-    <div class="font-color-picker">
-      <label for="fontColor">Font Color: </label>
-      <input type="color" id="fontColor" value="#9DA8C4">
-    </div>
+<!-- Timezone Display -->
+<div class="timezone-container" id="timezoneContainer">
+<div class="timezone" id="usPacific">US Pacific: Loading...</div>
+<div class="timezone" id="usMountain">US Mountain: Loading...</div>
+<div class="timezone" id="usCentral">US Central: Loading...</div>
+<div class="timezone" id="usEastern">US Eastern: Loading...</div>
+<div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
+</div>
+</div>
 
-    <!-- Timezone Display -->
-    <div class="timezone-container" id="timezoneContainer">
-      <div class="timezone" id="usPacific">US Pacific: Loading...</div>
-      <div class="timezone" id="usMountain">US Mountain: Loading...</div>
-      <div class="timezone" id="usCentral">US Central: Loading...</div>
-      <div class="timezone" id="usEastern">US Eastern: Loading...</div>
-      <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
-    </div>
-  </div>
+<script>
+// Theme Toggle Functionality
+const themeToggle = document.getElementById('themeToggle');
+let isDarkMode = localStorage.getItem('theme') === 'dark';
+document.body.classList.toggle('dark-theme', isDarkMode);
+document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
+document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+el.classList.toggle('dark-theme', isDarkMode);
+});
 
-  <script>
-    // Theme Toggle Functionality
-    const themeToggle = document.getElementById('themeToggle');
-    let isDarkMode = localStorage.getItem('theme') === 'dark';
-    document.body.classList.toggle('dark-theme', isDarkMode);
-    document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
+themeToggle.addEventListener('click', () => {
+isDarkMode = !isDarkMode;
+localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+document.body.classList.toggle('dark-theme', isDarkMode);
+document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
+document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+el.classList.toggle('dark-theme', isDarkMode);
+});
+themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+});
 
-    themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+// Notepad Persistence
+const notepad = document.getElementById('notepad');
+notepad.value = localStorage.getItem('notepadText') || '';
 
-    themeToggle.addEventListener('click', () => {
-      isDarkMode = !isDarkMode;
-      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-      document.body.classList.toggle('dark-theme', isDarkMode);
-      document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
-      themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-    });
+notepad.addEventListener('input', () => {
+localStorage.setItem('notepadText', notepad.value);
+});
 
-    // Font Size Controls
-    const notepad = document.getElementById('notepad');
-    const increaseFontSize = document.getElementById('increaseFontSize');
-    const decreaseFontSize = document.getElementById('decreaseFontSize');
-    let currentFontSize = parseInt(localStorage.getItem('fontSize')) || 16;
-    notepad.style.fontSize = `${currentFontSize}px`;
+// Font Size Controls (Persistence)
+let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
+notepad.style.fontSize = fontSize + 'px';
 
-    increaseFontSize.addEventListener('click', () => {
-      currentFontSize += 2;
-      notepad.style.fontSize = `${currentFontSize}px`;
-      localStorage.setItem('fontSize', currentFontSize);
-    });
+const increaseFontSize = document.getElementById('increaseFontSize');
+const decreaseFontSize = document.getElementById('decreaseFontSize');
 
-    decreaseFontSize.addEventListener('click', () => {
-      if (currentFontSize > 12) {
-        currentFontSize -= 2;
-        notepad.style.fontSize = `${currentFontSize}px`;
-        localStorage.setItem('fontSize', currentFontSize);
-      }
-    });
+increaseFontSize.addEventListener('click', () => {
+fontSize += 2;
+localStorage.setItem('fontSize', fontSize);
+notepad.style.fontSize = fontSize + 'px';
+});
 
-    // Task List
-    const taskInput = document.getElementById('taskInput');
-    const taskList = document.getElementById('taskList');
-    const addTaskButton = document.getElementById('addTaskButton');
-    const clearAllButton = document.getElementById('clearAllButton');
-    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+decreaseFontSize.addEventListener('click', () => {
+fontSize -= 2;
+localStorage.setItem('fontSize', fontSize);
+notepad.style.fontSize = fontSize + 'px';
+});
 
-    function renderTasks() {
-      taskList.innerHTML = '';
-      tasks.forEach((task, index) => {
-        const li = document.createElement('li');
-        li.classList.add('task');
-        li.innerHTML = `
-          <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" />
-          ${task.text}
-          <button class="delete-button" data-index="${index}">Delete</button>
-        `;
-        taskList.appendChild(li);
-      });
-    }
+// Task List Persistence
+const taskList = document.getElementById('taskList');
+const taskInput = document.getElementById('taskInput');
+const addTaskButton = document.getElementById('addTaskButton');
+const clearAllButton = document.getElementById('clearAllButton');
 
-    addTaskButton.addEventListener('click', () => {
-      if (taskInput.value.trim()) {
-        tasks.push({ text: taskInput.value.trim(), completed: false });
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        taskInput.value = '';
-        renderTasks();
-      }
-    });
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-    taskList.addEventListener('click', (e) => {
-      if (e.target.type === 'checkbox') {
-        const taskIndex = e.target.getAttribute('data-index');
-        tasks[taskIndex].completed = e.target.checked;
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-      } else if (e.target.classList.contains('delete-button')) {
-        const taskIndex = e.target.getAttribute('data-index');
-        tasks.splice(taskIndex, 1);
-        localStorage.setItem('tasks', JSON.stringify(tasks));
-        renderTasks();
-      }
-    });
+function renderTasks() {
+taskList.innerHTML = '';
+tasks.forEach((task, index) => {
+const li = document.createElement('li');
+li.classList.add('task');
+li.innerHTML = <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span> <button class="deleteBtn" data-index="${index}">X</button>;
+taskList.appendChild(li);
+});
+localStorage.setItem('tasks', JSON.stringify(tasks));
+}
 
-    clearAllButton.addEventListener('click', () => {
-      tasks = [];
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-      renderTasks();
-    });
+addTaskButton.addEventListener('click', () => {
+const taskText = taskInput.value.trim();
+if (taskText) {
+tasks.push({ text: taskText, completed: false });
+taskInput.value = '';
+renderTasks();
+}
+});
 
-    renderTasks(); // Initial render of tasks
+taskList.addEventListener('click', (e) => {
+if (e.target.classList.contains('deleteBtn')) {
+const index = e.target.getAttribute('data-index');
+tasks.splice(index, 1);
+renderTasks();
+} else if (e.target.type === 'checkbox') {
+const index = e.target.getAttribute('data-index');
+tasks[index].completed = e.target.checked;
+renderTasks();
+}
+});
 
-    // Notepad Resizing
-    const notepadContainer = document.getElementById('notepadContainer');
-    notepadContainer.addEventListener('mousedown', (e) => {
-      let prevX = e.clientX;
-      let prevY = e.clientY;
-      let prevWidth = notepadContainer.offsetWidth;
-      let prevHeight = notepadContainer.offsetHeight;
+clearAllButton.addEventListener('click', () => {
+tasks = [];
+renderTasks();
+});
 
-      const onMouseMove = (e) => {
-        notepadContainer.style.width = `${prevWidth + (e.clientX - prevX)}px`;
-        notepadContainer.style.height = `${prevHeight + (e.clientY - prevY)}px`;
-      };
+renderTasks();
 
-      const onMouseUp = () => {
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
-      };
+// Font Color Customization Persistence
+const fontColorInput = document.getElementById('fontColor');
+const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4';
+fontColorInput.value = savedFontColor;
 
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-    });
+document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+el.style.color = savedFontColor;
+});
 
-    // Font Color Picker
-    const fontColorPicker = document.getElementById('fontColor');
-    fontColorPicker.addEventListener('input', () => {
-      notepad.style.color = fontColorPicker.value;
-    });
+fontColorInput.addEventListener('input', () => {
+const fontColor = fontColorInput.value;
+document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+el.style.color = fontColor;
+});
+localStorage.setItem('fontColor', fontColor);
+});
 
-    // Magical Notes Sidebar
-    const magicalNotesSidebar = document.getElementById('magicalNotesSidebar');
-    const saveTemplateButton = document.getElementById('saveTemplateButton');
-    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
-    const templateList = document.getElementById('templateList');
-    const addTemplateBtn = document.getElementById('addTemplateBtn');
+// Timezone Display
+function updateTimezone() {
+const date = new Date();
+document.getElementById('usPacific').textContent = US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })};
+document.getElementById('usMountain').textContent = US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })};
+document.getElementById('usCentral').textContent = US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })};
+document.getElementById('usEastern').textContent = US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })};
+document.getElementById('phPhilippines').textContent = PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })};
+}
 
-    let templates = JSON.parse(localStorage.getItem('templates')) || [];
+updateTimezone();
+setInterval(updateTimezone, 1000);
 
-    function renderTemplates() {
-      templateList.innerHTML = '';
-      templates.forEach((template, index) => {
-        const li = document.createElement('li');
-        li.classList.add('template-item');
-        li.innerHTML = `
-          ${template}
-          <button class="delete-button" data-index="${index}">Delete</button>
-        `;
-        templateList.appendChild(li);
-      });
-    }
-
-    addTemplateBtn.addEventListener('click', () => {
-      magicalNotesSidebar.style.visibility = 'visible';
-      renderTemplates();
-    });
-
-    closeSidebarBtn.addEventListener('click', () => {
-      magicalNotesSidebar.style.visibility = 'hidden';
-    });
-
-    saveTemplateButton.addEventListener('click', () => {
-      templates.push(notepad.value);
-      localStorage.setItem('templates', JSON.stringify(templates));
-      magicalNotesSidebar.style.visibility = 'hidden';
-      renderTemplates();
-    });
-
-    templateList.addEventListener('click', (e) => {
-      if (e.target.classList.contains('delete-button')) {
-        const templateIndex = e.target.getAttribute('data-index');
-        templates.splice(templateIndex, 1);
-        localStorage.setItem('templates', JSON.stringify(templates));
-        renderTemplates();
-      }
-    });
-
-    // Timezone Display (Simple Time)
-    function updateTimezone() {
-      const timezoneOffsets = [
-        { id: 'usPacific', offset: -8 },
-        { id: 'usMountain', offset: -7 },
-        { id: 'usCentral', offset: -6 },
-        { id: 'usEastern', offset: -5 },
-        { id: 'phPhilippines', offset: 8 }
-      ];
-
-      timezoneOffsets.forEach(zone => {
-        const time = new Date(new Date().toLocaleString('en-US', { timeZone: `Etc/GMT${zone.offset > 0 ? '-' : '+'}${Math.abs(zone.offset)}` }));
-        document.getElementById(zone.id).textContent = `${zone.id.replace('us', '').replace('ph', 'PH ')}: ${time.toLocaleTimeString()}`;
-      });
-    }
-
-    setInterval(updateTimezone, 60000);
-    updateTimezone(); // Initial call to set the timezone immediately
-
-  </script>
+</script>
+<script src="MagicalNotes.js"></script>
 </body>
 </html>
