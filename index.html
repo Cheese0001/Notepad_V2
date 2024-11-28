@@ -251,29 +251,81 @@
         function updateTime() {
             const selectedZone = timezoneSelect.value;
 [_{{{CITATION{{{_1{](https://github.com/davinyvidal/Notepad-Browser/tree/1395e466534584183691d59939f10861884c04b4/file%2Ffile.php)
+        taskList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-task')) {
+                const taskItem = e.target.parentElement;
+                taskList.removeChild(taskItem);
+                saveTasks();
+            } else if (e.target.classList.contains('task-text')) {
+                e.target.classList.toggle('completed');
+                saveTasks();
+            }
+        });
 
-const now = new Date();
-            const formatter = new Intl.DateTimeFormat('en-US', {
-                timeZone: selectedZone,
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
+        clearTasksButton.addEventListener('click', () => {
+            taskList.innerHTML = '';
+            localStorage.removeItem('tasks');
+        });
+
+        function saveTasks() {
+            const tasks = [];
+            taskList.querySelectorAll('li').forEach(taskItem => {
+                const taskText = taskItem.querySelector('.task-text').textContent;
+                const taskCompleted = taskItem.querySelector('.task-text').classList.contains('completed');
+                tasks.push({ text: taskText, completed: taskCompleted });
             });
-            currentTimeDisplay.textContent = `Current time in ${selectedZone}: ${formatter.format(now)}`;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function createTaskElement(taskText, completed) {
+            const taskItem = document.createElement('li');
+            taskItem.innerHTML = `<span class="task-text ${completed ? 'completed' : ''}">${taskText}</span>
+                                  <button class="delete-task">x</button>`;
+            return taskItem;
+        }
+
+        // Timezone Feature
+        function updateTime() {
+            const now = new Date();
+            const timezones = [
+                { id: 'pacific-time-display', zone: 'America/Los_Angeles' },
+                { id: 'mountain-time-display', zone: 'America/Denver' },
+                { id: 'central-time-display', zone: 'America/Chicago' },
+                { id: 'eastern-time-display', zone: 'America/New_York' },
+                { id: 'philippines-time-display', zone: 'Asia/Manila' }
+            ];
+
+            timezones.forEach(tz => {
+                const formatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: tz.zone,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                });
+                document.getElementById(tz.id).textContent = formatter.format(now);
+            });
         }
 
         setInterval(updateTime, 1000);
 
-        // Time Difference Calculator
-        function calculateTimeDifference(timezone1, timezone2) {
-            const now = new Date();
-            const time1 = new Intl.DateTimeFormat('en-US', { timeZone: timezone1, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now);
-            const time2 = new Intl.DateTimeFormat('en-US', { timeZone: timezone2, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now);
-            return `Time difference between ${timezone1} and ${timezone2}: ${time1} - ${time2}`;
+        // Modal Logic
+        const modal = document.getElementById("myModal");
+        const btn = document.getElementById("open-modal");
+        const span = document.getElementsByClassName("close")[0];
+
+        btn.onclick = function() {
+            modal.style.display = "block";
         }
 
-        // Example usage of time difference calculator
-        console.log(calculateTimeDifference('America/Los_Angeles', 'Asia/Manila'));
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
