@@ -177,7 +177,8 @@ button:hover {
     <label for="fontColor">Font Color: </label>
     <input type="color" id="fontColor" value="#9DA8C4">
 </div>
-
+   <!-- Footer will be added by JavaScript -->
+    <footer id="footer"></footer>
 </div>
 
 <script>
@@ -305,6 +306,8 @@ function updateTimezone() {
 
 updateTimezone();
 setInterval(updateTimezone, 60000);
+       // JavaScript to dynamically add the footer text
+        document.getElementById('footer').textContent = "Made by Shemida Garces";
 </script>
 </body>
 </html>
