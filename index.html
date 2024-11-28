@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notepad and Task Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --background-color: #f0f0f0;
@@ -22,7 +21,7 @@
     }
 
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Nunito', sans-serif;
       margin: 20px;
       background-color: var(--background-color);
       color: var(--text-color);
@@ -136,7 +135,8 @@
 
     select {
       padding: 5px;
-      font-size: 16px;
+      font-size: 14px; /* Smaller font size for the font selector */
+      width: 150px;
     }
 
     .notepad-container button {
@@ -146,7 +146,7 @@
     }
 
     textarea {
-      font-size: 16px; /* Default text size */
+      font-size: 16px;
       width: 100%;
       height: 300px;
       resize: none;
@@ -207,95 +207,96 @@
 <div class="font-selector">
   <label for="fontSelect">Choose Font:</label>
   <select id="fontSelect">
+    <option value="Nunito">Nunito</option>
+    <option value="Quicksand">Quicksand</option>
     <option value="Arial">Arial</option>
     <option value="Courier New">Courier New</option>
-    <option value="Georgia">Georgia</option>
-    <option value="Press Start 2P">Press Start 2P</option>
   </select>
 </div>
 
 <script>
-// Timezone Display Logic
-function updateTimezones() {
-  const pacificTime = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
-  const mountainTime = new Date().toLocaleString("en-US", { timeZone: "America/Denver" });
-  const centralTime = new Date().toLocaleString("en-US", { timeZone: "America/Chicago" });
-  const easternTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
-  const philippinesTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" });
+  // Timezone Display Logic
+  function updateTimezones() {
+    const pacificTime = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles", hour: '2-digit', minute: '2-digit' });
+    const mountainTime = new Date().toLocaleString("en-US", { timeZone: "America/Denver", hour: '2-digit', minute: '2-digit' });
+    const centralTime = new Date().toLocaleString("en-US", { timeZone: "America/Chicago", hour: '2-digit', minute: '2-digit' });
+    const easternTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York", hour: '2-digit', minute: '2-digit' });
+    const philippinesTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila", hour: '2-digit', minute: '2-digit' });
 
-  document.getElementById("pacificTime").textContent = pacificTime;
-  document.getElementById("mountainTime").textContent = mountainTime;
-  document.getElementById("centralTime").textContent = centralTime;
-  document.getElementById("easternTime").textContent = easternTime;
-  document.getElementById("philippinesTime").textContent = philippinesTime;
-}
+    document.getElementById("pacificTime").textContent = pacificTime;
+    document.getElementById("mountainTime").textContent = mountainTime;
+    document.getElementById("centralTime").textContent = centralTime;
+    document.getElementById("easternTime").textContent = easternTime;
+    document.getElementById("philippinesTime").textContent = philippinesTime;
+  }
 
-// Set an interval to update the time every minute
-setInterval(updateTimezones, 60000);
-updateTimezones(); // Initial call to display the time immediately
+  // Set an interval to update the time every minute
+  setInterval(updateTimezones, 60000);
+  updateTimezones(); // Initial call to display the time immediately
 
-// Notepad Font Size Adjustment Logic
-let currentFontSize = 16;
+  // Notepad Font Size Adjustment Logic
+  let currentFontSize = 16;
 
-document.getElementById("increaseTextSize").addEventListener("click", () => {
-  currentFontSize += 2;
-  document.getElementById("notepad").style.fontSize = `${currentFontSize}px`;
-});
-
-document.getElementById("decreaseTextSize").addEventListener("click", () => {
-  if (currentFontSize > 8) {
-    currentFontSize -= 2;
+  document.getElementById("increaseTextSize").addEventListener("click", () => {
+    currentFontSize += 2;
     document.getElementById("notepad").style.fontSize = `${currentFontSize}px`;
-  }
-});
+  });
 
-// Task Tracker Logic
-const taskList = document.getElementById("taskList");
-const taskInput = document.getElementById("taskInput");
+  document.getElementById("decreaseTextSize").addEventListener("click", () => {
+    if (currentFontSize > 8) {
+      currentFontSize -= 2;
+      document.getElementById("notepad").style.fontSize = `${currentFontSize}px`;
+    }
+  });
 
-document.getElementById("addTaskButton").addEventListener("click", () => {
-  const taskText = taskInput.value.trim();
-  if (taskText) {
-    const listItem = document.createElement("li");
-    listItem.textContent = taskText;
+  // Task Tracker Logic
+  const taskList = document.getElementById("taskList");
+  const taskInput = document.getElementById("taskInput");
 
-    // Add complete button
-    const completeButton = document.createElement("button");
-    completeButton.textContent = "✓";
-    completeButton.addEventListener("click", () => {
-      listItem.classList.toggle("completed");
-    });
-    listItem.appendChild(completeButton);
+  document.getElementById("addTaskButton").addEventListener("click", () => {
+    const taskText = taskInput.value.trim();
+    if (taskText) {
+      const listItem = document.createElement("li");
+      listItem.textContent = taskText;
 
-    // Add delete button
-    const deleteButton = document.createElement("button");
-    deleteButton.textContent = "X";
-    deleteButton.addEventListener("click", () => {
-      listItem.remove();
-    });
-    listItem.appendChild(deleteButton);
+      // Add complete button
+      const completeButton = document.createElement("button");
+      completeButton.textContent = "✓";
+      completeButton.addEventListener("click", () => {
+        listItem.classList.toggle("completed");
+      });
+      listItem.appendChild(completeButton);
 
-    taskList.appendChild(listItem);
-    taskInput.value = ""; // Clear input
-  }
-});
+      // Add delete button
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "X";
+      deleteButton.addEventListener("click", () => {
+        listItem.remove();
+      });
+      listItem.appendChild(deleteButton);
 
-// Clear All Tasks
-document.getElementById("clearAllButton").addEventListener("click", () => {
-  taskList.innerHTML = "";
-});
+      taskList.appendChild(listItem);
+      taskInput.value = ""; // Clear input
+    }
+  });
 
-// Theme Toggle Logic
-let isDarkMode = false;
-document.getElementById("themeToggle").addEventListener("click", () => {
-  isDarkMode = !isDarkMode;
-  document.body.setAttribute("data-theme", isDarkMode ? "dark" : "light");
-});
+  // Clear All Tasks
+  document.getElementById("clearAllButton").addEventListener("click", () => {
+    taskList.innerHTML = "";
+  });
 
-// Font Selector Logic
-document.getElementById("fontSelect").addEventListener("change", (event) => {
-  document.getElementById("notepad").style.fontFamily = event.target.value;
-});
+  // Theme Toggle Logic
+  let isDarkMode = false;
+  document.getElementById("themeToggle").addEventListener("click", () => {
+    isDarkMode = !isDarkMode;
+    document.body.setAttribute("data-theme", isDarkMode ? "dark" : "light");
+  });
+
+  // Font Selector Logic
+  document.getElementById("fontSelect").addEventListener("change", (event) => {
+    document.getElementById("notepad").style.fontFamily = event.target.value;
+  });
 </script>
+
 </body>
 </html>
