@@ -291,37 +291,32 @@ select {
 
   // Timezone Function
   const updateTimes = () => {
-    const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    const now = new Date();
+  const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+  
+  const pacificTime = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+  const mountainTime = new Date().toLocaleString('en-US', { timeZone: 'America/Denver' });
+  const centralTime = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' });
+  const easternTime = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
+  const philippinesTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
 
-    const pacificTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
-    const mountainTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Denver' }));
-    const centralTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
-    const easternTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-    const philippinesTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+  document.getElementById('pacificTime').textContent = pacificTime.toLocaleTimeString('en-US', options);
+  document.getElementById('mountainTime').textContent = mountainTime.toLocaleTimeString('en-US', options);
+  document.getElementById('centralTime').textContent = centralTime.toLocaleTimeString('en-US', options);
+  document.getElementById('easternTime').textContent = easternTime.toLocaleTimeString('en-US', options);
+  document.getElementById('philippinesTime').textContent = philippinesTime.toLocaleTimeString('en-US', options);
+};
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', () => {
+  const currentTheme = document.body.getAttribute('data-theme');
+  if (currentTheme === 'light') {
+    document.body.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+  } else {
+    document.body.setAttribute('data-theme', 'light');
+    localStorage.setItem('theme', 'light');
+  }
+});
 
-    document.getElementById('pacificTime').textContent = pacificTime.toLocaleTimeString('en-US', options);
-    document.getElementById('mountainTime').textContent = mountainTime.toLocaleTimeString('en-US', options);
-    document.getElementById('centralTime').textContent = centralTime.toLocaleTimeString('en-US', options);
-    document.getElementById('easternTime').textContent = easternTime.toLocaleTimeString('en-US', options);
-    document.getElementById('philippinesTime').textContent = philippinesTime.toLocaleTimeString('en-US', options);
-  };
-
-  setInterval(updateTimes, 60000); // Update every minute
-  updateTimes(); // Initial call to set the time on load
-
-  // Theme Toggle Logic
-  const themeToggle = document.getElementById('themeToggle');
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = document.body.getAttribute('data-theme');
-    if (currentTheme === 'light') {
-      document.body.setAttribute('data-theme', 'dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.body.setAttribute('data-theme', 'light');
-      localStorage.setItem('theme', 'light');
-    }
-  });
   const increaseTextSize = document.getElementById('increaseTextSize');
 const decreaseTextSize = document.getElementById('decreaseTextSize');
 const notepad = document.getElementById('notepad');
