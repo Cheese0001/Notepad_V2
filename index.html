@@ -82,12 +82,12 @@
 
     /* Font color customization */
     .font-color-picker {
-      margin-top: 10px;
+      margin-top: 5px;
     }
 
     .font-color-picker input[type="color"] {
-      width: 40px;
-      height: 40px;
+      width: 20;
+      height: 20px;
       border: none;
       cursor: pointer;
     }
@@ -113,8 +113,8 @@
   <div class="container">
     <!-- Theme Toggle and Font Size Controls -->
     <button id="themeToggle">Switch to Dark Mode</button>
-    <button id="increaseFontSize">Increase Font Size</button>
-    <button id="decreaseFontSize">Decrease Font Size</button>
+    <button id="increaseFontSize">+</button>
+    <button id="decreaseFontSize">-</button>
 
     <!-- Notepad Container -->
     <div class="notepad-container" id="notepadContainer">
@@ -131,16 +131,17 @@
 
     <!-- Font Color Customization -->
     <div class="font-color-picker">
-      <label for="fontColor">Select Font Color: </label>
+      <label for="fontColor">Font Color: </label>
       <input type="color" id="fontColor" value="#9DA8C4">
     </div>
 
     <!-- Timezone Display -->
     <div class="timezone-container" id="timezoneContainer">
-      <div class="timezone" id="usPacific">US Pacific: Loading...</div>
-      <div class="timezone" id="usMountain">US Mountain: Loading...</div>
-      <div class="timezone" id="usCentral">US Central: Loading...</div>
-      <div class="timezone" id="phPhilippines">Philippines: Loading...</div>
+      <div class="timezone" id="Pacific">US Pacific: Loading...</div>
+      <div class="timezone" id="Mountain">US Mountain: Loading...</div>
+      <div class="timezone" id="Central">US Central: Loading...</div>
+      <div class="timezone" id="Eastern">US Eastern: Loading...</div>
+      <div class="timezone" id="Phil">Philippines: Loading...</div>
     </div>
   </div>
 
@@ -248,6 +249,7 @@
         { id: 'usPacific', offset: -8 },
         { id: 'usMountain', offset: -7 },
         { id: 'usCentral', offset: -6 },
+        { id: 'usEastern', offset: -5 },
         { id: 'phPhilippines', offset: 8 }
       ];
 
