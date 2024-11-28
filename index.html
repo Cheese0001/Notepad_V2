@@ -1,376 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notepad and Task Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --background-color: #f0f0f0;
-  --text-color: #333;
-  --container-bg: #fff;
-  --button-bg: #6200ea;
-  --button-color: white;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notepad & Task Tracker</title>
+  <style>
+    /* Base styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+    }
 
-[data-theme="dark"] {
-  --background-color: #121212;
-  --text-color: #f0f0f0;
-  --container-bg: #1e1e1e;
-  --button-bg: #bb86fc;
-  --button-color: #000;
-}
+    .container {
+      width: 80%;
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-body {
-  font-family: 'Nunito', sans-serif;
-  margin: 20px;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
-}
+    .notepad-container, .task-container {
+      min-width: 200px;
+      min-height: 150px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      resize: both;
+      overflow: auto;
+    }
 
-.container {
-  display: flex;
-  gap: 20px;
-  margin-top: 20px;
-}
+    .task-list {
+      list-style-type: none;
+      padding: 0;
+    }
 
-.notepad-container, .task-container {
-  width: 300px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  padding: 10px;
-  background-color: var(--container-bg);
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  resize: both;
-  overflow: auto;
-}
+    .task {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
 
-textarea {
-  width: 100%;
-  height: 150px;
-  border: none;
-  resize: none;
-  outline: none;
-  font-size: 16px;
-  background-color: var(--container-bg);
-  color: var(--text-color);
-}
+    .task input[type="checkbox"] {
+      margin-right: 10px;
+    }
 
-.task-container input {
-  width: calc(100% - 50px);
-  padding: 5px;
-  margin-bottom: 10px;
-  font-size: 16px;
-  background-color: var(--container-bg);
-  color: var(--text-color);
-  border: 1px solid var(--text-color);
-}
+    /* Button styles */
+    button {
+      padding: 10px 15px;
+      border: none;
+      cursor: pointer;
+      background-color: #9DA8C4;
+      color: white;
+      font-size: 14px;
+      border-radius: 5px;
+    }
 
-.task-container button {
-  padding: 5px 10px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  border-radius: 3px;
-  background-color: var(--button-bg);
-  color: var(--button-color);
-  transition: background-color 0.3s, color 0.3s;
-}
+    button:hover {
+      background-color: #93B9CF;
+    }
 
-.task-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+    /* Theme-specific styles */
+    .light-theme {
+      background-color: #ffffff;
+      color: #333333;
+    }
 
-.task-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 10px 0;
-  line-height: 1.6; /* Improved line spacing for tasks */
-}
+    .dark-theme {
+      background-color: #333333;
+      color: #f0f0f0;
+    }
 
-.task-list li.completed {
-  text-decoration: line-through;
-  color: #aaa;
-}
+    /* Font color customization */
+    .font-color-picker {
+      margin-top: 10px;
+    }
 
-.task-list li button {
-  margin-left: 5px;
-  font-size: 14px;
-}
+    .font-color-picker input[type="color"] {
+      width: 40px;
+      height: 40px;
+      border: none;
+      cursor: pointer;
+    }
 
-.task-list li:after {
-  content: "";
-  display: block;
-  border-bottom: 1px solid #ccc;
-  margin-top: 10px;
-}
+    /* Resizing and box shadow */
+    .notepad-container, .task-container {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-.timezone-container {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin-bottom: 20px;
-}
+    .timezone-container {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
 
-.timezone {
-  background-color: var(--container-bg);
-  padding: 10px;
-  border-radius: 5px;
-  width: 100%;
-  text-align: center;
-  margin: 0 5px;
-}
-
-.timezone h3 {
-  margin: 0;
-}
-
-.timezone p {
-  margin: 5px 0;
-}
-
-.theme-toggle {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  padding: 10px;
-  font-size: 16px;
-  background-color: var(--button-bg);
-  color: var(--button-color);
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s, color 0.3s;
-}
-
-.font-selector {
-  margin-bottom: 10px;
-}
-
-select {
-  padding: 5px;
-  font-size: 14px;
-  width: 150px;
-}
-
-.notepad-container button, .task-container button {
-  padding: 5px 10px;
-  margin: 5px;
-  font-size: 16px;
-}
-
-textarea {
-  font-size: 16px;
-  width: 100%;
-  height: 300px;
-  resize: none;
-}
-
-.task-container button {
-  display: inline-block;
-  margin-left: 10px;
-}
-
-#increaseTaskTextSize, #decreaseTaskTextSize {
-  margin-left: 10px;
-}
-
-</style>
+    .timezone {
+      padding: 10px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <!-- Theme Toggle and Font Size Controls -->
+    <button id="themeToggle">Switch to Dark Mode</button>
+    <button id="increaseFontSize">Increase Font Size</button>
+    <button id="decreaseFontSize">Decrease Font Size</button>
 
-<!-- Timezone Display -->
-<div class="timezone-container" id="timezoneContainer">
-  <div class="timezone" id="pacific">
-    <h3>Pacific</h3>
-    <p id="pacificTime">Loading...</p>
+    <!-- Notepad Container -->
+    <div class="notepad-container" id="notepadContainer">
+      <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+    </div>
+
+    <!-- Task List -->
+    <div class="task-container">
+      <input type="text" id="taskInput" placeholder="Add a task" />
+      <button id="addTaskButton">Add Task</button>
+      <button id="clearAllButton">Clear All Tasks</button>
+      <ul id="taskList" class="task-list"></ul>
+    </div>
+
+    <!-- Font Color Customization -->
+    <div class="font-color-picker">
+      <label for="fontColor">Select Font Color: </label>
+      <input type="color" id="fontColor" value="#9DA8C4">
+    </div>
+
+    <!-- Timezone Display -->
+    <div class="timezone-container" id="timezoneContainer">
+      <div class="timezone" id="usPacific">US Pacific: Loading...</div>
+      <div class="timezone" id="usMountain">US Mountain: Loading...</div>
+      <div class="timezone" id="usCentral">US Central: Loading...</div>
+      <div class="timezone" id="phPhilippines">Philippines: Loading...</div>
+    </div>
   </div>
-  <div class="timezone" id="mountain">
-    <h3>Mountain</h3>
-    <p id="mountainTime">Loading...</p>
-  </div>
-  <div class="timezone" id="central">
-    <h3>Central</h3>
-    <p id="centralTime">Loading...</p>
-  </div>
-  <div class="timezone" id="eastern">
-    <h3>Eastern</h3>
-    <p id="easternTime">Loading...</p>
-  </div>
-  <div class="timezone" id="philippines">
-    <h3>Philippines</h3>
-    <p id="philippinesTime">Loading...</p>
-  </div>
-</div>
 
-<div class="container">
-  <!-- Notepad -->
-  <div class="notepad-container">
-    <textarea id="notepad" placeholder="Write your notes here..."></textarea>
-    <button id="increaseTextSize">+</button>
-    <button id="decreaseTextSize">-</button>
-  </div>
+  <script>
+    // Theme Toggle Functionality
+    const themeToggle = document.getElementById('themeToggle');
+    let isDarkMode = localStorage.getItem('theme') === 'dark';
+    document.body.classList.toggle('dark-theme', isDarkMode);
 
-  <!-- Task Tracker -->
-  <div class="task-container">
-    <input type="text" id="taskInput" placeholder="Add a task..." />
-    <button id="addTaskButton">Add</button>
-    <ul id="taskList" class="task-list"></ul>
-  </div>
-</div>
+    themeToggle.addEventListener('click', () => {
+      isDarkMode = !isDarkMode;
+      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+      document.body.classList.toggle('dark-theme', isDarkMode);
+      themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+    });
 
-<!-- Font and Task Text Size Control -->
-<div class="font-selector">
-  <label for="fontSelect">Choose Font:</label>
-  <select id="fontSelect">
-    <option value="Nunito">Nunito</option>
-    <option value="Quicksand">Quicksand</option>
-    <option value="Arial">Arial</option>
-    <option value="Courier New">Courier New</option>
-  </select>
-  <button id="increaseTaskTextSize">A+</button>
-  <button id="decreaseTaskTextSize">A-</button>
-</div>
+    // Notepad Persistence
+    const notepad = document.getElementById('notepad');
+    notepad.value = localStorage.getItem('notepadText') || '';
 
-<!-- Theme Toggle Button -->
-<button class="theme-toggle" id="themeToggle">Toggle Theme</button>
+    notepad.addEventListener('input', () => {
+      localStorage.setItem('notepadText', notepad.value);
+    });
 
-<script>
-// Function to update the timezones
-function updateTimezones() {
-  const pacificTime = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles", hour: '2-digit', minute: '2-digit' });
-  const mountainTime = new Date().toLocaleString("en-US", { timeZone: "America/Denver", hour: '2-digit', minute: '2-digit' });
-  const centralTime = new Date().toLocaleString("en-US", { timeZone: "America/Chicago", hour: '2-digit', minute: '2-digit' });
-  const easternTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York", hour: '2-digit', minute: '2-digit' });
-  const philippinesTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila", hour: '2-digit', minute: '2-digit' });
+    // Font Size Controls
+    let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
+    notepad.style.fontSize = fontSize + 'px';
 
-  document.getElementById("pacificTime").textContent = pacificTime;
-  document.getElementById("mountainTime").textContent = mountainTime;
-  document.getElementById("centralTime").textContent = centralTime;
-  document.getElementById("easternTime").textContent = easternTime;
-  document.getElementById("philippinesTime").textContent = philippinesTime;
-}
+    const increaseFontSize = document.getElementById('increaseFontSize');
+    const decreaseFontSize = document.getElementById('decreaseFontSize');
 
-// Set an interval to update the time every minute
-setInterval(updateTimezones, 60000);
-updateTimezones(); // Initial call to display the time immediately
+    increaseFontSize.addEventListener('click', () => {
+      fontSize += 2;
+      localStorage.setItem('fontSize', fontSize);
+      notepad.style.fontSize = fontSize + 'px';
+    });
 
-// Persist theme in localStorage
-const storedTheme = localStorage.getItem('theme');
-if (storedTheme) {
-  document.body.setAttribute('data-theme', storedTheme);
-}
+    decreaseFontSize.addEventListener('click', () => {
+      fontSize -= 2;
+      localStorage.setItem('fontSize', fontSize);
+      notepad.style.fontSize = fontSize + 'px';
+    });
 
-// Persist font family in localStorage
-const storedFont = localStorage.getItem('font');
-if (storedFont) {
-  document.getElementById("notepad").style.fontFamily = storedFont;
-  document.getElementById("taskList").style.fontFamily = storedFont; // Apply font to task list
-}
+    // Task List Persistence
+    const taskList = document.getElementById('taskList');
+    const taskInput = document.getElementById('taskInput');
+    const addTaskButton = document.getElementById('addTaskButton');
+    const clearAllButton = document.getElementById('clearAllButton');
 
-// Task Management
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
-function saveTasks() {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.classList.add('task');
+        li.innerHTML = `
+          <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" />
+          <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span>
+          <button class="deleteBtn" data-index="${index}">X</button>
+        `;
+        taskList.appendChild(li);
+      });
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    }
 
-function addTask() {
-  const taskInput = document.getElementById("taskInput");
-  const taskName = taskInput.value.trim();
-  if (taskName) {
-    const task = {
-      name: taskName,
-      completed: false
-    };
-    tasks.push(task);
-    taskInput.value = '';
+    addTaskButton.addEventListener('click', () => {
+      const taskText = taskInput.value.trim();
+      if (taskText) {
+        tasks.push({ text: taskText, completed: false });
+        taskInput.value = '';
+        renderTasks();
+      }
+    });
+
+    taskList.addEventListener('click', (e) => {
+      if (e.target.tagName === 'INPUT') {
+        const index = e.target.dataset.index;
+        tasks[index].completed = e.target.checked;
+        renderTasks();
+      } else if (e.target.classList.contains('deleteBtn')) {
+        const index = e.target.dataset.index;
+        tasks.splice(index, 1);
+        renderTasks();
+      }
+    });
+
+    clearAllButton.addEventListener('click', () => {
+      tasks = [];
+      renderTasks();
+    });
+
     renderTasks();
-    saveTasks();
-  }
-}
 
-function deleteTask(taskItem) {
-  const index = Array.from(taskItem.parentElement.children).indexOf(taskItem);
-  tasks.splice(index, 1);
-  renderTasks();
-  saveTasks();
-}
+    // Font Color Customization
+    const fontColorInput = document.getElementById('fontColor');
+    fontColorInput.addEventListener('input', (e) => {
+      const color = e.target.value;
+      document.body.style.color = color;
+    });
 
-function toggleTaskCompletion(taskItem) {
-  const taskIndex = Array.from(taskItem.parentElement.children).indexOf(taskItem);
-  tasks[taskIndex].completed = !tasks[taskIndex].completed;
-  renderTasks();
-  saveTasks();
-}
+    // Timezone Functionality
+    function updateTimeZones() {
+      const timeZones = [
+        { id: 'usPacific', offset: -8 },
+        { id: 'usMountain', offset: -7 },
+        { id: 'usCentral', offset: -6 },
+        { id: 'phPhilippines', offset: 8 }
+      ];
 
-function renderTasks() {
-  const taskList = document.getElementById("taskList");
-  taskList.innerHTML = ''; // Clear current task list
-  tasks.forEach(task => {
-    const taskItem = document.createElement('li');
-    taskItem.textContent = task.name;
-    taskItem.classList.toggle('completed', task.completed);
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'X';
-    deleteButton.onclick = () => deleteTask(taskItem);
-    const completeButton = document.createElement('button');
-    completeButton.textContent = '✓';
-    completeButton.onclick = () => toggleTaskCompletion(taskItem);
-    taskItem.append(deleteButton, completeButton);
-    taskList.appendChild(taskItem);
-  });
-}
+      const now = new Date();
+      timeZones.forEach(zone => {
+        const zoneTime = new Date(now.getTime() + zone.offset * 60 * 60 * 1000);
+        const timeString = zoneTime.toLocaleString();
+        document.getElementById(zone.id).textContent = `${zone.id.replace(/[A-Z]/g, letter => ' ' + letter).trim()}: ${timeString}`;
+      });
+    }
 
-document.getElementById("addTaskButton").addEventListener("click", addTask);
-document.getElementById("clearAllButton").addEventListener("click", () => {
-  tasks = [];
-  renderTasks();
-  saveTasks();
-});
+    setInterval(updateTimeZones, 60000);
+    updateTimeZones();
 
-// Theme toggle button
-document.getElementById('themeToggle').addEventListener('click', () => {
-  const currentTheme = document.body.getAttribute('data-theme');
-  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  document.body.setAttribute('data-theme', newTheme);
-  localStorage.setItem('theme', newTheme);
-});
-
-// Font selector
-document.getElementById('fontSelect').addEventListener('change', (e) => {
-  const font = e.target.value;
-  document.getElementById("notepad").style.fontFamily = font;
-  document.getElementById("taskList").style.fontFamily = font; // Apply font to task list
-  localStorage.setItem('font', font);
-});
-
-// Notepad text size control
-document.getElementById('increaseTextSize').addEventListener('click', () => {
-  const currentSize = parseInt(window.getComputedStyle(document.getElementById('notepad')).fontSize);
-  document.getElementById('notepad').style.fontSize = `${currentSize + 2}px`;
-});
-
-document.getElementById('decreaseTextSize').addEventListener('click', () => {
-  const currentSize = parseInt(window.getComputedStyle(document.getElementById('notepad')).fontSize);
-  document.getElementById('notepad').style.fontSize = `${currentSize - 2}px`;
-});
-
-// Task text size control
-document.getElementById('increaseTaskTextSize').addEventListener('click', () => {
-  const currentSize = parseInt(window.getComputedStyle(document.getElementById('taskList')).fontSize);
-  document.getElementById('taskList').style.fontSize = `${currentSize + 2}px`;
-});
-
-document.getElementById('decreaseTaskTextSize').addEventListener('click', () => {
-  const currentSize = parseInt(window.getComputedStyle(document.getElementById('taskList')).fontSize);
-  document.getElementById('taskList').style.fontSize = `${currentSize - 2}px`;
-});
-</script>
-
+  </script>
 </body>
 </html>
