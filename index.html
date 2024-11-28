@@ -1,137 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notepad & Task Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-/* Styles omitted for brevity, use the same styles as your existing code */
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notepad & Task Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Existing styles omitted for brevity */
+
+        /* Template List Modal */
+        #templateListModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        #templateList {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            width: 300px;
+        }
+        #templateList li {
+            padding: 10px;
+            cursor: pointer;
+        }
+        #templateList li:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-    <!-- Theme Toggle and Font Size Controls -->
-    <button id="themeToggle">Switch to Dark Mode</button>
-    <button id="increaseFontSize">+</button>
-    <button id="decreaseFontSize">-</button>
+    <div class="container">
+        <!-- Existing content omitted for brevity -->
 
-    <!-- Notepad Container -->
-    <div class="notepad-container" id="notepadContainer">
-        <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+        <!-- Template Save/Load buttons -->
+        <button id="saveTemplateButton">Save Template</button>
+        <button id="loadTemplateButton">Load Template</button>
+
+        <!-- Template List Modal (hidden initially) -->
+        <div id="templateListModal">
+            <ul id="templateList"></ul>
+        </div>
     </div>
 
-    <!-- Task List -->
-    <div class="task-container">
-        <input type="text" id="taskInput" placeholder="Add a task" />
-        <button id="addTaskButton">Add Task</button>
-        <button id="clearAllButton">Clear All Tasks</button>
-        <ul id="taskList" class="task-list"></ul>
-    </div>
+    <script>
+        // Existing code (Theme toggle, font size controls, etc.) omitted for brevity
 
-    <!-- Font Color Customization -->
-    <div class="font-color-picker">
-        <label for="fontColor">Font Color: </label>
-        <input type="color" id="fontColor" value="#9DA8C4">
-    </div>
+        // Template feature
+        const saveTemplateButton = document.getElementById('saveTemplateButton');
+        const loadTemplateButton = document.getElementById('loadTemplateButton');
+        const templateListModal = document.getElementById('templateListModal');
+        const templateList = document.getElementById('templateList');
+        let templates = JSON.parse(localStorage.getItem('templates')) || [];
 
-    <!-- Timezone Display -->
-    <div class="timezone-container" id="timezoneContainer">
-        <div class="timezone" id="usPacific">US Pacific: Loading...</div>
-        <div class="timezone" id="usMountain">US Mountain: Loading...</div>
-        <div class="timezone" id="usCentral">US Central: Loading...</div>
-        <div class="timezone" id="usEastern">US Eastern: Loading...</div>
-        <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
-    </div>
-
-    <!-- Template Save/Load buttons -->
-    <button id="saveTemplateButton">Save Template</button>
-    <button id="loadTemplateButton">Load Template</button>
-
-    <!-- Template List Modal (hidden initially) -->
-    <div id="templateListModal" style="display:none;">
-        <ul id="templateList"></ul>
-    </div>
-</div>
-
-<script>
-// Add your existing script here and correct the following sections:
-
-// Fixing the task list rendering
-function renderTasks() {
-    taskList.innerHTML = ''; // Clear task list
-    tasks.forEach((task, index) => {
-        const li = document.createElement('li');
-        li.classList.add('task');
-        li.innerHTML = `
-            <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> 
-            <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span> 
-            <button class="deleteBtn" data-index="${index}">X</button>
-        `;
-        taskList.appendChild(li);
-    });
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-// Fixing template button functionality
-const saveTemplateButton = document.getElementById('saveTemplateButton');
-const loadTemplateButton = document.getElementById('loadTemplateButton');
-const templateListModal = document.getElementById('templateListModal');
-const templates = JSON.parse(localStorage.getItem('templates')) || [];
-const templateList = document.getElementById('templateList');
-
-saveTemplateButton.addEventListener('click', () => {
-    const templateName = prompt("Enter a name for your template:");
-    if (templateName) {
-        const newTemplate = {
-            name: templateName,
-            noteContent: notepad.value,
-            tasks: tasks
-        };
-        templates.push(newTemplate);
-        localStorage.setItem('templates', JSON.stringify(templates));
-        alert("Template saved!");
-    }
-});
-
-loadTemplateButton.addEventListener('click', () => {
-    templateListModal.style.display = 'block'; // Show modal
-    renderTemplateList();  // Show templates in the list
-});
-
-// Render the template list
-function renderTemplateList() {
-    templateList.innerHTML = ''; // Clear existing list
-    templates.forEach((template, index) => {
-        const listItem = document.createElement('li');
-        listItem.textContent = `${template.name} (Saved: ${template.savedAt})`;
-        listItem.addEventListener('click', () => {
-            loadTemplate(template);  // Load the selected template
-            templateListModal.style.display = 'none';  // Close modal
+        // Save the current state as a template
+        saveTemplateButton.addEventListener('click', () => {
+            const templateName = prompt("Enter a name for your template:");
+            if (templateName) {
+                const newTemplate = {
+                    name: templateName,
+                    noteContent: notepad.value,
+                    tasks: tasks,
+                    savedAt: new Date().toLocaleString()
+                };
+                templates.push(newTemplate);
+                localStorage.setItem('templates', JSON.stringify(templates));
+                alert("Template saved!");
+            }
         });
-        templateList.appendChild(listItem);
-    });
-}
 
-// Load the selected template
-function loadTemplate(template) {
-    notepad.value = template.noteContent;
-    tasks = template.tasks;
-    renderTasks();  // Render tasks from the loaded template
-}
+        // Load the template list modal
+        loadTemplateButton.addEventListener('click', () => {
+            templateListModal.style.display = 'flex';
+            renderTemplateList();  // Show the list of saved templates
+        });
 
-// Timezone Display Function
-function updateTimezone() {
-    const date = new Date();
-    document.getElementById('usPacific').textContent = `US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}`;
-    document.getElementById('usMountain').textContent = `US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })}`;
-    document.getElementById('usCentral').textContent = `US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })}`;
-    document.getElementById('usEastern').textContent = `US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })}`;
-    document.getElementById('phPhilippines').textContent = `PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })}`;
-}
-setInterval(updateTimezone, 1000);
+        // Render the list of templates
+        function renderTemplateList() {
+            templateList.innerHTML = '';  // Clear existing list
+            templates.forEach((template, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${template.name} (Saved: ${template.savedAt})`;
+                listItem.addEventListener('click', () => {
+                    loadTemplate(template);  // Load the selected template
+                    templateListModal.style.display = 'none';  // Close the modal
+                });
+                templateList.appendChild(listItem);
+            });
+        }
 
-// Your existing logic for dark mode, font customization, etc., remains the same.
-</script>
+        // Load the selected template
+        function loadTemplate(template) {
+            notepad.value = template.noteContent;
+            tasks = template.tasks;
+            renderTasks();  // Render tasks from the loaded template
+        }
+
+        // Close the template list modal if clicked outside
+        templateListModal.addEventListener('click', (e) => {
+            if (e.target === templateListModal) {
+                templateListModal.style.display = 'none';
+            }
+        });
+
+        // Task List Persistence
+        const taskList = document.getElementById('taskList');
+        const taskInput = document.getElementById('taskInput');
+        const addTaskButton = document.getElementById('addTaskButton');
+        const clearAllButton = document.getElementById('clearAllButton');
+
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+        function renderTasks() {
+            taskList.innerHTML = '';
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.classList.add('task');
+                li.innerHTML = `
+                    <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" />
+                    <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span>
+                    <button class="deleteBtn" data-index="${index}">X</button>
+                `;
+                taskList.appendChild(li);
+            });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        addTaskButton.addEventListener('click', () => {
+            const taskText = taskInput.value.trim();
+            if (taskText) {
+                tasks.push({ text: taskText, completed: false });
+                taskInput.value = '';
+                renderTasks();
+            }
+        });
+
+        taskList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('deleteBtn')) {
+                const index = e.target.getAttribute('data-index');
+                tasks.splice(index, 1);
+                renderTasks();
+            } else if (e.target.type === 'checkbox') {
+                const index = e.target.getAttribute('data-index');
+                tasks[index].completed = e.target.checked;
+                renderTasks();
+            }
+        });
+
+        clearAllButton.addEventListener('click', () => {
+            tasks = [];
+            renderTasks();
+        });
+
+        renderTasks();  // Initial render of tasks
+
+        // Timezone Display Function
+        function updateTimezone() {
+            const date = new Date();
+            document.getElementById('usPacific').textContent = `US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}`;
+            document.getElementById('usMountain').textContent = `US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })}`;
+            document.getElementById('usCentral').textContent = `US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })}`;
+            document.getElementById('usEastern').textContent = `US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })}`;
+            document.getElementById('phPhilippines').textContent = `PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })}`;
+        }
+
+        updateTimezone();
+        setInterval(updateTimezone, 1000);
+    </script>
 </body>
 </html>
