@@ -6,7 +6,6 @@
 <title>Notepad & Task Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-/* Global Styles */
 body {
     font-family: 'Quicksand', sans-serif;
     margin: 0;
@@ -20,22 +19,7 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     transition: background-color 0.3s ease;
-    min-height: 100%; /* Ensure full height coverage even if zoomed */
 }
-
-/* Footer Styles */
-footer {
-    position: fixed;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    color: #9DA8C4;
-    font-size: 14px;
-    font-weight: 500;
-    z-index: 10;
-}
-
-/* Timezone Display */
 .timezone-container {
     display: flex;
     justify-content: space-between;
@@ -48,52 +32,79 @@ footer {
     margin-right: 10px;
 }
 
-/* Notepad & Task List Styling */
+/* Change the font-family of the notepad to Quicksand */
 .notepad-container textarea {
     font-family: 'Quicksand', sans-serif;
-    font-size: 16px;
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    resize: both;
+    font-size: 16px; /* Default font size */
 }
-
 .container {
     width: 80%;
     max-width: 1000px;
     margin: auto;
     padding: 15px;
-    background-color: rgba(255, 255, 255, 0.8); 
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container for light mode */
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s, color 0.3s, opacity 0.3s ease;
 }
 
-/* Light Theme */
+/* Light Mode */
 .light-theme .container {
     background-color: rgba(255, 255, 255, 0.8);
-    color: #333333;
+    color: #333333; /* Light font color */
 }
 
 .light-theme .notepad-container,
 .light-theme .task-container {
-    color: #333333;
+    color: #333333; /* Light theme font color */
 }
 
 /* Dark Mode */
 .dark-theme .container {
     background-color: rgba(51, 51, 51, 0.8);
-    color: #f0f0f0;
+    color: #f0f0f0; /* Light font color for dark theme */
 }
 
 .dark-theme .notepad-container,
 .dark-theme .task-container {
-    color: #f0f0f0;
+    color: #f0f0f0; /* Light font color for dark theme */
 }
 
-/* Button and Text Customization */
+/* Global Font Color */
+body, .notepad-container, .task-container {
+    transition: color 0.3s ease;
+}
+
+.notepad-container, .task-container {
+    min-width: 200px;
+    min-height: 150px;
+    margin-bottom: 15px;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    resize: both;
+    overflow: auto;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.task-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+    padding: 3px; /* Reduced padding for closer line spacing */
+    font-size: 13px; /* Font size set to 13px */
+}
+
+.task input[type="checkbox"] {
+    margin-right: 8px;
+}
+
 button {
     padding: 8px 12px;
     border: none;
@@ -119,64 +130,54 @@ button:hover {
     cursor: pointer;
 }
 
-/* Task List */
-.task-list {
-    list-style-type: none;
-    padding: 0;
+/* Footer Styles */
+footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: #9DA8C4; /* You can adjust the color here */
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10; /* Ensure it stays on top */
 }
-
-.task {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2px;
-    padding: 3px;
-    font-size: 13px;
-}
-
-.task input[type="checkbox"] {
-    margin-right: 8px;
-}
-
 </style>
 </head>
 <body>
 <div class="container">
-    <!-- Timezone Display -->
-    <div class="timezone-container" id="timezoneContainer">
-        <div class="timezone" id="usPacific">US Pacific: Loading...</div>
-        <div class="timezone" id="usMountain">US Mountain: Loading...</div>
-        <div class="timezone" id="usCentral">US Central: Loading...</div>
-        <div class="timezone" id="usEastern">US Eastern: Loading...</div>
-        <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
-    </div>
+<!-- Timezone Display -->
+<div class="timezone-container" id="timezoneContainer">
+    <div class="timezone" id="usPacific">US Pacific: Loading...</div>
+    <div class="timezone" id="usMountain">US Mountain: Loading...</div>
+    <div class="timezone" id="usCentral">US Central: Loading...</div>
+    <div class="timezone" id="usEastern">US Eastern: Loading...</div>
+    <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
+</div>
 
-    <!-- Theme Toggle and Font Size Controls -->
-    <button id="themeToggle">Switch to Dark Mode</button>
-    <button id="increaseFontSize">+</button>
-    <button id="decreaseFontSize">-</button>
+<!-- Theme Toggle and Font Size Controls -->
+<button id="themeToggle">Switch to Dark Mode</button>
+<button id="increaseFontSize">+</button>
+<button id="decreaseFontSize">-</button>
 
-    <!-- Notepad Container -->
-    <div class="notepad-container" id="notepadContainer">
-        <textarea id="notepad" placeholder="Write your notes here..."></textarea>
-    </div>
+<!-- Notepad Container -->
+<div class="notepad-container" id="notepadContainer">
+    <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+</div>
 
-    <!-- Task List -->
-    <div class="task-container">
-        <input type="text" id="taskInput" placeholder="Add a task" />
-        <button id="addTaskButton">Add Task</button>
-        <button id="clearAllButton">Clear All Tasks</button>
-        <ul id="taskList" class="task-list"></ul>
-    </div>
+<!-- Task List -->
+<div class="task-container">
+    <input type="text" id="taskInput" placeholder="Add a task" />
+    <button id="addTaskButton">Add Task</button>
+    <button id="clearAllButton">Clear All Tasks</button>
+    <ul id="taskList" class="task-list"></ul>
+</div>
 
-    <!-- Font Color Customization -->
-    <div class="font-color-picker">
-        <label for="fontColor">Font Color: </label>
-        <input type="color" id="fontColor" value="#9DA8C4">
-    </div>
+<!-- Font Color Customization -->
+<div class="font-color-picker">
+    <label for="fontColor">Font Color: </label>
+    <input type="color" id="fontColor" value="#9DA8C4">
+</div>
 
-    <!-- Footer -->
-    <footer id="footer">Created by Shem | Enjoy your time!</footer>
 </div>
 
 <script>
@@ -185,12 +186,18 @@ const themeToggle = document.getElementById('themeToggle');
 let isDarkMode = localStorage.getItem('theme') === 'dark';
 document.body.classList.toggle('dark-theme', isDarkMode);
 document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
+document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+    el.classList.toggle('dark-theme', isDarkMode);
+});
 
 themeToggle.addEventListener('click', () => {
     isDarkMode = !isDarkMode;
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     document.body.classList.toggle('dark-theme', isDarkMode);
     document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
+    document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+        el.classList.toggle('dark-theme', isDarkMode);
+    });
     themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
 });
 
@@ -206,13 +213,16 @@ notepad.addEventListener('input', () => {
 let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
 notepad.style.fontSize = fontSize + 'px';
 
-document.getElementById('increaseFontSize').addEventListener('click', () => {
+const increaseFontSize = document.getElementById('increaseFontSize');
+const decreaseFontSize = document.getElementById('decreaseFontSize');
+
+increaseFontSize.addEventListener('click', () => {
     fontSize += 2;
     localStorage.setItem('fontSize', fontSize);
     notepad.style.fontSize = fontSize + 'px';
 });
 
-document.getElementById('decreaseFontSize').addEventListener('click', () => {
+decreaseFontSize.addEventListener('click', () => {
     fontSize -= 2;
     localStorage.setItem('fontSize', fontSize);
     notepad.style.fontSize = fontSize + 'px';
@@ -231,17 +241,10 @@ function renderTasks() {
     tasks.forEach((task, index) => {
         const li = document.createElement('li');
         li.classList.add('task');
-        li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : ''}">${task.text}</span>`;
+        li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span> <button class="deleteBtn" data-index="${index}">X</button>`;
         taskList.appendChild(li);
-
-        // Add event listener for task completion
-        li.querySelector('input').addEventListener('change', (e) => {
-            const index = e.target.dataset.index;
-            tasks[index].completed = e.target.checked;
-            localStorage.setItem('tasks', JSON.stringify(tasks));
-            renderTasks();
-        });
     });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 addTaskButton.addEventListener('click', () => {
@@ -249,48 +252,64 @@ addTaskButton.addEventListener('click', () => {
     if (taskText) {
         tasks.push({ text: taskText, completed: false });
         taskInput.value = '';
-        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTasks();
+});
+
+
+taskList.addEventListener('click', (e) => {
+    if (e.target.classList.contains('deleteBtn')) {
+        const index = e.target.getAttribute('data-index');
+        tasks.splice(index, 1);
+        renderTasks();
+    } else if (e.target.type === 'checkbox') {
+        const index = e.target.getAttribute('data-index');
+        tasks[index].completed = e.target.checked;
         renderTasks();
     }
 });
 
 clearAllButton.addEventListener('click', () => {
     tasks = [];
-    localStorage.setItem('tasks', JSON.stringify(tasks));
     renderTasks();
 });
 
 renderTasks();
 
-// Font Color Customization
+// Font Color Customization Persistence
 const fontColorInput = document.getElementById('fontColor');
+const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4';
+fontColorInput.value = savedFontColor;
+
+document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
+    el.style.color = savedFontColor;
+});
+
 fontColorInput.addEventListener('input', () => {
+    const fontColor = fontColorInput.value;
     document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-        el.style.color = fontColorInput.value;
+        el.style.color = fontColor;
     });
+    localStorage.setItem('fontColor', fontColor);
 });
 
 // Timezone Display
 function updateTimezone() {
     const date = new Date();
-    const options = { timeZoneName: 'short', hour: '2-digit', minute: '2-digit' };
-
-    const usPacific = date.toLocaleTimeString('en-US', { ...options, timeZone: 'America/Los_Angeles' });
-    const usMountain = date.toLocaleTimeString('en-US', { ...options, timeZone: 'America/Denver' });
-    const usCentral = date.toLocaleTimeString('en-US', { ...options, timeZone: 'America/Chicago' });
-    const usEastern = date.toLocaleTimeString('en-US', { ...options, timeZone: 'America/New_York' });
-    const phPhilippines = date.toLocaleTimeString('en-US', { ...options, timeZone: 'Asia/Manila' });
-
-    document.getElementById('usPacific').textContent = `US Pacific: ${usPacific}`;
-    document.getElementById('usMountain').textContent = `US Mountain: ${usMountain}`;
-    document.getElementById('usCentral').textContent = `US Central: ${usCentral}`;
-    document.getElementById('usEastern').textContent = `US Eastern: ${usEastern}`;
-    document.getElementById('phPhilippines').textContent = `PH Philippines: ${phPhilippines}`;
+    document.getElementById('usPacific').textContent = `US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })}`;
+    document.getElementById('usMountain').textContent = `US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })}`;
+    document.getElementById('usCentral').textContent = `US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })}`;
+    document.getElementById('usEastern').textContent = `US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })}`;
+    document.getElementById('phPhilippines').textContent = `PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })}`;
 }
 
-// Update Timezone Every Minute
-setInterval(updateTimezone, 60000);
 updateTimezone();
+setInterval(updateTimezone, 60000);
 </script>
+
+<!-- Footer -->
+<footer>
+    Made by Shemida G
+</footer>
+
 </body>
 </html>
