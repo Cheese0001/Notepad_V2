@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Tracker Widget</title>
 
-
     <style>
         /* Base Styles */
         body {
@@ -124,6 +123,34 @@
         .large-font {
             font-size: 24px;
         }
+
+        /* Pastel colors */
+        .pastel {
+            color: #DFB7CC;
+            background-color: #C6B0C8;
+        }
+
+        /* Input text field styles */
+        #notepad, #task-input {
+            background-color: #F8E1F4;
+            border: 1px solid #D1B0D9;
+            color: #5A4F5C;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            width: 100%;
+        }
+
+        /* Resizable task container */
+        .task-resize-handle {
+            width: 15px;
+            height: 15px;
+            background-color: #9DA8C4;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            cursor: se-resize;
+        }
     </style>
 </head>
 <body>
@@ -133,13 +160,13 @@
         <!-- Time Zone Container -->
         <div class="time-zone-container">
             <div class="time-zone-box" id="pacific-time">
-                US Pacific: <span id="pacific"></span>
+                US Pacific: <span id="pacific"></span> <span id="pacific-diff"></span>
             </div>
             <div class="time-zone-box" id="mountain-time">
-                US Mountain: <span id="mountain"></span>
+                US Mountain: <span id="mountain"></span> <span id="mountain-diff"></span>
             </div>
             <div class="time-zone-box" id="central-time">
-                US Central: <span id="central"></span>
+                US Central: <span id="central"></span> <span id="central-diff"></span>
             </div>
             <div class="time-zone-box" id="philippines-time">
                 Philippines: <span id="philippines"></span>
@@ -148,17 +175,20 @@
 
         <!-- Notepad Container -->
         <div class="notepad-container" id="notepad-container">
-            <textarea id="notepad" placeholder="Write your notes here..." rows="10" style="width: 100%; font-size: 18px;"></textarea>
+            <textarea id="notepad" placeholder="Write your notes here..." rows="10"></textarea>
             <div class="resize-handle" id="resize-handle"></div>
         </div>
-    <button id="increase-font" class="button">+</button>
-    <button id="decrease-font" class="button">-</button>
+
+        <button id="increase-font" class="button">+</button>
+        <button id="decrease-font" class="button">-</button>
+
         <!-- Task Container -->
         <div class="task-container" id="task-container">
-            <input type="text" id="task-input" placeholder="Enter task" style="width: 100%; padding: 5px; margin-bottom: 10px;">
+            <input type="text" id="task-input" placeholder="Enter task">
             <ul id="task-list"></ul>
             <button class="button" onclick="addTask()">Add Task</button>
             <button class="button" onclick="clearTasks()">Clear All Tasks</button>
+            <div class="task-resize-handle" id="task-resize-handle"></div>
         </div>
 
         <!-- Font Color Customization -->
@@ -170,7 +200,6 @@
     </div>
 
     <script>
-        // Initialize Theme and Font Color
         let isDarkMode = localStorage.getItem('theme') === 'dark';
         let currentFontColor = 'purple';
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
@@ -179,7 +208,7 @@
         // Handle Theme Toggle
         function toggleTheme() {
             isDarkMode = !isDarkMode;
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light'); // Store theme in localStorage
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
             document.body.className = isDarkMode ? 'dark-theme' : 'light-theme';
             document.getElementById('mainContainer').className = isDarkMode ? 'container dark-theme' : 'container light-theme';
         }
@@ -196,7 +225,6 @@
             localStorage.setItem('notepad', this.value);
         });
 
-        // Set initial notepad value
         document.getElementById('notepad').value = savedNotepad;
 
         // Add Task Functionality
@@ -205,7 +233,7 @@
             if (taskText) {
                 tasks.push({ text: taskText, completed: false });
                 updateTaskList();
-                document.getElementById('task-input').value = ''; // Clear input after adding
+                document.getElementById('task-input').value = '';
             }
         }
 
@@ -243,49 +271,67 @@
             updateTaskList();
         }
 
-        // Update Time Zones
-        function updateTimeZones() {
-            const options = { hour: '2-digit', minute: '2-digit', hour12: true };
-            const pacific = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', ...options });
-            const mountain = new Date().toLocaleString('en-US', { timeZone: 'America/Denver', ...options });
-            const central = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago', ...options });
-            const philippines = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', ...options });
+        // Resize Notepad and Task Container
+        let resizeHandle = document.getElementById('resize-handle');
+        let taskResizeHandle = document.getElementById('task-resize-handle');
+        let notepadContainer = document.getElementById('notepad-container');
+        let taskContainer = document.getElementById('task-container');
 
-            document.getElementById('pacific').textContent = pacific;
-            document.getElementById('mountain').textContent = mountain;
-            document.getElementById('central').textContent = central;
-            document.getElementById('philippines').textContent = philippines;
+        resizeHandle.addEventListener('mousedown', startResizeNotepad);
+        taskResizeHandle.addEventListener('mousedown', startResizeTask);
+
+        function startResizeNotepad(e) {
+            e.preventDefault();
+            window.addEventListener('mousemove', resizeNotepad);
+            window.addEventListener('mouseup', stopResize);
         }
 
-        // Call updateTimeZones function periodically
-        setInterval(updateTimeZones, 1000); // Update every second
-        updateTimeZones(); // Initial call
+        function startResizeTask(e) {
+            e.preventDefault();
+            window.addEventListener('mousemove', resizeTask);
+            window.addEventListener('mouseup', stopResize);
+        }
 
-        // Handle Resizing Notepad
-        const resizeHandle = document.getElementById('resize-handle');
-        const notepadContainer = document.getElementById('notepad-container');
+        function resizeNotepad(e) {
+            notepadContainer.style.width = e.clientX - notepadContainer.getBoundingClientRect().left + 'px';
+            notepadContainer.style.height = e.clientY - notepadContainer.getBoundingClientRect().top + 'px';
+        }
 
-        resizeHandle.addEventListener('mousedown', function(e) {
-            const initialWidth = notepadContainer.offsetWidth;
-            const initialHeight = notepadContainer.offsetHeight;
-            const initialX = e.clientX;
-            const initialY = e.clientY;
+        function resizeTask(e) {
+            taskContainer.style.width = e.clientX - taskContainer.getBoundingClientRect().left + 'px';
+            taskContainer.style.height = e.clientY - taskContainer.getBoundingClientRect().top + 'px';
+        }
 
-            const onMouseMove = (moveEvent) => {
-                const widthDiff = moveEvent.clientX - initialX;
-                const heightDiff = moveEvent.clientY - initialY;
-                notepadContainer.style.width = initialWidth + widthDiff + 'px';
-                notepadContainer.style.height = initialHeight + heightDiff + 'px';
-            };
+        function stopResize() {
+            window.removeEventListener('mousemove', resizeNotepad);
+            window.removeEventListener('mousemove', resizeTask);
+            window.removeEventListener('mouseup', stopResize);
+        }
 
-            const onMouseUp = () => {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            };
+        // Update Time Zones
+        function updateTimeZones() {
+            let pacificTime = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+            let mountainTime = new Date().toLocaleString('en-US', { timeZone: 'America/Denver' });
+            let centralTime = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' });
+            let philippinesTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
 
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
-        });
+            let pacificDiff = new Date().getHours() - new Date(pacificTime).getHours();
+            let mountainDiff = new Date().getHours() - new Date(mountainTime).getHours();
+            let centralDiff = new Date().getHours() - new Date(centralTime).getHours();
+
+            document.getElementById('pacific').textContent = pacificTime;
+            document.getElementById('mountain').textContent = mountainTime;
+            document.getElementById('central').textContent = centralTime;
+            document.getElementById('philippines').textContent = philippinesTime;
+
+            document.getElementById('pacific-diff').textContent = `(Diff: ${pacificDiff} hours)`;
+            document.getElementById('mountain-diff').textContent = `(Diff: ${mountainDiff} hours)`;
+            document.getElementById('central-diff').textContent = `(Diff: ${centralDiff} hours)`;
+        }
+
+        setInterval(updateTimeZones, 1000);
+        updateTimeZones();  // Initialize time zones
+
     </script>
 </body>
 </html>
