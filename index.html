@@ -80,13 +80,19 @@ textarea {
 .task-list {
   list-style: none;
   padding: 0;
-  line-height: 1.1;
+  margin: 0;
 }
 
 .task-list li {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.task-list li button {
+  margin-left: 5px;
+  font-size: 14px;
 }
 
 .task-list li.completed {
@@ -258,17 +264,46 @@ if (storedFont) {
   document.getElementById("fontSelect").value = storedFont;
 }
 
-// Persist notepad content
-const storedNotes = localStorage.getItem('notes');
-if (storedNotes) {
-  document.getElementById("notepad").value = storedNotes;
+// Task Management
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-// Persist task list
-const storedTasks = JSON.parse(localStorage.getItem('tasks'));
-if (storedTasks) {
-  const taskList = document.getElementById('taskList');
-  storedTasks.forEach(task => {
+function addTask() {
+  const taskInput = document.getElementById("taskInput");
+  const taskName = taskInput.value.trim();
+  if (taskName) {
+    const task = {
+      name: taskName,
+      completed: false
+    };
+    tasks.push(task);
+    taskInput.value = '';
+    renderTasks();
+    saveTasks();
+  }
+}
+
+function deleteTask(taskItem) {
+  const index = Array.from(taskItem.parentElement.children).indexOf(taskItem);
+  tasks.splice(index, 1);
+  renderTasks();
+  saveTasks();
+}
+
+function toggleTaskCompletion(taskItem) {
+  const taskIndex = Array.from(taskItem.parentElement.children).indexOf(taskItem);
+  tasks[taskIndex].completed = !tasks[taskIndex].completed;
+  renderTasks();
+  saveTasks();
+}
+
+function renderTasks() {
+  const taskList = document.getElementById("taskList");
+  taskList.innerHTML = ''; // Clear current task list
+  tasks.forEach(task => {
     const taskItem = document.createElement('li');
     taskItem.textContent = task.name;
     taskItem.classList.toggle('completed', task.completed);
@@ -282,6 +317,13 @@ if (storedTasks) {
     taskList.appendChild(taskItem);
   });
 }
+
+document.getElementById("addTaskButton").addEventListener("click", addTask);
+document.getElementById("clearAllButton").addEventListener("click", () => {
+  tasks = [];
+  renderTasks();
+  saveTasks();
+});
 
 // Theme toggle button
 document.getElementById('themeToggle').addEventListener('click', () => {
@@ -319,7 +361,6 @@ document.getElementById('decreaseTaskTextSize').addEventListener('click', () => 
   const currentSize = parseInt(window.getComputedStyle(document.getElementById('taskInput')).fontSize);
   document.getElementById('taskInput').style.fontSize = `${currentSize - 2}px`;
 });
-
 </script>
 </body>
 </html>
