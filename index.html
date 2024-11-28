@@ -44,14 +44,18 @@
       padding: 0;
     }
 
-    .task {
+.task {
   display: flex;
-  align-items: left;
-  justify-content: space-between;
-  margin-bottom: 2px; /* Reduced vertical space between tasks */
-  padding: 5px; /* Optional: reduces padding inside each task item */
+  align-items: center;  /* Keep the checkbox and text aligned properly */
+  justify-content: flex-start;  /* Align the text to the left */
+  margin-bottom: 8px;
+  padding: 0px;  /* Optional: reduces padding inside each task item */
 }
 
+.task span {
+  text-align: left;  /* Ensures text is aligned left within the span */
+  margin-left: 10px;  /* Optional: Adds spacing between the checkbox and the text */
+}
 
     .task input[type="checkbox"] {
       margin-right: 8px;
