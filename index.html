@@ -233,7 +233,36 @@
             document.getElementById('mountain').textContent = mountain;
             document.getElementById('central').textContent = central;
             document.getElementById('philippines').textContent = philippines;
-        }
+        } document.getElementById('increase-font').addEventListener('click', function() {
+    const currentSize = parseInt(window.getComputedStyle(notepad).fontSize);
+    notepad.style.fontSize = (currentSize + 2) + 'px';
+});
+
+document.getElementById('decrease-font').addEventListener('click', function() {
+    const currentSize = parseInt(window.getComputedStyle(notepad).fontSize);
+    notepad.style.fontSize = (currentSize - 2) + 'px';
+});
+const resizeHandle = document.getElementById('resize-handle');
+let isResizing = false;
+
+resizeHandle.addEventListener('mousedown', (e) => {
+    isResizing = true;
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', () => {
+        isResizing = false;
+        document.removeEventListener('mousemove', handleMouseMove);
+    });
+});
+
+function handleMouseMove(e) {
+    if (isResizing) {
+        const newWidth = e.clientX - notepadContainer.offsetLeft;
+        const newHeight = e.clientY - notepadContainer.offsetTop;
+        notepadContainer.style.width = `${newWidth}px`;
+        notepadContainer.style.height = `${newHeight}px`;
+    }
+}
+
 
         // Initial Setup
         updateTimeZones();
