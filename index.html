@@ -189,6 +189,9 @@
             <button class="button" onclick="addTask()">Add Task</button>
             <button class="button" onclick="clearTasks()">Clear All Tasks</button>
             <div class="task-resize-handle" id="task-resize-handle"></div>
+            <button id="increase-task-font" class="button">Increase Task Font</button>
+<button id="decrease-task-font" class="button">Decrease Task Font</button>
+
         </div>
 
         <!-- Font Color Customization -->
@@ -237,20 +240,41 @@
             }
         }
 
-        // Update Task List
-        function updateTaskList() {
-            const taskList = document.getElementById('task-list');
-            taskList.innerHTML = '';
-            tasks.forEach((task, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span style="text-decoration: ${task.completed ? 'line-through' : 'none'}">${task.text}</span>
-                    <button class="button" onclick="toggleTaskCompletion(${index})">✓</button>
-                    <button class="button" onclick="deleteTask(${index})">X</button>
-                `;
-                taskList.appendChild(li);
-            });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
+       // Update Task List
+function updateTaskList() {
+    const taskList = document.getElementById('task-list');
+    taskList.innerHTML = '';
+    tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        
+        // Set the font size for the task item, for example 20px
+        li.style.fontSize = '20px';  // Change this value to your preferred font size
+
+        li.innerHTML = `
+            <span style="text-decoration: ${task.completed ? 'line-through' : 'none'}">${task.text}</span>
+            <button class="button" onclick="toggleTaskCompletion(${index})">✓</button>
+            <button class="button" onclick="deleteTask(${index})">X</button>
+        `;
+        taskList.appendChild(li);
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+} let taskFontSize = 20; // Initial font size for tasks
+
+// Increase task font size
+document.getElementById('increase-task-font').addEventListener('click', function() {
+    taskFontSize += 2; // Increase by 2px
+    updateTaskList();  // Re-render tasks with the new font size
+});
+
+// Decrease task font size
+document.getElementById('decrease-task-font').addEventListener('click', function() {
+    if (taskFontSize > 10) {  // Minimum font size
+        taskFontSize -= 2; // Decrease by 2px
+        updateTaskList();  // Re-render tasks with the new font size
+    }
+});
+
+
         }
 
         // Toggle Task Completion
