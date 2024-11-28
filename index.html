@@ -3,329 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notepad, Task Manager, & Timezones</title>
+    <title>Notepad & Task Tracker Widget</title>
     <style>
-        /* General Styles */
+        /* Base Styles */
         body {
-            font-family: 'Press Start 2P', cursive;
-            padding: 20px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .container {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-        }
-        button {
-            padding: 10px 15px;
-            margin: 5px;
-            cursor: pointer;
-            border: none;
-            border-radius: 5px;
-        }
-        /* Dark Theme Styles */
-        .dark-theme {
-            background-color: #333;
-            color: #fff;
-        }
-        .dark-theme textarea, .dark-theme input, .dark-theme select {
-            background-color: #444;
-            color: #fff;
-            border: 1px solid #666;
-        }
-        .dark-theme button {
-            background-color: #555;
-            color: #fff;
-        }
-        textarea {
-            width: 100%;
-            height: 200px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            resize: both;
-        }
-        ul {
-            list-style-type: none;
+            font-family: 'Star 2P', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            margin: 0;
             padding: 0;
         }
-        #task-list li {
-            margin: 10px 0;
+
+        /* Theme Styles */
+        .dark-theme {
+            background-color: #2e2e2e;
+            color: white;
+        }
+        
+        .light-theme {
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .container {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            padding: 15px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+
+        .notepad-container, .task-container {
+            background-color: #f5f5f5;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .time-zone-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .completed {
-            text-decoration: line-through;
-            color: grey;
-        }
-        #current-time {
-            font-size: 1.2em;
-            font-weight: bold;
+            justify-content: space-around;
+            width: 100%;
             margin-top: 10px;
         }
-        button:hover {
-            background-color: #45a049;
+
+        .time-zone-box {
+            background-color: #e0c3fc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 20%;
+            text-align: center;
         }
-        .pastel-pink { background-color: #ffd1dc; }
-        .pastel-purple { background-color: #d1c4e9; }
-        .pastel-brown { background-color: #d7ccc8; }
-        .pastel-blue { background-color: #bbdefb; }
-        .pastel-green { background-color: #c8e6c9; }
-        .credits {
-            position: fixed;
+
+        .button {
+            background-color: #D0B0BD;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            font-size: 1rem;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #DFB7CC;
+        }
+
+        .resize-handle {
+            width: 15px;
+            height: 15px;
+            background-color: #9DA8C4;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            cursor: se-resize;
+        }
+
+        .toggle-container {
+            position: absolute;
             bottom: 10px;
-            right: 10px;
-            font-size: 0.8em;
-            color: #888;
+            left: 10px;
+        }
+
+        .collapsible {
+            display: none;
+        }
+
+        /* Theme Toggle */
+        .theme-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px;
+            background-color: #9DA8C4;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <!-- Theme Toggle -->
-    <button id="theme-toggle">Toggle Theme</button>
+    <div class="theme-button" onclick="toggleTheme()">Toggle Theme</div>
 
-    <!-- Current Time and Timezone -->
-    <div id="timezone" class="container pastel-pink">
-        <h2>Current Time</h2>
-        <select id="timezone-select">
-            <option value="America/Los_Angeles">US Pacific</option>
-            <option value="America/Denver">US Mountain</option>
-            <option value="America/Chicago">US Central</option>
-            <option value="America/New_York">US Eastern</option>
-            <option value="Asia/Manila">Philippines</option>
-        </select>
-        <div id="current-time"></div>
-    </div>
-
-    <!-- Notepad Section -->
-    <section id="notepad-section" class="container pastel-purple">
-        <h3>Notepad</h3>
-        <textarea id="notepad" placeholder="Write your notes here..."></textarea>
-        <button id="clear-notes">Clear Notes</button>
-        <div>
-            <button id="increase-font">+</button>
-            <button id="decrease-font">-</button>
+    <div id="mainContainer" class="container">
+        <!-- Time Zone Container -->
+        <div class="time-zone-container">
+            <div class="time-zone-box" id="pacific-time">
+                US Pacific: <span id="pacific"></span>
+            </div>
+            <div class="time-zone-box" id="mountain-time">
+                US Mountain: <span id="mountain"></span>
+            </div>
+            <div class="time-zone-box" id="central-time">
+                US Central: <span id="central"></span>
+            </div>
+            <div class="time-zone-box" id="philippines-time">
+                Philippines: <span id="philippines"></span>
+            </div>
         </div>
-    </section>
 
-    <!-- Task Manager Section -->
-    <section id="task-manager-section" class="container pastel-brown">
-        <h3>Task Manager</h3>
-        <input type="text" id="new-task" placeholder="New task...">
-        <button id="add-task">Add Task</button>
-        <ul id="task-list"></ul>
-        <button id="clear-tasks">Clear All Tasks</button>
-    </section>
+        <!-- Notepad Container -->
+        <div class="notepad-container" id="notepad-container">
+            <textarea id="notepad" placeholder="Write your notes here..." rows="10" style="width: 100%; font-size: 18px;"></textarea>
+            <div class="resize-handle" id="resize-handle"></div>
+        </div>
 
-    <div class="credits">
-        Made by Copilot and Cheese000
+        <!-- Task Container -->
+        <div class="task-container" id="task-container">
+            <ul id="task-list"></ul>
+            <button class="button" onclick="addTask()">Add Task</button>
+            <button class="button" onclick="clearTasks()">Clear All Tasks</button>
+        </div>
+
+        <!-- Font Color Customization -->
+        <div class="toggle-container">
+            <button class="button" onclick="changeFontColor('purple')">Purple Font</button>
+            <button class="button" onclick="changeFontColor('pink')">Pink Font</button>
+            <button class="button" onclick="changeFontColor('brown')">Brown Font</button>
+        </div>
     </div>
 
     <script>
-        // Theme Toggle with Persistence
-        const themeToggle = document.getElementById('theme-toggle');
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'dark') {
-            document.body.classList.add('dark-theme');
+        // Initialize Theme and Font Color
+        let isDarkMode = false;
+        let currentFontColor = 'purple';
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let savedNotepad = localStorage.getItem('notepad') || '';
+
+        // Handle Theme Toggle
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.className = isDarkMode ? 'dark-theme' : 'light-theme';
+            document.getElementById('mainContainer').className = isDarkMode ? 'container dark-theme' : 'container light-theme';
         }
 
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
-        });
-
-        // Notepad Persistence
-        const notepad = document.getElementById('notepad');
-        const savedNotes = localStorage.getItem('notepad');
-        if (savedNotes) {
-            notepad.value = savedNotes;
+        // Handle Font Color Change
+        function changeFontColor(color) {
+            currentFontColor = color;
+            document.getElementById('notepad').style.color = color;
+            document.getElementById('task-container').style.color = color;
         }
-        notepad.addEventListener('input', () => {
-            localStorage.setItem('notepad', notepad.value);
+
+        // Save Notepad Content
+        document.getElementById('notepad').addEventListener('input', function() {
+            localStorage.setItem('notepad', this.value);
         });
 
-        document.getElementById('clear-notes').addEventListener('click', () => {
-            notepad.value = '';
-            localStorage.removeItem('notepad');
-        });
+        // Set initial notepad value
+        document.getElementById('notepad').value = savedNotepad;
 
-        // Font size control for notepad
-        const increaseFontButton = document.getElementById('increase-font');
-        const decreaseFontButton = document.getElementById('decrease-font');
-
-        increaseFontButton.addEventListener('click', () => {
-            let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
-            notepad.style.fontSize = (currentFontSize + 2) + 'px';
-        });
-
-        decreaseFontButton.addEventListener('click', () => {
-            let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
-            notepad.style.fontSize = (currentFontSize - 2) + 'px';
-        });
-
-        // Task Manager
-        const taskList = document.getElementById('task-list');
-        const newTaskInput = document.getElementById('new-task');
-        const addTaskButton = document.getElementById('add-task');
-        const clearTasksButton = document.getElementById('clear-tasks');
-
-        const savedTasks = JSON.parse(localStorage.getItem('tasks')) || [];
-        savedTasks.forEach(task => {
-            const taskItem = createTaskElement(task.text, task.completed);
-            taskList.appendChild(taskItem);
-        });
-
-        addTaskButton.addEventListener('click', () => {
-            const taskText = newTaskInput.value.trim();
+        // Add Task Functionality
+        function addTask() {
+            const taskText = prompt("Enter task:");
             if (taskText) {
-                const taskItem = createTaskElement(taskText, false);
-                taskList.appendChild(taskItem);
-                newTaskInput.value = '';
-                saveTasks();
+                tasks.push({ text: taskText, completed: false });
+                updateTaskList();
             }
-        });
+        }
 
-        taskList.addEventListener('click', (e) => {
-            if (e.target.classList.contains('delete-task')) {
-                const taskItem = e.target.parentElement;
-                taskList.removeChild(taskItem);
-                saveTasks();
-            } else if (e.target.classList.contains('task-text')) {
-                e.target.classList.toggle('completed');
-                saveTasks();
-            }
-        });
-
-        clearTasksButton.addEventListener('click', () => {
+        // Update Task List
+        function updateTaskList() {
+            const taskList = document.getElementById('task-list');
             taskList.innerHTML = '';
-            localStorage.removeItem('tasks');
-        });
-
-        function saveTasks() {
-            const tasks = [];
-            taskList.querySelectorAll('li').forEach(taskItem => {
-                const taskText = taskItem.querySelector('.task-text').textContent;
-                const taskCompleted = taskItem.querySelector('.task-text').classList.contains('completed');
-                tasks.push({ text: taskText, completed: taskCompleted });
+            tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span style="text-decoration: ${task.completed ? 'line-through' : 'none'}">${task.text}</span>
+                    <button class="button" onclick="toggleTaskCompletion(${index})">✓</button>
+                    <button class="button" onclick="deleteTask(${index})">X</button>
+                `;
+                taskList.appendChild(li);
             });
             localStorage.setItem('tasks', JSON.stringify(tasks));
         }
 
-        function createTaskElement(taskText, completed) {
-            const taskItem = document.createElement('li');
-            taskItem.innerHTML = `<span class="task-text ${completed ? 'completed' : ''}">${taskText}</span>
-                                  <button class="delete-task">x</button>`;
-            return taskItem;
+        // Toggle Task Completion
+        function toggleTaskCompletion(index) {
+            tasks[index].completed = !tasks[index].completed;
+            updateTaskList();
         }
 
-        // Timezone Feature
-        const timezoneSelect = document.getElementById('timezone-select');
-        const currentTimeDisplay = document.getElementById('current-time');
-
-        const timezones = [
-            { name: 'US Pacific', zone: 'America/Los_Angeles' },
-            { name: 'US Mountain', zone: 'America/Denver' },
-            { name: 'US Central', zone: 'America/Chicago' },
-            { name: 'US Eastern', zone: 'America/New_York' },
-            { name: 'Philippines', zone: 'Asia/Manila' }
-        ];
-
-        timezones.forEach(tz => {
-            const option = document.createElement('option');
-            option.value = tz.zone;
-            option.textContent = tz.name;
-            timezoneSelect.appendChild(option);
-        });
-
-        timezoneSelect.value = localStorage.getItem('selectedTimezone') || Intl.DateTimeFormat().resolvedOptions().timeZone;
-        updateTime();
-
-        timezoneSelect.addEventListener('change', () => {
-            localStorage.setItem('selectedTimezone', timezoneSelect.value);
-            updateTime();
-        });
-
-        function updateTime() {
-            const selectedZone = timezoneSelect.value;
-[_{{{CITATION{{{_1{](https://github.com/davinyvidal/Notepad-Browser/tree/1395e466534584183691d59939f10861884c04b4/file%2Ffile.php)
-        taskList.addEventListener('click', (e) => {
-            if (e.target.classList.contains('delete-task')) {
-                const taskItem = e.target.parentElement;
-                taskList.removeChild(taskItem);
-                saveTasks();
-            } else if (e.target.classList.contains('task-text')) {
-                e.target.classList.toggle('completed');
-                saveTasks();
-            }
-        });
-
-        clearTasksButton.addEventListener('click', () => {
-            taskList.innerHTML = '';
-            localStorage.removeItem('tasks');
-        });
-
-        function saveTasks() {
-            const tasks = [];
-            taskList.querySelectorAll('li').forEach(taskItem => {
-                const taskText = taskItem.querySelector('.task-text').textContent;
-                const taskCompleted = taskItem.querySelector('.task-text').classList.contains('completed');
-                tasks.push({ text: taskText, completed: taskCompleted });
-            });
-            localStorage.setItem('tasks', JSON.stringify(tasks));
+        // Delete Task
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            updateTaskList();
         }
 
-        function createTaskElement(taskText, completed) {
-            const taskItem = document.createElement('li');
-            taskItem.innerHTML = `<span class="task-text ${completed ? 'completed' : ''}">${taskText}</span>
-                                  <button class="delete-task">x</button>`;
-            return taskItem;
+        // Clear All Tasks
+        function clearTasks() {
+            tasks = [];
+            updateTaskList();
         }
 
-        // Timezone Feature
-        function updateTime() {
-            const now = new Date();
-            const timezones = [
-                { id: 'pacific-time-display', zone: 'America/Los_Angeles' },
-                { id: 'mountain-time-display', zone: 'America/Denver' },
-                { id: 'central-time-display', zone: 'America/Chicago' },
-                { id: 'eastern-time-display', zone: 'America/New_York' },
-                { id: 'philippines-time-display', zone: 'Asia/Manila' }
-            ];
+        // Update Time Zones
+        function updateTimeZones() {
+            const options = { timeZoneName: 'short' };
+            const pacific = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', ...options });
+            const mountain = new Date().toLocaleString('en-US', { timeZone: 'America/Denver', ...options });
+            const central = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago', ...options });
+            const philippines = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', ...options });
 
-            timezones.forEach(tz => {
-                const formatter = new Intl.DateTimeFormat('en-US', {
-                    timeZone: tz.zone,
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                });
-                document.getElementById(tz.id).textContent = formatter.format(now);
-            });
+            document.getElementById('pacific').textContent = pacific;
+            document.getElementById('mountain').textContent = mountain;
+            document.getElementById('central').textContent = central;
+            document.getElementById('philippines').textContent = philippines;
         }
 
-        setInterval(updateTime, 1000);
-
-        // Modal Logic
-        const modal = document.getElementById("myModal");
-        const btn = document.getElementById("open-modal");
-        const span = document.getElementsByClassName("close")[0];
-
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
-
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
+        // Initial Setup
+        updateTimeZones();
+        setInterval(updateTimeZones, 60000); // Update every minute
     </script>
 </body>
 </html>
