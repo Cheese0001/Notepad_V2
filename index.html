@@ -15,7 +15,9 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #f0f0f0;
+      background-image: url('your-image-url.jpg');  /* Set your image URL here */
+      background-size: cover;
+      background-position: center;
     }
 
     .container {
@@ -26,8 +28,20 @@
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, color 0.3s;
     }
 
+    .dark-theme {
+      background-color: #333333;
+      color: #f0f0f0;
+    }
+
+    .light-theme {
+      background-color: #ffffff;
+      color: #333333;
+    }
+
+    /* Notepad and Task Containers */
     .notepad-container, .task-container {
       min-width: 200px;
       min-height: 150px;
@@ -44,11 +58,10 @@
       padding: 0;
     }
 
-    /* Task style */
     .task {
       display: flex;
       align-items: center;
-      justify-content: flex-start;  /* Align task text to the left */
+      justify-content: flex-start;
       margin-bottom: 8px;
       padding: 5px;
     }
@@ -79,20 +92,9 @@
 
     /* Delete button styling */
     .task .delete-btn {
-      margin-left: 10px;  /* More space between task text and "X" button */
+      margin-left: 10px;
       cursor: pointer;
       font-size: 18px;
-    }
-
-    /* Theme-specific styles */
-    .light-theme {
-      background-color: #ffffff;
-      color: #333333;
-    }
-
-    .dark-theme {
-      background-color: #333333;
-      color: #f0f0f0;
     }
 
     /* Font color customization */
@@ -107,11 +109,7 @@
       cursor: pointer;
     }
 
-    /* Resizing and box shadow */
-    .notepad-container, .task-container {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
+    /* Timezone display */
     .timezone-container {
       display: flex;
       justify-content: space-between;
@@ -160,16 +158,17 @@
       <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
     </div>
   </div>
+
   <script>
     // Theme Toggle Functionality
     const themeToggle = document.getElementById('themeToggle');
     let isDarkMode = localStorage.getItem('theme') === 'dark';
-    document.body.classList.toggle('dark-theme', isDarkMode);
+    document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
 
     themeToggle.addEventListener('click', () => {
       isDarkMode = !isDarkMode;
       localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-      document.body.classList.toggle('dark-theme', isDarkMode);
+      document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
       themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
     });
 
@@ -257,35 +256,10 @@
     document.body.style.color = savedFontColor;
     fontColorInput.value = savedFontColor;
 
-    fontColorInput.addEventListener('input', () => {
-      const color = fontColorInput.value;
-      localStorage.setItem('fontColor', color);
-      document.body.style.color = color;
-      // Update font color for timezone
-      document.querySelectorAll('.timezone').forEach((zone) => {
-        zone.style.color = color;
-      });
+    fontColorInput.addEventListener('input', (e) => {
+      document.body.style.color = e.target.value;
+      localStorage.setItem('fontColor', e.target.value);
     });
-
-    // Timezone Update Function
-    function updateTimeZones() {
-      const timeZones = [
-        { id: 'usPacific', offset: -8 },
-        { id: 'usMountain', offset: -7 },
-        { id: 'usCentral', offset: -6 },
-        { id: 'usEastern', offset: -5 },
-        { id: 'phPhilippines', offset: 8 }
-      ];
-
-      timeZones.forEach(zone => {
-        const date = new Date(new Date().toLocaleString("en-US", { timeZone: `Etc/GMT${zone.offset < 0 ? '+' : '-'}${Math.abs(zone.offset)}` }));
-        const timeString = date.toLocaleString();
-        document.getElementById(zone.id).textContent = `${zone.id.replace('us', 'US ')}: ${timeString}`;
-      });
-    }
-
-    setInterval(updateTimeZones, 1000);
-    updateTimeZones();
   </script>
 </body>
 </html>
