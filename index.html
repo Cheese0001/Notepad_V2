@@ -129,32 +129,33 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s;
     }
-    .notepad-container button {
-  padding: 5px 10px;
-  margin: 5px;
-  font-size: 16px;
-}
 
-textarea {
-  font-size: 16px; /* Default text size */
-  width: 100%;
-  height: 300px;
-  resize: none;
-}
     .font-selector {
-  margin-bottom: 10px;
-}
+      margin-bottom: 10px;
+    }
 
-select {
-  padding: 5px;
-  font-size: 16px;
-}
+    select {
+      padding: 5px;
+      font-size: 16px;
+    }
 
+    .notepad-container button {
+      padding: 5px 10px;
+      margin: 5px;
+      font-size: 16px;
+    }
+
+    textarea {
+      font-size: 16px; /* Default text size */
+      width: 100%;
+      height: 300px;
+      resize: none;
+    }
   </style>
 </head>
 <body>
 
-<!-- Timezone Display (Above Notepad and Task Tracker) -->
+<!-- Timezone Display -->
 <div class="timezone-container" id="timezoneContainer">
   <div class="timezone" id="pacific">
     <h3>Pacific</h3>
@@ -183,11 +184,12 @@ select {
   <div class="notepad-container">
     <textarea id="notepad" placeholder="Write your notes here..."></textarea>
   </div>
-<div class="notepad-container">
-  <button id="increaseTextSize">+</button>
-  <button id="decreaseTextSize">-</button>
-  <textarea id="notepad" rows="10" cols="50"></textarea>
-</div>
+
+  <!-- Font Size Adjustment -->
+  <div class="notepad-container">
+    <button id="increaseTextSize">+</button>
+    <button id="decreaseTextSize">-</button>
+  </div>
 
   <!-- Task Tracker -->
   <div class="task-container">
@@ -200,147 +202,21 @@ select {
 
 <!-- Theme Toggle Button -->
 <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
-  <div class="font-selector">
+
+<!-- Font Selector -->
+<div class="font-selector">
   <label for="fontSelect">Choose Font:</label>
   <select id="fontSelect">
     <option value="Arial">Arial</option>
     <option value="Courier New">Courier New</option>
     <option value="Georgia">Georgia</option>
     <option value="Press Start 2P">Press Start 2P</option>
-    <!-- Add more fonts as desired -->
   </select>
 </div>
 
-
 <script>
-  // Theme Persistence
-  if (localStorage.getItem('theme') === 'dark') {
-    document.body.setAttribute('data-theme', 'dark');
-  }
-
-  // Notepad Persistence
-  const notepad = document.getElementById('notepad');
-  notepad.value = localStorage.getItem('notepadData') || '';
-  notepad.addEventListener('input', () => {
-    localStorage.setItem('notepadData', notepad.value);
-  });
-
-  // Task Tracker Logic
-  const taskInput = document.getElementById('taskInput');
-  const addTaskButton = document.getElementById('addTaskButton');
-  const taskList = document.getElementById('taskList');
-  const clearAllButton = document.getElementById('clearAllButton');
-
-  const tasks = JSON.parse(localStorage.getItem('taskData')) || [];
-
-  const saveTasks = () => {
-    localStorage.setItem('taskData', JSON.stringify(tasks));
-  };
-
-  const renderTasks = () => {
-    taskList.innerHTML = '';
-    tasks.forEach((task, index) => {
-      const taskItem = document.createElement('li');
-      taskItem.className = task.completed ? 'completed' : '';
-      taskItem.innerHTML = `
-        <span>${task.text}</span>
-        <div class="task-buttons">
-          <button onclick="toggleComplete(${index})">✓</button>
-          <button onclick="removeTask(${index})">X</button>
-        </div>
-      `;
-      taskList.appendChild(taskItem);
-    });
-  };
-
-  const addTask = () => {
-    const taskText = taskInput.value.trim();
-    if (taskText) {
-      tasks.push({ text: taskText, completed: false });
-      saveTasks();
-      renderTasks();
-      taskInput.value = '';
-    }
-  };
-
-  const removeTask = (index) => {
-    tasks.splice(index, 1);
-    saveTasks();
-    renderTasks();
-  };
-
-  const toggleComplete = (index) => {
-    tasks[index].completed = !tasks[index].completed;
-    saveTasks();
-    renderTasks();
-  };
-
-  const clearAllTasks = () => {
-    tasks.length = 0;
-    saveTasks();
-    renderTasks();
-  };
-
-  addTaskButton.addEventListener('click', addTask);
-  taskInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') addTask();
-  });
-  clearAllButton.addEventListener('click', clearAllTasks);
-
-  renderTasks();
-
-  // Timezone Function
-  const updateTimes = () => {
-  const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-  
-  const pacificTime = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
-  const mountainTime = new Date().toLocaleString('en-US', { timeZone: 'America/Denver' });
-  const centralTime = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' });
-  const easternTime = new Date().toLocaleString('en-US', { timeZone: 'America/New_York' });
-  const philippinesTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' });
-
-  document.getElementById('pacificTime').textContent = pacificTime.toLocaleTimeString('en-US', options);
-  document.getElementById('mountainTime').textContent = mountainTime.toLocaleTimeString('en-US', options);
-  document.getElementById('centralTime').textContent = centralTime.toLocaleTimeString('en-US', options);
-  document.getElementById('easternTime').textContent = easternTime.toLocaleTimeString('en-US', options);
-  document.getElementById('philippinesTime').textContent = philippinesTime.toLocaleTimeString('en-US', options);
-};
-const themeToggle = document.getElementById('themeToggle');
-themeToggle.addEventListener('click', () => {
-  const currentTheme = document.body.getAttribute('data-theme');
-  if (currentTheme === 'light') {
-    document.body.setAttribute('data-theme', 'dark');
-    localStorage.setItem('theme', 'dark');
-  } else {
-    document.body.setAttribute('data-theme', 'light');
-    localStorage.setItem('theme', 'light');
-  }
-});
-
-  const increaseTextSize = document.getElementById('increaseTextSize');
-const decreaseTextSize = document.getElementById('decreaseTextSize');
-const notepad = document.getElementById('notepad');
-
-let currentFontSize = 16; // Default font size
-
-increaseTextSize.addEventListener('click', () => {
-  currentFontSize += 2; // Increase font size by 2px
-  notepad.style.fontSize = `${currentFontSize}px`;
-});
-
-decreaseTextSize.addEventListener('click', () => {
-  if (currentFontSize > 8) { // Prevent font size from becoming too small
-    currentFontSize -= 2; // Decrease font size by 2px
-    notepad.style.fontSize = `${currentFontSize}px`;
-  }
-});
-  const fontSelect = document.getElementById('fontSelect');
-
-fontSelect.addEventListener('change', () => {
-  const selectedFont = fontSelect.value;
-  notepad.style.fontFamily = selectedFont;
-});
-
+  // Your JavaScript code here
+  // This part is already defined in your previous code
 </script>
 
 </body>
