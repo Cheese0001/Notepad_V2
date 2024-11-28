@@ -129,6 +129,27 @@
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s;
     }
+    .notepad-container button {
+  padding: 5px 10px;
+  margin: 5px;
+  font-size: 16px;
+}
+
+textarea {
+  font-size: 16px; /* Default text size */
+  width: 100%;
+  height: 300px;
+  resize: none;
+}
+    .font-selector {
+  margin-bottom: 10px;
+}
+
+select {
+  padding: 5px;
+  font-size: 16px;
+}
+
   </style>
 </head>
 <body>
@@ -162,6 +183,11 @@
   <div class="notepad-container">
     <textarea id="notepad" placeholder="Write your notes here..."></textarea>
   </div>
+<div class="notepad-container">
+  <button id="increaseTextSize">+</button>
+  <button id="decreaseTextSize">-</button>
+  <textarea id="notepad" rows="10" cols="50"></textarea>
+</div>
 
   <!-- Task Tracker -->
   <div class="task-container">
@@ -174,6 +200,17 @@
 
 <!-- Theme Toggle Button -->
 <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
+  <div class="font-selector">
+  <label for="fontSelect">Choose Font:</label>
+  <select id="fontSelect">
+    <option value="Arial">Arial</option>
+    <option value="Courier New">Courier New</option>
+    <option value="Georgia">Georgia</option>
+    <option value="Press Start 2P">Press Start 2P</option>
+    <!-- Add more fonts as desired -->
+  </select>
+</div>
+
 
 <script>
   // Theme Persistence
@@ -285,6 +322,30 @@
       localStorage.setItem('theme', 'light');
     }
   });
+  const increaseTextSize = document.getElementById('increaseTextSize');
+const decreaseTextSize = document.getElementById('decreaseTextSize');
+const notepad = document.getElementById('notepad');
+
+let currentFontSize = 16; // Default font size
+
+increaseTextSize.addEventListener('click', () => {
+  currentFontSize += 2; // Increase font size by 2px
+  notepad.style.fontSize = `${currentFontSize}px`;
+});
+
+decreaseTextSize.addEventListener('click', () => {
+  if (currentFontSize > 8) { // Prevent font size from becoming too small
+    currentFontSize -= 2; // Decrease font size by 2px
+    notepad.style.fontSize = `${currentFontSize}px`;
+  }
+});
+  const fontSelect = document.getElementById('fontSelect');
+
+fontSelect.addEventListener('change', () => {
+  const selectedFont = fontSelect.value;
+  notepad.style.fontFamily = selectedFont;
+});
+
 </script>
 
 </body>
