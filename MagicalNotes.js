@@ -1,3 +1,5 @@
+// MagicalNotes.js
+
 // Load saved templates from localStorage
 const templateList = document.getElementById('templateList');
 const saveTemplateButton = document.getElementById('saveTemplateButton');
@@ -5,7 +7,7 @@ let templates = JSON.parse(localStorage.getItem('templates')) || [];
 
 // Function to render saved templates
 function renderTemplates() {
-  templateList.innerHTML = '';
+  templateList.innerHTML = ''; // Clear the current template list
   templates.forEach((template, index) => {
     const li = document.createElement('li');
     li.classList.add('template-item');
@@ -29,5 +31,5 @@ saveTemplateButton.addEventListener('click', () => {
   }
 });
 
-// Initialize templates
+// Initialize templates on page load
 renderTemplates();
