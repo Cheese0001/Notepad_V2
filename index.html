@@ -26,10 +26,22 @@
       max-width: 1000px;
       margin: auto;
       padding: 15px;
-      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container */
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container for light mode */
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: background-color 0.3s, color 0.3s;
+      transition: background-color 0.3s, color 0.3s, opacity 0.3s ease;
+    }
+
+    /* Light Mode */
+    .light-theme .container {
+      background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container */
+      color: #333333;
+    }
+
+    /* Dark Mode */
+    .dark-theme .container {
+      background-color: rgba(51, 51, 51, 0.8); /* Semi-transparent dark container */
+      color: #f0f0f0;
     }
 
     .notepad-container, .task-container {
@@ -227,11 +239,12 @@
 
     taskList.addEventListener('click', (e) => {
       if (e.target.tagName === 'INPUT') {
-        const index = e.target.dataset.index;
+        const index = e.target.getAttribute('data-index');
         tasks[index].completed = e.target.checked;
         renderTasks();
-      } else if (e.target.classList.contains('deleteBtn')) {
-        const index = e.target.dataset.index;
+      }
+      if (e.target.classList.contains('deleteBtn')) {
+        const index = e.target.getAttribute('data-index');
         tasks.splice(index, 1);
         renderTasks();
       }
@@ -244,7 +257,7 @@
 
     renderTasks();
 
-    // Font Color Customization (Persistence)
+    // Font Color Change
     const fontColorInput = document.getElementById('fontColor');
     fontColorInput.addEventListener('input', () => {
       const color = fontColorInput.value;
