@@ -6,6 +6,7 @@
 <title>Notepad & Task Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+/* Global Styles /
 body {
 font-family: 'Quicksand', sans-serif;
 margin: 0;
@@ -26,7 +27,7 @@ width: 80%;
 max-width: 1000px;
 margin: auto;
 padding: 15px;
-background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container for light mode /
+background-color: rgba(255, 255, 255, 0.8); / Semi-transparent container for light mode /
 border-radius: 8px;
 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 transition: background-color 0.3s, color 0.3s, opacity 0.3s ease;
@@ -54,11 +55,7 @@ color: #f0f0f0; / Light font color for dark theme /
 color: #f0f0f0; / Light font color for dark theme /
 }
 
-/ Global Font Color /
-body, .notepad-container, .task-container {
-transition: color 0.3s ease;
-}
-
+/ Notepad & Task Styles /
 .notepad-container, .task-container {
 min-width: 200px;
 min-height: 150px;
@@ -103,6 +100,7 @@ button:hover {
 background-color: #93B9CF;
 }
 
+/ Font Color Picker /
 .font-color-picker {
 margin-top: 5px;
 }
@@ -114,6 +112,7 @@ border: none;
 cursor: pointer;
 }
 
+/ Timezone Container /
 .timezone-container {
 display: flex;
 justify-content: space-between;
@@ -126,10 +125,77 @@ border-radius: 8px;
 margin-right: 10px;
 }
 
-/ Change the font-family of the notepad to Quicksand /
+/ Notepad textarea /
 .notepad-container textarea {
 font-family: 'Quicksand', sans-serif;
-font-size: 16px; / Default font size */
+font-size: 16px;
+width: 100%;
+height: 200px;
+padding: 8px;
+border-radius: 5px;
+background-color: rgba(255, 255, 255, 0.9);
+border: 1px solid #ccc;
+}
+
+/ Magical Notes Sidebar /
+#magicalNotesSidebar {
+position: absolute;
+left: 0;
+top: 50px;
+width: 200px;
+background-color: rgba(255, 255, 255, 0.8);
+padding: 10px;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+visibility: hidden;
+border-radius: 8px;
+}
+
+#templateList {
+list-style-type: none;
+padding: 0;
+}
+
+.template-item {
+padding: 5px;
+display: flex;
+justify-content: space-between;
+cursor: pointer;
+}
+
+.template-item:hover {
+background-color: #D0B0BD;
+}
+
+#saveTemplateButton {
+padding: 10px 15px;
+margin-top: 15px;
+background-color: #C6B0C8;
+color: white;
+border: none;
+cursor: pointer;
+border-radius: 5px;
+}
+
+.delete-button {
+background-color: #E57373;
+color: white;
+border: none;
+cursor: pointer;
+font-size: 12px;
+padding: 5px;
+border-radius: 5px;
+margin-left: 10px;
+}
+
+/ Close Button */
+#closeSidebarBtn {
+padding: 10px;
+background-color: #C6B0C8;
+color: white;
+border: none;
+cursor: pointer;
+border-radius: 5px;
+margin-top: 10px;
 }
 </style>
 </head>
@@ -139,10 +205,19 @@ font-size: 16px; / Default font size */
 <button id="themeToggle">Switch to Dark Mode</button>
 <button id="increaseFontSize">+</button>
 <button id="decreaseFontSize">-</button>
+<button id="addTemplateBtn">Add Template</button> <!-- Button for Magical Notes Sidebar -->
 
 <!-- Notepad Container -->
 <div class="notepad-container" id="notepadContainer">
 <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+</div>
+
+<!-- Magical Notes Sidebar -->
+<div id="magicalNotesSidebar">
+<h3>Saved Templates</h3>
+<ul id="templateList"></ul> <!-- Where the templates will be listed -->
+<button id="saveTemplateButton">Save Current Note as Template</button> <!-- Button to save the current note as a template -->
+<button id="closeSidebarBtn">Close</button> <!-- Close Button -->
 </div>
 
 <!-- Task List -->
@@ -175,126 +250,98 @@ const themeToggle = document.getElementById('themeToggle');
 let isDarkMode = localStorage.getItem('theme') === 'dark';
 document.body.classList.toggle('dark-theme', isDarkMode);
 document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-el.classList.toggle('dark-theme', isDarkMode);
-});
+
+themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
 
 themeToggle.addEventListener('click', () => {
 isDarkMode = !isDarkMode;
 localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
 document.body.classList.toggle('dark-theme', isDarkMode);
 document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-el.classList.toggle('dark-theme', isDarkMode);
-});
 themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
 });
 
-// Notepad Persistence
+// Font Size Controls
 const notepad = document.getElementById('notepad');
-notepad.value = localStorage.getItem('notepadText') || '';
-
-notepad.addEventListener('input', () => {
-localStorage.setItem('notepadText', notepad.value);
-});
-
-// Font Size Controls (Persistence)
-let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
-notepad.style.fontSize = fontSize + 'px';
-
 const increaseFontSize = document.getElementById('increaseFontSize');
 const decreaseFontSize = document.getElementById('decreaseFontSize');
 
 increaseFontSize.addEventListener('click', () => {
-fontSize += 2;
-localStorage.setItem('fontSize', fontSize);
-notepad.style.fontSize = fontSize + 'px';
+let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
+notepad.style.fontSize = ${currentFontSize + 2}px;
 });
 
 decreaseFontSize.addEventListener('click', () => {
-fontSize -= 2;
-localStorage.setItem('fontSize', fontSize);
-notepad.style.fontSize = fontSize + 'px';
+let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
+notepad.style.fontSize = ${currentFontSize - 2}px;
 });
 
-// Task List Persistence
-const taskList = document.getElementById('taskList');
-const taskInput = document.getElementById('taskInput');
-const addTaskButton = document.getElementById('addTaskButton');
-const clearAllButton = document.getElementById('clearAllButton');
+// Magical Notes Sidebar
+const addTemplateBtn = document.getElementById('addTemplateBtn');
+const magicalNotesSidebar = document.getElementById('magicalNotesSidebar');
+const saveTemplateButton = document.getElementById('saveTemplateButton');
+const templateList = document.getElementById('templateList');
+const closeSidebarBtn = document.getElementById('closeSidebarBtn');
 
-let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-
-function renderTasks() {
-taskList.innerHTML = '';
-tasks.forEach((task, index) => {
-const li = document.createElement('li');
-li.classList.add('task');
-li.innerHTML = <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span> <button class="deleteBtn" data-index="${index}">X</button>;
-taskList.appendChild(li);
-});
-localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-addTaskButton.addEventListener('click', () => {
-const taskText = taskInput.value.trim();
-if (taskText) {
-tasks.push({ text: taskText, completed: false });
-taskInput.value = '';
-renderTasks();
-}
+// Add or close sidebar visibility
+addTemplateBtn.addEventListener('click', () => {
+magicalNotesSidebar.style.visibility = 'visible';
 });
 
-taskList.addEventListener('click', (e) => {
-if (e.target.classList.contains('deleteBtn')) {
-const index = e.target.getAttribute('data-index');
-tasks.splice(index, 1);
-renderTasks();
-} else if (e.target.type === 'checkbox') {
-const index = e.target.getAttribute('data-index');
-tasks[index].completed = e.target.checked;
-renderTasks();
-}
+// Close Sidebar
+closeSidebarBtn.addEventListener('click', () => {
+magicalNotesSidebar.style.visibility = 'hidden';
 });
 
-clearAllButton.addEventListener('click', () => {
-tasks = [];
-renderTasks();
+// Save template functionality
+saveTemplateButton.addEventListener('click', () => {
+const template = {
+content: notepad.value,
+};
+const templateItem = document.createElement('li');
+templateItem.className = 'template-item';
+templateItem.textContent = template.content;
+const deleteButton = document.createElement('button');
+deleteButton.className = 'delete-button';
+deleteButton.textContent = 'Delete';
+deleteButton.onclick = () => templateItem.remove();
+templateItem.appendChild(deleteButton);
+templateList.appendChild(templateItem);
+
+// Save the template to local storage
+let templates = JSON.parse(localStorage.getItem('templates')) || [];
+templates.push(template);
+localStorage.setItem('templates', JSON.stringify(templates));
 });
 
-renderTasks();
-
-// Font Color Customization Persistence
+// Font Color Customization
 const fontColorInput = document.getElementById('fontColor');
-const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4';
-fontColorInput.value = savedFontColor;
-
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-el.style.color = savedFontColor;
+fontColorInput.addEventListener('input', (event) => {
+document.querySelector('.container').style.color = event.target.value;
+document.querySelector('.notepad-container').style.color = event.target.value;
+document.querySelector('.task-container').style.color = event.target.value;
 });
 
-fontColorInput.addEventListener('input', () => {
-const fontColor = fontColorInput.value;
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-el.style.color = fontColor;
-});
-localStorage.setItem('fontColor', fontColor);
-});
+// Timezone Calculation
+const timezoneElements = {
+usPacific: document.getElementById('usPacific'),
+usMountain: document.getElementById('usMountain'),
+usCentral: document.getElementById('usCentral'),
+usEastern: document.getElementById('usEastern'),
+phPhilippines: document.getElementById('phPhilippines'),
+};
 
-// Timezone Display
-function updateTimezone() {
-const date = new Date();
-document.getElementById('usPacific').textContent = US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })};
-document.getElementById('usMountain').textContent = US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })};
-document.getElementById('usCentral').textContent = US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })};
-document.getElementById('usEastern').textContent = US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })};
-document.getElementById('phPhilippines').textContent = PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })};
+function updateTimezones() {
+const now = new Date();
+timezoneElements.usPacific.textContent = US Pacific: ${now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })};
+timezoneElements.usMountain.textContent = US Mountain: ${now.toLocaleString('en-US', { timeZone: 'America/Denver' })};
+timezoneElements.usCentral.textContent = US Central: ${now.toLocaleString('en-US', { timeZone: 'America/Chicago' })};
+timezoneElements.usEastern.textContent = US Eastern: ${now.toLocaleString('en-US', { timeZone: 'America/New_York' })};
+timezoneElements.phPhilippines.textContent = PH Philippines: ${now.toLocaleString('en-US', { timeZone: 'Asia/Manila' })};
 }
 
-updateTimezone();
-setInterval(updateTimezone, 1000);
-
+updateTimezones();
+setInterval(updateTimezones, 60000);
 </script>
-<script src="MagicalNotes.js"></script>
 </body>
 </html>
