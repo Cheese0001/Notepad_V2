@@ -122,8 +122,6 @@
       padding: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       visibility: hidden;
-      opacity: 0;
-      transition: visibility 0s, opacity 0.5s linear;
       border-radius: 8px;
     }
 
@@ -173,13 +171,6 @@
       cursor: pointer;
       border-radius: 5px;
       margin-top: 10px;
-    }
-
-    /* Media Queries for Mobile */
-    @media (max-width: 768px) {
-      .container {
-        width: 95%;
-      }
     }
   </style>
 </head>
@@ -249,23 +240,21 @@
     const notepad = document.getElementById('notepad');
     const increaseFontSize = document.getElementById('increaseFontSize');
     const decreaseFontSize = document.getElementById('decreaseFontSize');
+    let currentFontSize = parseInt(localStorage.getItem('fontSize')) || 16;
+    notepad.style.fontSize = `${currentFontSize}px`;
 
     increaseFontSize.addEventListener('click', () => {
-      let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
-      notepad.style.fontSize = (currentFontSize + 2) + 'px';
+      currentFontSize += 2;
+      notepad.style.fontSize = `${currentFontSize}px`;
+      localStorage.setItem('fontSize', currentFontSize);
     });
 
     decreaseFontSize.addEventListener('click', () => {
-      let currentFontSize = parseInt(window.getComputedStyle(notepad).fontSize);
-      if (currentFontSize > 12) { 
-        notepad.style.fontSize = (currentFontSize - 2) + 'px';
+      if (currentFontSize > 12) {
+        currentFontSize -= 2;
+        notepad.style.fontSize = `${currentFontSize}px`;
+        localStorage.setItem('fontSize', currentFontSize);
       }
-    });
-
-    // Font Color Picker
-    const fontColorPicker = document.getElementById('fontColor');
-    fontColorPicker.addEventListener('input', (event) => {
-      notepad.style.color = event.target.value;
     });
 
     // Task List
@@ -273,124 +262,146 @@
     const taskList = document.getElementById('taskList');
     const addTaskButton = document.getElementById('addTaskButton');
     const clearAllButton = document.getElementById('clearAllButton');
+    let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.classList.add('task');
+        li.innerHTML = `
+          <input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" />
+          ${task.text}
+          <button class="delete-button" data-index="${index}">Delete</button>
+        `;
+        taskList.appendChild(li);
+      });
+    }
 
     addTaskButton.addEventListener('click', () => {
-      if (taskInput.value.trim() !== "") {
-        const task = document.createElement('li');
-        task.classList.add('task');
-        task.innerHTML = `
-          <input type="checkbox" class="task-checkbox" />
-          ${taskInput.value}
-          <button class="delete-button">Delete</button>
-        `;
-        taskList.appendChild(task);
-        taskInput.value = "";
+      if (taskInput.value.trim()) {
+        tasks.push({ text: taskInput.value.trim(), completed: false });
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        taskInput.value = '';
+        renderTasks();
+      }
+    });
 
-        // Task Checkbox Event
-        task.querySelector('.task-checkbox').addEventListener('change', (e) => {
-          task.style.textDecoration = e.target.checked ? 'line-through' : 'none';
-        });
-
-        // Task Delete Button Event
-        task.querySelector('.delete-button').addEventListener('click', () => {
-          task.remove();
-        });
+    taskList.addEventListener('click', (e) => {
+      if (e.target.type === 'checkbox') {
+        const taskIndex = e.target.getAttribute('data-index');
+        tasks[taskIndex].completed = e.target.checked;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      } else if (e.target.classList.contains('delete-button')) {
+        const taskIndex = e.target.getAttribute('data-index');
+        tasks.splice(taskIndex, 1);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+        renderTasks();
       }
     });
 
     clearAllButton.addEventListener('click', () => {
-      taskList.innerHTML = "";
+      tasks = [];
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      renderTasks();
     });
 
-    // Save Task and Template in Local Storage
-    const saveTasksToLocalStorage = () => {
-      const tasks = [];
-      document.querySelectorAll('.task').forEach(task => {
-        tasks.push(task.innerHTML);
-      });
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-    };
+    renderTasks(); // Initial render of tasks
 
-    const loadTasksFromLocalStorage = () => {
-      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
-      tasks.forEach(taskHtml => {
-        const task = document.createElement('li');
-        task.classList.add('task');
-        task.innerHTML = taskHtml;
-        taskList.appendChild(task);
-      });
-    };
+    // Notepad Resizing
+    const notepadContainer = document.getElementById('notepadContainer');
+    notepadContainer.addEventListener('mousedown', (e) => {
+      let prevX = e.clientX;
+      let prevY = e.clientY;
+      let prevWidth = notepadContainer.offsetWidth;
+      let prevHeight = notepadContainer.offsetHeight;
 
-    loadTasksFromLocalStorage();
-
-    // Timezone Display Update
-    const updateTimezones = () => {
-      const timezones = {
-        usPacific: 'America/Los_Angeles',
-        usMountain: 'America/Denver',
-        usCentral: 'America/Chicago',
-        usEastern: 'America/New_York',
-        phPhilippines: 'Asia/Manila'
+      const onMouseMove = (e) => {
+        notepadContainer.style.width = `${prevWidth + (e.clientX - prevX)}px`;
+        notepadContainer.style.height = `${prevHeight + (e.clientY - prevY)}px`;
       };
 
-      Object.keys(timezones).forEach(id => {
-        const timezone = timezones[id];
-        const time = new Date().toLocaleString('en-US', { timeZone: timezone, timeStyle: 'short', dateStyle: 'medium' });
-        document.getElementById(id).textContent = `${timezone.replace('Asia/', '').replace('America/', '').replace('_', ' ')}: ${time}`;
-      });
-    };
+      const onMouseUp = () => {
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      };
 
-    setInterval(updateTimezones, 60000); // Update every minute
-    updateTimezones(); // Initialize timezones immediately
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+    });
+
+    // Font Color Picker
+    const fontColorPicker = document.getElementById('fontColor');
+    fontColorPicker.addEventListener('input', () => {
+      notepad.style.color = fontColorPicker.value;
+    });
 
     // Magical Notes Sidebar
-    const sidebar = document.getElementById('magicalNotesSidebar');
+    const magicalNotesSidebar = document.getElementById('magicalNotesSidebar');
     const saveTemplateButton = document.getElementById('saveTemplateButton');
+    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
     const templateList = document.getElementById('templateList');
     const addTemplateBtn = document.getElementById('addTemplateBtn');
-    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+    let templates = JSON.parse(localStorage.getItem('templates')) || [];
+
+    function renderTemplates() {
+      templateList.innerHTML = '';
+      templates.forEach((template, index) => {
+        const li = document.createElement('li');
+        li.classList.add('template-item');
+        li.innerHTML = `
+          ${template}
+          <button class="delete-button" data-index="${index}">Delete</button>
+        `;
+        templateList.appendChild(li);
+      });
+    }
 
     addTemplateBtn.addEventListener('click', () => {
-      sidebar.style.visibility = 'visible';
-      sidebar.style.opacity = '1';
+      magicalNotesSidebar.style.visibility = 'visible';
+      renderTemplates();
     });
 
     closeSidebarBtn.addEventListener('click', () => {
-      sidebar.style.visibility = 'hidden';
-      sidebar.style.opacity = '0';
+      magicalNotesSidebar.style.visibility = 'hidden';
     });
 
     saveTemplateButton.addEventListener('click', () => {
-      const templateName = `Template ${templateList.children.length + 1}`;
-      const newTemplate = document.createElement('li');
-      newTemplate.classList.add('template-item');
-      newTemplate.innerHTML = `
-        ${templateName}
-        <button class="delete-button">Delete</button>
-      `;
-      templateList.appendChild(newTemplate);
-
-      // Save template data to localStorage
-      localStorage.setItem('templates', JSON.stringify(Array.from(templateList.children).map(item => item.textContent)));
-
-      newTemplate.querySelector('.delete-button').addEventListener('click', () => {
-        newTemplate.remove();
-        localStorage.setItem('templates', JSON.stringify(Array.from(templateList.children).map(item => item.textContent)));
-      });
+      templates.push(notepad.value);
+      localStorage.setItem('templates', JSON.stringify(templates));
+      magicalNotesSidebar.style.visibility = 'hidden';
+      renderTemplates();
     });
 
-    // Load Saved Templates
-    const loadTemplates = () => {
-      const templates = JSON.parse(localStorage.getItem('templates')) || [];
-      templates.forEach(templateText => {
-        const templateItem = document.createElement('li');
-        templateItem.classList.add('template-item');
-        templateItem.textContent = templateText;
-        templateList.appendChild(templateItem);
-      });
-    };
+    templateList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('delete-button')) {
+        const templateIndex = e.target.getAttribute('data-index');
+        templates.splice(templateIndex, 1);
+        localStorage.setItem('templates', JSON.stringify(templates));
+        renderTemplates();
+      }
+    });
 
-    loadTemplates();
+    // Timezone Display (Simple Time)
+    function updateTimezone() {
+      const timezoneOffsets = [
+        { id: 'usPacific', offset: -8 },
+        { id: 'usMountain', offset: -7 },
+        { id: 'usCentral', offset: -6 },
+        { id: 'usEastern', offset: -5 },
+        { id: 'phPhilippines', offset: 8 }
+      ];
+
+      timezoneOffsets.forEach(zone => {
+        const time = new Date(new Date().toLocaleString('en-US', { timeZone: `Etc/GMT${zone.offset > 0 ? '-' : '+'}${Math.abs(zone.offset)}` }));
+        document.getElementById(zone.id).textContent = `${zone.id.replace('us', '').replace('ph', 'PH ')}: ${time.toLocaleTimeString()}`;
+      });
+    }
+
+    setInterval(updateTimezone, 60000);
+    updateTimezone(); // Initial call to set the timezone immediately
+
   </script>
 </body>
 </html>
