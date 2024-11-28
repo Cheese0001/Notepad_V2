@@ -31,7 +31,7 @@ footer {
     font-size: 14px;
     font-weight: 500;
     z-index: 10; /* Ensure it stays on top */
-        }   
+}   
 .timezone-container {
     display: flex;
     justify-content: space-between;
@@ -243,10 +243,17 @@ function renderTasks() {
     tasks.forEach((task, index) => {
         const li = document.createElement('li');
         li.classList.add('task');
-        li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : 'none'};">${task.text}</span> <button class="deleteBtn" data-index="${index}">X</button>`;
+        li.innerHTML = `<input type="checkbox" ${task.completed ? 'checked' : ''} data-index="${index}" /> <span style="text-decoration: ${task.completed ? 'line-through' : ''}">${task.text}</span>`;
         taskList.appendChild(li);
+
+        // Add event listener for task completion
+        li.querySelector('input').addEventListener('change', (e) => {
+            const index = e.target.dataset.index;
+            tasks[index].completed = e.target.checked;
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            renderTasks();
+        });
     });
-    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
 addTaskButton.addEventListener('click', () => {
@@ -254,59 +261,53 @@ addTaskButton.addEventListener('click', () => {
     if (taskText) {
         tasks.push({ text: taskText, completed: false });
         taskInput.value = '';
-        renderTasks();
-    }
-});
-
-
-taskList.addEventListener('click', (e) => {
-    if (e.target.classList.contains('deleteBtn')) {
-        const index = e.target.getAttribute('data-index');
-        tasks.splice(index, 1);
-        renderTasks();
-    } else if (e.target.type === 'checkbox') {
-        const index = e.target.getAttribute('data-index');
-        tasks[index].completed = e.target.checked;
+        localStorage.setItem('tasks', JSON.stringify(tasks));
         renderTasks();
     }
 });
 
 clearAllButton.addEventListener('click', () => {
     tasks = [];
+    localStorage.setItem('tasks', JSON.stringify(tasks));
     renderTasks();
 });
 
 renderTasks();
 
-// Font Color Customization Persistence
+// Font Color Customization
 const fontColorInput = document.getElementById('fontColor');
-const savedFontColor = localStorage.getItem('fontColor') || '#9DA8C4';
-fontColorInput.value = savedFontColor;
-
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-    el.style.color = savedFontColor;
-});
-
 fontColorInput.addEventListener('input', () => {
-    const fontColor = fontColorInput.value;
     document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-        el.style.color = fontColor;
+        el.style.color = fontColorInput.value;
     });
-    localStorage.setItem('fontColor', fontColor);
 });
 
 // Timezone Display
 function updateTimezone() {
     const date = new Date();
-    document.getElementById('usPacific').textContent = US Pacific: ${date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })};
-    document.getElementById('usMountain').textContent = US Mountain: ${date.toLocaleString('en-US', { timeZone: 'America/Denver' })};
-    document.getElementById('usCentral').textContent = US Central: ${date.toLocaleString('en-US', { timeZone: 'America/Chicago' })};
-    document.getElementById('usEastern').textContent = US Eastern: ${date.toLocaleString('en-US', { timeZone: 'America/New_York' })};
-    document.getElementById('phPhilippines').textContent = PH Philippines: ${date.toLocaleString('en-US', { timeZone: 'Asia/Manila' })};
+    const options = { timeZoneName: 'short', hour: '2-digit', minute: '2-digit' };
+
+    const usPacific = date.toLocaleTimeString('en-US', { ...options, timeZone: 'America/Los_Angeles' });
+    const usMountain = date.toLocaleTimeString('en-US', { ...options, timeZone: 'America/Denver' });
+    const usCentral = date.toLocaleTimeString('en-US', { ...options, timeZone: 'America/Chicago' });
+    const usEastern = date.toLocaleTimeString('en-US', { ...options, timeZone: 'America/New_York' });
+    const phPhilippines = date.toLocaleTimeString('en-US', { ...options, timeZone: 'Asia/Manila' });
+
+    document.getElementById('usPacific').textContent = `US Pacific: ${usPacific}`;
+    document.getElementById('usMountain').textContent = `US Mountain: ${usMountain}`;
+    document.getElementById('usCentral').textContent = `US Central: ${usCentral}`;
+    document.getElementById('usEastern').textContent = `US Eastern: ${usEastern}`;
+    document.getElementById('phPhilippines').textContent = `PH Philippines: ${phPhilippines}`;
 }
-updateTimezone();
+
+// Update Timezone Every Minute
 setInterval(updateTimezone, 60000);
-       // JavaScript to dynamically add the footer text
-        document.getElementById('footer').textContent = "Made by Shemida Garces";
+updateTimezone();
+
+// Footer Text (Corrected)
+const footer = document.getElementById('footer');
+footer.textContent = 'Created by Shemida Garces;
+</script>
+
 </body>
 </html>
