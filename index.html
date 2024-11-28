@@ -11,7 +11,6 @@
       --container-bg: #fff;
       --button-bg: #6200ea;
       --button-color: white;
-      --completed-task-color: #aaa;
     }
 
     [data-theme="dark"] {
@@ -20,7 +19,6 @@
       --container-bg: #1e1e1e;
       --button-bg: #bb86fc;
       --button-color: #000;
-      --completed-task-color: #555;
     }
 
     body {
@@ -34,6 +32,7 @@
     .container {
       display: flex;
       gap: 20px;
+      margin-top: 20px;
     }
 
     .notepad-container, .task-container {
@@ -90,13 +89,14 @@
 
     .task-list li.completed {
       text-decoration: line-through;
-      color: var(--completed-task-color);
+      color: #aaa;
     }
 
     .timezone-container {
       display: flex;
       justify-content: space-between;
       width: 100%;
+      margin-bottom: 20px;
     }
 
     .timezone {
@@ -131,7 +131,31 @@
     }
   </style>
 </head>
-<body data-theme="light">
+<body>
+
+<!-- Timezone Display (Above Notepad and Task Tracker) -->
+<div class="timezone-container" id="timezoneContainer">
+  <div class="timezone" id="pacific">
+    <h3>Pacific</h3>
+    <p id="pacificTime">Loading...</p>
+  </div>
+  <div class="timezone" id="mountain">
+    <h3>Mountain</h3>
+    <p id="mountainTime">Loading...</p>
+  </div>
+  <div class="timezone" id="central">
+    <h3>Central</h3>
+    <p id="centralTime">Loading...</p>
+  </div>
+  <div class="timezone" id="eastern">
+    <h3>Eastern</h3>
+    <p id="easternTime">Loading...</p>
+  </div>
+  <div class="timezone" id="philippines">
+    <h3>Philippines</h3>
+    <p id="philippinesTime">Loading...</p>
+  </div>
+</div>
 
 <div class="container">
   <!-- Notepad -->
@@ -148,34 +172,15 @@
   </div>
 </div>
 
-<!-- Timezone Display -->
-<div class="timezone-container" id="timezoneContainer">
-  <div class="timezone" id="pacific">
-    <h3>Pacific</h3>
-    <p id="pacificTime">Loading...</p>
-    <p id="pacificDiff">Loading...</p>
-  </div>
-  <div class="timezone" id="mountain">
-    <h3>Mountain</h3>
-    <p id="mountainTime">Loading...</p>
-    <p id="mountainDiff">Loading...</p>
-  </div>
-  <div class="timezone" id="central">
-    <h3>Central</h3>
-    <p id="centralTime">Loading...</p>
-    <p id="centralDiff">Loading...</p>
-  </div>
-  <div class="timezone" id="philippines">
-    <h3>Philippines</h3>
-    <p id="philippinesTime">Loading...</p>
-    <p id="philippinesDiff">Loading...</p>
-  </div>
-</div>
-
 <!-- Theme Toggle Button -->
 <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
 
 <script>
+  // Theme Persistence
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.setAttribute('data-theme', 'dark');
+  }
+
   // Notepad Persistence
   const notepad = document.getElementById('notepad');
   notepad.value = localStorage.getItem('notepadData') || '';
@@ -255,23 +260,14 @@
     const pacificTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
     const mountainTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Denver' }));
     const centralTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Chicago' }));
+    const easternTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
     const philippinesTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
 
     document.getElementById('pacificTime').textContent = pacificTime.toLocaleTimeString('en-US', options);
     document.getElementById('mountainTime').textContent = mountainTime.toLocaleTimeString('en-US', options);
     document.getElementById('centralTime').textContent = centralTime.toLocaleTimeString('en-US', options);
+    document.getElementById('easternTime').textContent = easternTime.toLocaleTimeString('en-US', options);
     document.getElementById('philippinesTime').textContent = philippinesTime.toLocaleTimeString('en-US', options);
-
-    // Calculate time difference (in hours)
-    const pacificOffset = pacificTime.getHours() - now.getHours();
-    const mountainOffset = mountainTime.getHours() - now.getHours();
-    const centralOffset = centralTime.getHours() - now.getHours();
-    const philippinesOffset = philippinesTime.getHours() - now.getHours();
-
-    document.getElementById('pacificDiff').textContent = `Pacific time difference: ${pacificOffset} hrs`;
-    document.getElementById('mountainDiff').textContent = `Mountain time difference: ${mountainOffset} hrs`;
-    document.getElementById('centralDiff').textContent = `Central time difference: ${centralOffset} hrs`;
-    document.getElementById('philippinesDiff').textContent = `Philippines time difference: ${philippinesOffset} hrs`;
   };
 
   setInterval(updateTimes, 60000); // Update every minute
@@ -283,8 +279,10 @@
     const currentTheme = document.body.getAttribute('data-theme');
     if (currentTheme === 'light') {
       document.body.setAttribute('data-theme', 'dark');
+      localStorage.setItem('theme', 'dark');
     } else {
       document.body.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
     }
   });
 </script>
