@@ -6,6 +6,7 @@
 <title>Notepad & Task Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+/* Global Styles */
 body {
     font-family: 'Quicksand', sans-serif;
     margin: 0;
@@ -21,17 +22,20 @@ body {
     transition: background-color 0.3s ease;
     min-height: 100%; /* Ensure full height coverage even if zoomed */
 }
-   /* Footer Styles */
+
+/* Footer Styles */
 footer {
     position: fixed;
     bottom: 10px;
     width: 100%;
-    text-align: right;
-    color: #9DA8C4; /* You can adjust the color here */
+    text-align: center;
+    color: #9DA8C4;
     font-size: 14px;
     font-weight: 500;
-    z-index: 10; /* Ensure it stays on top */
-}   
+    z-index: 10;
+}
+
+/* Timezone Display */
 .timezone-container {
     display: flex;
     justify-content: space-between;
@@ -44,79 +48,52 @@ footer {
     margin-right: 10px;
 }
 
-/* Change the font-family of the notepad to Quicksand */
+/* Notepad & Task List Styling */
 .notepad-container textarea {
     font-family: 'Quicksand', sans-serif;
-    font-size: 16px; /* Default font size */
+    font-size: 16px;
+    width: 100%;
+    height: 150px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: both;
 }
+
 .container {
     width: 80%;
     max-width: 1000px;
     margin: auto;
     padding: 15px;
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent container for light mode */
+    background-color: rgba(255, 255, 255, 0.8); 
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s, color 0.3s, opacity 0.3s ease;
 }
 
-/* Light Mode */
+/* Light Theme */
 .light-theme .container {
     background-color: rgba(255, 255, 255, 0.8);
-    color: #333333; /* Light font color */
+    color: #333333;
 }
 
 .light-theme .notepad-container,
 .light-theme .task-container {
-    color: #333333; /* Light theme font color */
+    color: #333333;
 }
 
 /* Dark Mode */
 .dark-theme .container {
     background-color: rgba(51, 51, 51, 0.8);
-    color: #f0f0f0; /* Light font color for dark theme */
+    color: #f0f0f0;
 }
 
 .dark-theme .notepad-container,
 .dark-theme .task-container {
-    color: #f0f0f0; /* Light font color for dark theme */
+    color: #f0f0f0;
 }
 
-/* Global Font Color */
-body, .notepad-container, .task-container {
-    transition: color 0.3s ease;
-}
-
-.notepad-container, .task-container {
-    min-width: 200px;
-    min-height: 150px;
-    margin-bottom: 15px;
-    padding: 8px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    resize: both;
-    overflow: auto;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.task-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.task {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 2px;
-    padding: 3px; /* Reduced padding for closer line spacing */
-    font-size: 13px; /* Font size set to 13px */
-}
-
-.task input[type="checkbox"] {
-    margin-right: 8px;
-}
-
+/* Button and Text Customization */
 button {
     padding: 8px 12px;
     border: none;
@@ -142,44 +119,64 @@ button:hover {
     cursor: pointer;
 }
 
+/* Task List */
+.task-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2px;
+    padding: 3px;
+    font-size: 13px;
+}
+
+.task input[type="checkbox"] {
+    margin-right: 8px;
+}
+
 </style>
 </head>
 <body>
 <div class="container">
-<!-- Timezone Display -->
-<div class="timezone-container" id="timezoneContainer">
-    <div class="timezone" id="usPacific">US Pacific: Loading...</div>
-    <div class="timezone" id="usMountain">US Mountain: Loading...</div>
-    <div class="timezone" id="usCentral">US Central: Loading...</div>
-    <div class="timezone" id="usEastern">US Eastern: Loading...</div>
-    <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
-</div>
+    <!-- Timezone Display -->
+    <div class="timezone-container" id="timezoneContainer">
+        <div class="timezone" id="usPacific">US Pacific: Loading...</div>
+        <div class="timezone" id="usMountain">US Mountain: Loading...</div>
+        <div class="timezone" id="usCentral">US Central: Loading...</div>
+        <div class="timezone" id="usEastern">US Eastern: Loading...</div>
+        <div class="timezone" id="phPhilippines">PH Philippines: Loading...</div>
+    </div>
 
-<!-- Theme Toggle and Font Size Controls -->
-<button id="themeToggle">Switch to Dark Mode</button>
-<button id="increaseFontSize">+</button>
-<button id="decreaseFontSize">-</button>
+    <!-- Theme Toggle and Font Size Controls -->
+    <button id="themeToggle">Switch to Dark Mode</button>
+    <button id="increaseFontSize">+</button>
+    <button id="decreaseFontSize">-</button>
 
-<!-- Notepad Container -->
-<div class="notepad-container" id="notepadContainer">
-    <textarea id="notepad" placeholder="Write your notes here..."></textarea>
-</div>
+    <!-- Notepad Container -->
+    <div class="notepad-container" id="notepadContainer">
+        <textarea id="notepad" placeholder="Write your notes here..."></textarea>
+    </div>
 
-<!-- Task List -->
-<div class="task-container">
-    <input type="text" id="taskInput" placeholder="Add a task" />
-    <button id="addTaskButton">Add Task</button>
-    <button id="clearAllButton">Clear All Tasks</button>
-    <ul id="taskList" class="task-list"></ul>
-</div>
+    <!-- Task List -->
+    <div class="task-container">
+        <input type="text" id="taskInput" placeholder="Add a task" />
+        <button id="addTaskButton">Add Task</button>
+        <button id="clearAllButton">Clear All Tasks</button>
+        <ul id="taskList" class="task-list"></ul>
+    </div>
 
-<!-- Font Color Customization -->
-<div class="font-color-picker">
-    <label for="fontColor">Font Color: </label>
-    <input type="color" id="fontColor" value="#9DA8C4">
-</div>
-   <!-- Footer will be added by JavaScript -->
-    <footer id="footer"></footer>
+    <!-- Font Color Customization -->
+    <div class="font-color-picker">
+        <label for="fontColor">Font Color: </label>
+        <input type="color" id="fontColor" value="#9DA8C4">
+    </div>
+
+    <!-- Footer -->
+    <footer id="footer">Created by Shem | Enjoy your time!</footer>
 </div>
 
 <script>
@@ -188,18 +185,12 @@ const themeToggle = document.getElementById('themeToggle');
 let isDarkMode = localStorage.getItem('theme') === 'dark';
 document.body.classList.toggle('dark-theme', isDarkMode);
 document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
-document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-    el.classList.toggle('dark-theme', isDarkMode);
-});
 
 themeToggle.addEventListener('click', () => {
     isDarkMode = !isDarkMode;
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     document.body.classList.toggle('dark-theme', isDarkMode);
     document.querySelector('.container').classList.toggle('dark-theme', isDarkMode);
-    document.querySelectorAll('.notepad-container, .task-container').forEach((el) => {
-        el.classList.toggle('dark-theme', isDarkMode);
-    });
     themeToggle.textContent = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
 });
 
@@ -215,16 +206,13 @@ notepad.addEventListener('input', () => {
 let fontSize = parseInt(localStorage.getItem('fontSize')) || 16;
 notepad.style.fontSize = fontSize + 'px';
 
-const increaseFontSize = document.getElementById('increaseFontSize');
-const decreaseFontSize = document.getElementById('decreaseFontSize');
-
-increaseFontSize.addEventListener('click', () => {
+document.getElementById('increaseFontSize').addEventListener('click', () => {
     fontSize += 2;
     localStorage.setItem('fontSize', fontSize);
     notepad.style.fontSize = fontSize + 'px';
 });
 
-decreaseFontSize.addEventListener('click', () => {
+document.getElementById('decreaseFontSize').addEventListener('click', () => {
     fontSize -= 2;
     localStorage.setItem('fontSize', fontSize);
     notepad.style.fontSize = fontSize + 'px';
@@ -303,11 +291,6 @@ function updateTimezone() {
 // Update Timezone Every Minute
 setInterval(updateTimezone, 60000);
 updateTimezone();
-
-// Footer Text (Corrected)
-const footer = document.getElementById('footer');
-footer.textContent = 'Created by Shemida Garces;
 </script>
-
 </body>
 </html>
