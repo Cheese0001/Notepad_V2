@@ -242,7 +242,9 @@ addTaskButton.addEventListener('click', () => {
         tasks.push({ text: taskText, completed: false });
         taskInput.value = '';
         renderTasks();
+    }
 });
+
 
 taskList.addEventListener('click', (e) => {
     if (e.target.classList.contains('deleteBtn')) {
@@ -291,7 +293,7 @@ function updateTimezone() {
 }
 
 updateTimezone();
-setInterval(updateTimezone, 1000);
+setInterval(updateTimezone, 60000);
 </script>
 </body>
 </html>
