@@ -24,7 +24,7 @@
             background-color: #2e2e2e;
             color: white;
         }
-        
+
         .light-theme {
             background-color: #ffffff;
             color: #333;
@@ -49,6 +49,7 @@
             position: relative;
         }
 
+        /* Time Zone */
         .time-zone-container {
             display: flex;
             justify-content: space-around;
@@ -64,6 +65,7 @@
             text-align: center;
         }
 
+        /* Buttons */
         .button {
             background-color: #D0B0BD;
             border: none;
@@ -89,42 +91,9 @@
             cursor: se-resize;
         }
 
-        .toggle-container {
-            position: absolute;
-            bottom: 60px;
-            left: 10px;
-        }
-
-        .collapsible {
-            display: none;
-        }
-
-        .theme-button {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            padding: 10px;
-            background-color: #9DA8C4;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Dark theme styling */
-        .dark-theme .notepad-container, .dark-theme .task-container {
-            background-color: #333;
-            color: white;
-        }
-
         /* Font Size */
         .large-font {
             font-size: 24px;
-        }
-
-        /* Pastel Colors */
-        .pastel {
-            color: #DFB7CC;
-            background-color: #C6B0C8;
         }
 
         /* Task Container */
@@ -289,25 +258,36 @@
             });
         });
 
-        // Initialize Time Zone
-        function updateTimeZones() {
-            const options = { timeZoneName: 'short' };
-            const pacificTime = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', ...options });
-            const mountainTime = new Date().toLocaleString('en-US', { timeZone: 'America/Denver', ...options });
-            const centralTime = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago', ...options });
-            const philippinesTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', ...options });
+        // Initialize
+        updateTaskList();
+        toggleTheme();
 
-            document.getElementById('pacific').innerText = pacificTime;
-            document.getElementById('mountain').innerText = mountainTime;
-            document.getElementById('central').innerText = centralTime;
-            document.getElementById('philippines').innerText = philippinesTime;
+        // Time Zone Calculation (for US Pacific, Mountain, Central, and Philippines)
+        function updateTimeZones() {
+            const timeZones = {
+                pacific: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
+                mountain: new Date().toLocaleString('en-US', { timeZone: 'America/Denver' }),
+                central: new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' }),
+                Eastern: new Date().toLocaleString('en-US', { timeZone: 'America/Newyork' }),
+                philippines: new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila' }),
+            };
+
+            const pacificOffset = new Date().getHours() - new Date(timeZones.pacific).getHours();
+            const mountainOffset = new Date().getHours() - new Date(timeZones.mountain).getHours();
+            const centralOffset = new Date().getHours() - new Date(timeZones.central).getHours();
+
+            document.getElementById('pacific').innerText = timeZones.pacific;
+            document.getElementById('mountain').innerText = timeZones.mountain;
+            document.getElementById('central').innerText = timeZones.central;
+            document.getElementById('philippines').innerText = timeZones.philippines;
+
+            document.getElementById('pacific-diff').innerText = ` (UTC ${pacificOffset})`;
+            document.getElementById('mountain-diff').innerText = ` (UTC ${mountainOffset})`;
+            document.getElementById('central-diff').innerText = ` (UTC ${centralOffset})`;
         }
 
-        setInterval(updateTimeZones, 1000); // Update every second
         updateTimeZones();
-
-        // Initialize theme
-        document.body.className = isDarkMode ? 'dark-theme' : 'light-theme';
+        setInterval(updateTimeZones, 60000);  // Update every minute
     </script>
 </body>
 </html>
