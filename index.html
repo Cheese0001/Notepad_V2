@@ -160,6 +160,31 @@
   </div>
 
   <script>
+     // Function to update timezones
+  function updateTimezones() {
+    // US Pacific, Mountain, Central, Eastern and PH Philippines timezones
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+
+    const timeZones = {
+      'US Pacific': 'America/Los_Angeles',
+      'US Mountain': 'America/Denver',
+      'US Central': 'America/Chicago',
+      'US Eastern': 'America/New_York',
+      'PH Philippines': 'Asia/Manila'
+    };
+
+    // Loop through each timezone and update the displayed time
+    for (const [key, value] of Object.entries(timeZones)) {
+      const time = new Date().toLocaleString('en-US', { ...options, timeZone: value });
+      document.getElementById(key.replace(' ', '').toLowerCase()).textContent = `${key}: ${time}`;
+    }
+  }
+
+  // Call the function to update timezone when the page loads
+  updateTimezones();
+
+  // Optionally, update every second
+  setInterval(updateTimezones, 1000);
     // Theme Toggle Functionality
     const themeToggle = document.getElementById('themeToggle');
     let isDarkMode = localStorage.getItem('theme') === 'dark';
@@ -270,6 +295,7 @@
 
     // Load tasks on page load
     loadTasks();
+
   </script>
 </body>
 </html>
