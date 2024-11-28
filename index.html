@@ -218,6 +218,87 @@
   // Your JavaScript code here
   // This part is already defined in your previous code
 </script>
+// Timezone Display Logic
+function updateTimezones() {
+  const pacificTime = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
+  const mountainTime = new Date().toLocaleString("en-US", { timeZone: "America/Denver" });
+  const centralTime = new Date().toLocaleString("en-US", { timeZone: "America/Chicago" });
+  const easternTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York" });
+  const philippinesTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila" });
+
+  document.getElementById("pacificTime").textContent = pacificTime;
+  document.getElementById("mountainTime").textContent = mountainTime;
+  document.getElementById("centralTime").textContent = centralTime;
+  document.getElementById("easternTime").textContent = easternTime;
+  document.getElementById("philippinesTime").textContent = philippinesTime;
+}
+
+// Set an interval to update the time every minute
+setInterval(updateTimezones, 60000);
+updateTimezones(); // Initial call to display the time immediately
+
+// Notepad Font Size Adjustment Logic
+let currentFontSize = 16;
+
+document.getElementById("increaseTextSize").addEventListener("click", () => {
+  currentFontSize += 2;
+  document.getElementById("notepad").style.fontSize = `${currentFontSize}px`;
+});
+
+document.getElementById("decreaseTextSize").addEventListener("click", () => {
+  if (currentFontSize > 8) {
+    currentFontSize -= 2;
+    document.getElementById("notepad").style.fontSize = `${currentFontSize}px`;
+  }
+});
+
+// Task Tracker Logic
+const taskList = document.getElementById("taskList");
+const taskInput = document.getElementById("taskInput");
+
+document.getElementById("addTaskButton").addEventListener("click", () => {
+  const taskText = taskInput.value.trim();
+  if (taskText) {
+    const listItem = document.createElement("li");
+    listItem.textContent = taskText;
+
+    // Add complete button
+    const completeButton = document.createElement("button");
+    completeButton.textContent = "✓";
+    completeButton.addEventListener("click", () => {
+      listItem.classList.toggle("completed");
+    });
+    listItem.appendChild(completeButton);
+
+    // Add delete button
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "X";
+    deleteButton.addEventListener("click", () => {
+      listItem.remove();
+    });
+    listItem.appendChild(deleteButton);
+
+    taskList.appendChild(listItem);
+    taskInput.value = ""; // Clear input
+  }
+});
+
+// Clear All Tasks
+document.getElementById("clearAllButton").addEventListener("click", () => {
+  taskList.innerHTML = "";
+});
+
+// Theme Toggle Logic
+let isDarkMode = false;
+document.getElementById("themeToggle").addEventListener("click", () => {
+  isDarkMode = !isDarkMode;
+  document.body.setAttribute("data-theme", isDarkMode ? "dark" : "light");
+});
+
+// Font Selector Logic
+document.getElementById("fontSelect").addEventListener("change", (event) => {
+  document.getElementById("notepad").style.fontFamily = event.target.value;
+});
 
 </body>
 </html>
