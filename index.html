@@ -31,7 +31,7 @@
     .notepad-container, .task-container {
       min-width: 200px;
       min-height: 150px;
-      margin-bottom: 0px;
+      margin-bottom: 5px;
       padding: 8px;
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -46,9 +46,11 @@
 
     .task {
       display: flex;
-      align-items: center;
+      align-items: Left;
       justify-content: space-between;
       margin-bottom: 8px;
+      padding: 5px; /* Optional: reduces padding inside each task item */
+
     }
 
     .task input[type="checkbox"] {
