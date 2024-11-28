@@ -7,9 +7,15 @@
     <style>
         /* General Styles */
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Press Start 2P', cursive;
             padding: 20px;
             transition: background-color 0.3s, color 0.3s;
+        }
+        .container {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
         }
         button {
             padding: 10px 15px;
@@ -23,6 +29,15 @@
             background-color: #333;
             color: #fff;
         }
+        .dark-theme textarea, .dark-theme input, .dark-theme select {
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #666;
+        }
+        .dark-theme button {
+            background-color: #555;
+            color: #fff;
+        }
         textarea {
             width: 100%;
             height: 200px;
@@ -30,6 +45,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
+            resize: both;
         }
         ul {
             list-style-type: none;
@@ -53,18 +69,11 @@
         button:hover {
             background-color: #45a049;
         }
-        .dark-theme textarea, .dark-theme input {
-            background-color: #444;
-            color: #fff;
-            border: 1px solid #666;
-        }
-        #increase-font, #decrease-font {
-            margin-top: 10px;
-        }
-        .dark-theme button {
-            background-color: #555;
-            color: #fff;
-        }
+        .pastel-pink { background-color: #ffd1dc; }
+        .pastel-purple { background-color: #d1c4e9; }
+        .pastel-brown { background-color: #d7ccc8; }
+        .pastel-blue { background-color: #bbdefb; }
+        .pastel-green { background-color: #c8e6c9; }
     </style>
 </head>
 <body>
@@ -72,14 +81,20 @@
     <button id="theme-toggle">Toggle Theme</button>
 
     <!-- Current Time and Timezone -->
-    <div id="timezone">
+    <div id="timezone" class="container pastel-pink">
         <h2>Current Time</h2>
-        <select id="timezone-select"></select>
+        <select id="timezone-select">
+            <option value="America/Los_Angeles">US Pacific</option>
+            <option value="America/Denver">US Mountain</option>
+            <option value="America/Chicago">US Central</option>
+            <option value="America/New_York">US Eastern</option>
+            <option value="Asia/Manila">Philippines</option>
+        </select>
         <div id="current-time"></div>
     </div>
 
     <!-- Notepad Section -->
-    <section id="notepad-section">
+    <section id="notepad-section" class="container pastel-purple">
         <h3>Notepad</h3>
         <textarea id="notepad" placeholder="Write your notes here..."></textarea>
         <button id="clear-notes">Clear Notes</button>
@@ -90,7 +105,7 @@
     </section>
 
     <!-- Task Manager Section -->
-    <section id="task-manager-section">
+    <section id="task-manager-section" class="container pastel-brown">
         <h3>Task Manager</h3>
         <input type="text" id="new-task" placeholder="New task...">
         <button id="add-task">Add Task</button>
@@ -191,7 +206,7 @@
         function createTaskElement(taskText, completed) {
             const taskItem = document.createElement('li');
             taskItem.innerHTML = `<span class="task-text ${completed ? 'completed' : ''}">${taskText}</span>
-                                  <button class="delete-task">Delete</button>`;
+                                  <button class="delete-task">x</button>`;
             return taskItem;
         }
 
@@ -199,11 +214,18 @@
         const timezoneSelect = document.getElementById('timezone-select');
         const currentTimeDisplay = document.getElementById('current-time');
 
-        const timezones = Intl.supportedValuesOf('timeZone');
+        const timezones = [
+            { name: 'US Pacific', zone: 'America/Los_Angeles' },
+            { name: 'US Mountain', zone: 'America/Denver' },
+            { name: 'US Central', zone: 'America/Chicago' },
+            { name: 'US Eastern', zone: 'America/New_York' },
+            { name: 'Philippines', zone: 'Asia/Manila' }
+        ];
+
         timezones.forEach(tz => {
             const option = document.createElement('option');
-            option.value = tz;
-            option.textContent = tz;
+            option.value = tz.zone;
+            option.textContent = tz.name;
             timezoneSelect.appendChild(option);
         });
 
@@ -222,12 +244,20 @@
                 timeZone: selectedZone,
                 hour: '2-digit',
                 minute: '2-digit',
-                second: '2-digit',
-            });
-            currentTimeDisplay.textContent = `Current time in ${selectedZone}: ${formatter.format(now)}`;
-        }
+                second: '2-digit        });
 
         setInterval(updateTime, 1000);
+
+        // Time Difference Calculator
+        function calculateTimeDifference(timezone1, timezone2) {
+            const now = new Date();
+            const time1 = new Intl.DateTimeFormat('en-US', { timeZone: timezone1, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now);
+            const time2 = new Intl.DateTimeFormat('en-US', { timeZone: timezone2, hour: '2-digit', minute: '2-digit', second: '2-digit' }).format(now);
+            return `Time difference between ${timezone1} and ${timezone2}: ${time1} - ${time2}`;
+        }
+
+        // Example usage of time difference calculator
+        console.log(calculateTimeDifference('America/Los_Angeles', 'Asia/Manila'));
     </script>
 </body>
 </html>
