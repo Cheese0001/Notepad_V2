@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Tracker Widget</title>
-
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         /* Base Styles */
         body {
@@ -30,6 +30,7 @@
             color: #333;
         }
 
+        /* General Container */
         .container {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             margin: 10px;
@@ -39,11 +40,13 @@
             border-radius: 10px;
         }
 
+        /* Notepad & Task Containers */
         .notepad-container, .task-container {
             background-color: #f5f5f5;
             margin-bottom: 20px;
             border-radius: 10px;
             padding: 10px;
+            position: relative;
         }
 
         .time-zone-container {
@@ -54,7 +57,7 @@
         }
 
         .time-zone-box {
-            background-color: #E0C3FC;
+            background-color: #e0c3fc;
             border-radius: 5px;
             padding: 10px;
             width: 20%;
@@ -96,7 +99,6 @@
             display: none;
         }
 
-        /* Theme Toggle */
         .theme-button {
             position: fixed;
             bottom: 20px;
@@ -108,29 +110,34 @@
             cursor: pointer;
         }
 
-        /* Dark theme styling for readability */
-        .dark-theme .notepad-container {
+        /* Dark theme styling */
+        .dark-theme .notepad-container, .dark-theme .task-container {
             background-color: #333;
-            color: black;  /* Notepad text color in dark mode */
+            color: white;
         }
 
-        .dark-theme .task-container {
-            background-color: #333;
-            color: white;  /* Task text color in dark mode */
-        }
-
-        /* Increased font size */
+        /* Font Size */
         .large-font {
             font-size: 24px;
         }
 
-        /* Pastel colors */
+        /* Pastel Colors */
         .pastel {
             color: #DFB7CC;
             background-color: #C6B0C8;
         }
 
-        /* Input text field styles */
+        /* Task Container */
+        .task-resize-handle {
+            width: 15px;
+            height: 15px;
+            background-color: #9DA8C4;
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            cursor: se-resize;
+        }
+
         #notepad, #task-input {
             background-color: #F8E1F4;
             border: 1px solid #D1B0D9;
@@ -141,15 +148,10 @@
             width: 100%;
         }
 
-        /* Resizable task container */
-        .task-resize-handle {
-            width: 15px;
-            height: 15px;
-            background-color: #9DA8C4;
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            cursor: se-resize;
+        /* Resizable */
+        #task-container {
+            resize: both;
+            overflow: auto;
         }
     </style>
 </head>
@@ -191,7 +193,6 @@
             <div class="task-resize-handle" id="task-resize-handle"></div>
         </div>
 
-        <!-- Font Color Customization -->
         <div class="toggle-container">
             <button class="button" onclick="changeFontColor('purple')">Purple Font</button>
             <button class="button" onclick="changeFontColor('pink')">Pink Font</button>
@@ -205,7 +206,7 @@
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         let savedNotepad = localStorage.getItem('notepad') || '';
 
-        // Handle Theme Toggle
+        // Toggle Theme
         function toggleTheme() {
             isDarkMode = !isDarkMode;
             localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
@@ -213,7 +214,7 @@
             document.getElementById('mainContainer').className = isDarkMode ? 'container dark-theme' : 'container light-theme';
         }
 
-        // Handle Font Color Change
+        // Font Color Change
         function changeFontColor(color) {
             currentFontColor = color;
             document.getElementById('notepad').style.color = color;
@@ -227,7 +228,7 @@
 
         document.getElementById('notepad').value = savedNotepad;
 
-        // Add Task Functionality
+        // Add Task
         function addTask() {
             const taskText = document.getElementById('task-input').value;
             if (taskText) {
@@ -246,7 +247,7 @@
                 li.innerHTML = `
                     <span style="text-decoration: ${task.completed ? 'line-through' : 'none'}; font-size: 18px;">${task.text}</span>
                     <button class="button" onclick="toggleTaskCompletion(${index})">✓</button>
-                    <button class="button" onclick="deleteTask(${index})">X</button>
+                    <button class="button" onclick="removeTask(${index})">X</button>
                 `;
                 taskList.appendChild(li);
             });
@@ -259,46 +260,54 @@
             updateTaskList();
         }
 
-        // Delete Task
-        function deleteTask(index) {
+        // Remove Task
+        function removeTask(index) {
             tasks.splice(index, 1);
             updateTaskList();
         }
 
-        // Clear All Tasks
+        // Clear Tasks
         function clearTasks() {
             tasks = [];
             updateTaskList();
         }
 
-        // Resize Handlers
-        const resizeHandle = document.getElementById('resize-handle');
-        const notepadContainer = document.getElementById('notepad-container');
-        resizeHandle.addEventListener('mousedown', function(e) {
-            const startX = e.clientX;
-            const startY = e.clientY;
-            const startWidth = notepadContainer.offsetWidth;
-            const startHeight = notepadContainer.offsetHeight;
+        // Resize Functionality (both containers)
+        const resizeHandles = document.querySelectorAll('.resize-handle');
+        resizeHandles.forEach(handle => {
+            handle.addEventListener('mousedown', (e) => {
+                document.addEventListener('mousemove', onMouseMove);
+                document.addEventListener('mouseup', () => {
+                    document.removeEventListener('mousemove', onMouseMove);
+                });
 
-            const onMouseMove = (e) => {
-                const width = startWidth + e.clientX - startX;
-                const height = startHeight + e.clientY - startY;
-                notepadContainer.style.width = `${width}px`;
-                notepadContainer.style.height = `${height}px`;
-            };
-
-            const onMouseUp = () => {
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            };
-
-            document.addEventListener('mousemove', onMouseMove);
-            document.addEventListener('mouseup', onMouseUp);
+                function onMouseMove(e) {
+                    const container = handle.parentElement;
+                    container.style.width = e.pageX - container.offsetLeft + 'px';
+                    container.style.height = e.pageY - container.offsetTop + 'px';
+                }
+            });
         });
 
-        // Load Initial Data
-        updateTaskList();
-        toggleTheme(); // Apply saved theme
+        // Initialize Time Zone
+        function updateTimeZones() {
+            const options = { timeZoneName: 'short' };
+            const pacificTime = new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles', ...options });
+            const mountainTime = new Date().toLocaleString('en-US', { timeZone: 'America/Denver', ...options });
+            const centralTime = new Date().toLocaleString('en-US', { timeZone: 'America/Chicago', ...options });
+            const philippinesTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Manila', ...options });
+
+            document.getElementById('pacific').innerText = pacificTime;
+            document.getElementById('mountain').innerText = mountainTime;
+            document.getElementById('central').innerText = centralTime;
+            document.getElementById('philippines').innerText = philippinesTime;
+        }
+
+        setInterval(updateTimeZones, 1000); // Update every second
+        updateTimeZones();
+
+        // Initialize theme
+        document.body.className = isDarkMode ? 'dark-theme' : 'light-theme';
     </script>
 </body>
 </html>
