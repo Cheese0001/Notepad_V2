@@ -1,157 +1,157 @@
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notepad and Task Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --background-color: #f0f0f0;
-      --text-color: #333;
-      --container-bg: #fff;
-      --button-bg: #6200ea;
-      --button-color: white;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notepad and Task Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --background-color: #f0f0f0;
+  --text-color: #333;
+  --container-bg: #fff;
+  --button-bg: #6200ea;
+  --button-color: white;
+}
 
-    [data-theme="dark"] {
-      --background-color: #121212;
-      --text-color: #f0f0f0;
-      --container-bg: #1e1e1e;
-      --button-bg: #bb86fc;
-      --button-color: #000;
-    }
+[data-theme="dark"] {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --container-bg: #1e1e1e;
+  --button-bg: #bb86fc;
+  --button-color: #000;
+}
 
-    body {
-      font-family: 'Nunito', sans-serif;
-      margin: 20px;
-      background-color: var(--background-color);
-      color: var(--text-color);
-      transition: background-color 0.3s, color 0.3s;
-    }
+body {
+  font-family: 'Nunito', sans-serif;
+  margin: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
 
-    .container {
-      display: flex;
-      gap: 20px;
-      margin-top: 20px;
-    }
+.container {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
 
-    .notepad-container, .task-container {
-      width: 300px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      padding: 10px;
-      background-color: var(--container-bg);
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
+.notepad-container, .task-container {
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  background-color: var(--container-bg);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 
-    textarea {
-      width: 100%;
-      height: 150px;
-      border: none;
-      resize: none;
-      outline: none;
-      font-size: 16px;
-      background-color: var(--container-bg);
-      color: var(--text-color);
-    }
+textarea {
+  width: 100%;
+  height: 150px;
+  border: none;
+  resize: none;
+  outline: none;
+  font-size: 16px;
+  background-color: var(--container-bg);
+  color: var(--text-color);
+}
 
-    .task-container input {
-      width: calc(100% - 50px);
-      padding: 5px;
-      margin-bottom: 10px;
-      font-size: 16px;
-      background-color: var(--container-bg);
-      color: var(--text-color);
-      border: 1px solid var(--text-color);
-    }
+.task-container input {
+  width: calc(100% - 50px);
+  padding: 5px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  background-color: var(--container-bg);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+}
 
-    .task-container button {
-      padding: 5px 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      border-radius: 3px;
-      background-color: var(--button-bg);
-      color: var(--button-color);
-      transition: background-color 0.3s, color 0.3s;
-    }
+.task-container button {
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 3px;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  transition: background-color 0.3s, color 0.3s;
+}
 
-    .task-list {
-      list-style: none;
-      padding: 0;
-    }
+.task-list {
+  list-style: none;
+  padding: 0;
+}
 
-    .task-list li {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 5px;
-    }
+.task-list li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
 
-    .task-list li.completed {
-      text-decoration: line-through;
-      color: #aaa;
-    }
+.task-list li.completed {
+  text-decoration: line-through;
+  color: #aaa;
+}
 
-    .timezone-container {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      margin-bottom: 20px;
-    }
+.timezone-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
 
-    .timezone {
-      background-color: var(--container-bg);
-      padding: 10px;
-      border-radius: 5px;
-      width: 100%;
-      text-align: center;
-      margin: 0 5px;
-    }
+.timezone {
+  background-color: var(--container-bg);
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  text-align: center;
+  margin: 0 5px;
+}
 
-    .timezone h3 {
-      margin: 0;
-    }
+.timezone h3 {
+  margin: 0;
+}
 
-    .timezone p {
-      margin: 5px 0;
-    }
+.timezone p {
+  margin: 5px 0;
+}
 
-    .theme-toggle {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      padding: 10px;
-      font-size: 16px;
-      background-color: var(--button-bg);
-      color: var(--button-color);
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s, color 0.3s;
-    }
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px;
+  font-size: 16px;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
 
-    .font-selector {
-      margin-bottom: 10px;
-    }
+.font-selector {
+  margin-bottom: 10px;
+}
 
-    select {
-      padding: 5px;
-      font-size: 14px; /* Smaller font size for the font selector */
-      width: 150px;
-    }
+select {
+  padding: 5px;
+  font-size: 14px;
+  width: 150px;
+}
 
-    .notepad-container button {
-      padding: 5px 10px;
-      margin: 5px;
-      font-size: 16px;
-    }
+.notepad-container button {
+  padding: 5px 10px;
+  margin: 5px;
+  font-size: 16px;
+}
 
-    textarea {
-      font-size: 16px;
-      width: 100%;
-      height: 300px;
-      resize: none;
-    }
-  </style>
+textarea {
+  font-size: 16px;
+  width: 100%;
+  height: 300px;
+  resize: none;
+}
+</style>
 </head>
 <body>
 
@@ -215,162 +215,158 @@
 </div>
 
 <script>
-  // Function to update the timezones
-  function updateTimezones() {
-    const pacificTime = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles", hour: '2-digit', minute: '2-digit' });
-    const mountainTime = new Date().toLocaleString("en-US", { timeZone: "America/Denver", hour: '2-digit', minute: '2-digit' });
-    const centralTime = new Date().toLocaleString("en-US", { timeZone: "America/Chicago", hour: '2-digit', minute: '2-digit' });
-    const easternTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York", hour: '2-digit', minute: '2-digit' });
-    const philippinesTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila", hour: '2-digit', minute: '2-digit' });
+// Function to update the timezones
+function updateTimezones() {
+  const pacificTime = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles", hour: '2-digit', minute: '2-digit' });
+  const mountainTime = new Date().toLocaleString("en-US", { timeZone: "America/Denver", hour: '2-digit', minute: '2-digit' });
+  const centralTime = new Date().toLocaleString("en-US", { timeZone: "America/Chicago", hour: '2-digit', minute: '2-digit' });
+  const easternTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York", hour: '2-digit', minute: '2-digit' });
+  const philippinesTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila", hour: '2-digit', minute: '2-digit' });
 
-    document.getElementById("pacificTime").textContent = pacificTime;
-    document.getElementById("mountainTime").textContent = mountainTime;
-    document.getElementById("centralTime").textContent = centralTime;
-    document.getElementById("easternTime").textContent = easternTime;
-    document.getElementById("philippinesTime").textContent = philippinesTime;
-  }
+  document.getElementById("pacificTime").textContent = pacificTime;
+  document.getElementById("mountainTime").textContent = mountainTime;
+  document.getElementById("centralTime").textContent = centralTime;
+  document.getElementById("easternTime").textContent = easternTime;
+  document.getElementById("philippinesTime").textContent = philippinesTime;
+}
 
-  // Set an interval to update the time every minute
-  setInterval(updateTimezones, 60000);
-  updateTimezones(); // Initial call to display the time immediately
+// Set an interval to update the time every minute
+setInterval(updateTimezones, 60000);
+updateTimezones(); // Initial call to display the time immediately
 
-  // Persist theme in localStorage
-  const storedTheme = localStorage.getItem('theme');
-  if (storedTheme) {
-    document.body.setAttribute('data-theme', storedTheme);
-  }
+// Persist theme in localStorage
+const storedTheme = localStorage.getItem('theme');
+if (storedTheme) {
+  document.body.setAttribute('data-theme', storedTheme);
+}
 
-  // Persist font family in localStorage
-  const storedFont = localStorage.getItem('font');
-  if (storedFont) {
-    document.getElementById("notepad").style.fontFamily = storedFont;
-    document.getElementById("fontSelect").value = storedFont;
-  }
+// Persist font family in localStorage
+const storedFont = localStorage.getItem('font');
+if (storedFont) {
+  document.getElementById("notepad").style.fontFamily = storedFont;
+  document.getElementById("fontSelect").value = storedFont;
+}
 
-  // Persist notepad content
-  const storedNotes = localStorage.getItem('notes');
-  if (storedNotes) {
-    document.getElementById("notepad").value = storedNotes;
-  }
+// Persist notepad content
+const storedNotes = localStorage.getItem('notes');
+if (storedNotes) {
+  document.getElementById("notepad").value = storedNotes;
+}
 
-  // Persist task list
-  const storedTasks = JSON.parse(localStorage.getItem('tasks'));
-  if (storedTasks) {
-    const taskList = document.getElementById("taskList");
-    storedTasks.forEach(task => {
-      const listItem = document.createElement("li");
-      listItem.textContent = task.text;
-      if (task.completed) {
-        listItem.classList.add("completed");
-      }
-      // Add complete button
-      const completeButton = document.createElement("button");
-      completeButton.textContent = "✓";
-      completeButton.addEventListener("click", () => {
-        listItem.classList.toggle("completed");
-        saveTasks();
-      });
-      listItem.appendChild(completeButton);
-
-      // Add delete button
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "X";
-      deleteButton.addEventListener("click", () => {
-        listItem.remove();
-        saveTasks();
-      });
-      listItem.appendChild(deleteButton);
-
-      taskList.appendChild(listItem);
-    });
-  }
-
-  // Save notepad content to localStorage
-  document.getElementById("notepad").addEventListener("input", () => {
-    localStorage.setItem('notes', document.getElementById("notepad").value);
-  });
-
-  // Save tasks to localStorage
-  function saveTasks() {
-    const taskList = document.getElementById("taskList");
-    const tasks = [];
-    taskList.querySelectorAll("li").forEach((taskItem) => {
-      tasks.push({
-        text: taskItem.textContent.replace(/✓|X/g, '').trim(),
-        completed: taskItem.classList.contains("completed")
-      });
-    });
-    localStorage.setItem('tasks', JSON.stringify(tasks));
-  }
-
-  // Theme Toggle
-  document.getElementById("themeToggle").addEventListener("click", () => {
-    const currentTheme = document.body.getAttribute("data-theme");
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
-    document.body.setAttribute("data-theme", newTheme);
-    localStorage.setItem('theme', newTheme);
-  });
-
-  // Font Selector Logic
-  document.getElementById("fontSelect").addEventListener("change", (event) => {
-    document.getElementById("notepad").style.fontFamily = event.target.value;
-    localStorage.setItem('font', event.target.value);
-  });
-
-  // Increase and Decrease Text Size Logic
-  let currentFontSize = 16;
-  document.getElementById("increaseTextSize").addEventListener("click", () => {
-    currentFontSize += 2;
-    document.getElementById("notepad").style.fontSize = `${currentFontSize}px`;
-  });
-
-  document.getElementById("decreaseTextSize").addEventListener("click", () => {
-    if (currentFontSize > 8) {
-      currentFontSize -= 2;
-      document.getElementById("notepad").style.fontSize = `${currentFontSize}px`;
-    }
-  });
-
-  // Task Tracker Logic
+// Persist task list
+const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+if (storedTasks) {
   const taskList = document.getElementById("taskList");
-  const taskInput = document.getElementById("taskInput");
-
-  document.getElementById("addTaskButton").addEventListener("click", () => {
-    const taskText = taskInput.value.trim();
-    if (taskText) {
-      const listItem = document.createElement("li");
-      listItem.textContent = taskText;
-
-      // Add complete button
-      const completeButton = document.createElement("button");
-      completeButton.textContent = "✓";
-      completeButton.addEventListener("click", () => {
-        listItem.classList.toggle("completed");
-        saveTasks();
-      });
-      listItem.appendChild(completeButton);
-
-      // Add delete button
-      const deleteButton = document.createElement("button");
-      deleteButton.textContent = "X";
-      deleteButton.addEventListener("click", () => {
-        listItem.remove();
-        saveTasks();
-      });
-      listItem.appendChild(deleteButton);
-
-      taskList.appendChild(listItem);
-      taskInput.value = ""; // Clear input
-      saveTasks(); // Save the updated tasks list
+  storedTasks.forEach(task => {
+    const listItem = document.createElement("li");
+    listItem.textContent = task.text;
+    if (task.completed) {
+      listItem.classList.add("completed");
     }
+    // Add complete button
+    const completeButton = document.createElement("button");
+    completeButton.textContent = "✓";
+    completeButton.addEventListener("click", () => {
+      listItem.classList.toggle("completed");
+      saveTasks();
+    });
+    // Add delete button
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "X";
+    deleteButton.addEventListener("click", () => {
+      listItem.remove();
+      saveTasks();
+    });
+
+    listItem.appendChild(completeButton);
+    listItem.appendChild(deleteButton);
+    taskList.appendChild(listItem);
+  });
+}
+
+// Save notes to localStorage
+document.getElementById("notepad").addEventListener("input", () => {
+  localStorage.setItem('notes', document.getElementById("notepad").value);
+});
+
+// Save task list to localStorage
+function saveTasks() {
+  const tasks = [];
+  document.querySelectorAll("#taskList li").forEach(li => {
+    tasks.push({
+      text: li.textContent.replace("✓X", "").trim(),
+      completed: li.classList.contains("completed")
+    });
+  });
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+// Add task to task list
+document.getElementById("addTaskButton").addEventListener("click", () => {
+  const taskInput = document.getElementById("taskInput").value;
+  if (taskInput.trim() === "") return;
+
+  const taskList = document.getElementById("taskList");
+  const listItem = document.createElement("li");
+  listItem.textContent = taskInput;
+
+  const completeButton = document.createElement("button");
+  completeButton.textContent = "✓";
+  completeButton.addEventListener("click", () => {
+    listItem.classList.toggle("completed");
+    saveTasks();
   });
 
-  // Clear All Tasks
-  document.getElementById("clearAllButton").addEventListener("click", () => {
-    taskList.innerHTML = "";
-    saveTasks(); // Clear tasks from localStorage
+  const deleteButton = document.createElement("button");
+  deleteButton.textContent = "X";
+  deleteButton.addEventListener("click", () => {
+    listItem.remove();
+    saveTasks();
   });
 
+  listItem.appendChild(completeButton);
+  listItem.appendChild(deleteButton);
+  taskList.appendChild(listItem);
+
+  document.getElementById("taskInput").value = "";
+  saveTasks();
+});
+
+// Clear all tasks
+document.getElementById("clearAllButton").addEventListener("click", () => {
+  document.getElementById("taskList").innerHTML = "";
+  saveTasks();
+});
+
+// Theme toggle
+document.getElementById("themeToggle").addEventListener("click", () => {
+  const currentTheme = document.body.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.body.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+});
+
+// Font size change
+document.getElementById("increaseTextSize").addEventListener("click", () => {
+  const textArea = document.getElementById("notepad");
+  const currentSize = parseInt(window.getComputedStyle(textArea).fontSize);
+  textArea.style.fontSize = (currentSize + 2) + "px";
+});
+
+document.getElementById("decreaseTextSize").addEventListener("click", () => {
+  const textArea = document.getElementById("notepad");
+  const currentSize = parseInt(window.getComputedStyle(textArea).fontSize);
+  if (currentSize > 12) {
+    textArea.style.fontSize = (currentSize - 2) + "px";
+  }
+});
+
+// Font selector
+document.getElementById("fontSelect").addEventListener("change", (event) => {
+  const selectedFont = event.target.value;
+  document.getElementById("notepad").style.fontFamily = selectedFont;
+  localStorage.setItem('font', selectedFont);
+});
 </script>
 
 </body>
