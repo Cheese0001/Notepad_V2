@@ -194,8 +194,82 @@
     document.querySelector('.notepad-container').style.color = savedFontColor;
     document.querySelector('.task-container').style.color = savedFontColor;
 
-    // Other functionalities...
+    // Notepad Persistence
+    const notepad = document.getElementById('notepad');
+    notepad.value = localStorage.getItem('notepadText') || '';
 
+    notepad.addEventListener('input', () => {
+      localStorage.setItem('notepadText', notepad.value);
+    });
+
+    // Task Management
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+    const addTaskButton = document.getElementById('addTaskButton');
+    const clearAllButton = document.getElementById('clearAllButton');
+
+    // Load tasks from localStorage
+    const loadTasks = () => {
+      const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+      taskList.innerHTML = tasks.map(task => `
+        <li class="task">
+          <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} />
+          <span class="task-text" style="text-decoration: ${task.completed ? 'line-through' : 'none'}">${task.text}</span>
+          <button class="delete-task">X</button>
+        </li>
+      `).join('');
+    };
+
+    // Save tasks to localStorage
+    const saveTasks = () => {
+      const tasks = [];
+      document.querySelectorAll('.task').forEach(task => {
+        tasks.push({
+          text: task.querySelector('.task-text').textContent,
+          completed: task.querySelector('.task-checkbox').checked
+        });
+      });
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+    };
+
+    // Add a task
+    addTaskButton.addEventListener('click', () => {
+      const taskText = taskInput.value.trim();
+      if (taskText) {
+        const task = document.createElement('li');
+        task.classList.add('task');
+        task.innerHTML = `
+          <input type="checkbox" class="task-checkbox" />
+          <span class="task-text">${taskText}</span>
+          <button class="delete-task">X</button>
+        `;
+        taskList.appendChild(task);
+        taskInput.value = '';
+        saveTasks();
+      }
+    });
+
+    // Mark task as completed or remove task
+    taskList.addEventListener('click', (e) => {
+      if (e.target.classList.contains('task-checkbox')) {
+        const taskText = e.target.nextElementSibling;
+        taskText.style.textDecoration = e.target.checked ? 'line-through' : 'none';
+        saveTasks();
+      }
+      if (e.target.classList.contains('delete-task')) {
+        e.target.parentElement.remove();
+        saveTasks();
+      }
+    });
+
+    // Clear all tasks
+    clearAllButton.addEventListener('click', () => {
+      taskList.innerHTML = '';
+      saveTasks();
+    });
+
+    // Load tasks on page load
+    loadTasks();
   </script>
 </body>
 </html>
