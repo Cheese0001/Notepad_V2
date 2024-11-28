@@ -4,10 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Notepad & Task Tracker</title>
+  <!-- Link to Google Fonts for Quicksand -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
     /* Base styles */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Quicksand', sans-serif;
       margin: 0;
       padding: 0;
       display: flex;
@@ -256,14 +258,12 @@
       const now = new Date();
       timeZones.forEach(zone => {
         const zoneTime = new Date(now.getTime() + zone.offset * 60 * 60 * 1000);
-        const timeString = zoneTime.toLocaleString();
-        document.getElementById(zone.id).textContent = `${zone.id.replace(/[A-Z]/g, letter => ' ' + letter).trim()}: ${timeString}`;
+        document.getElementById(zone.id).textContent = `${zone.id.replace(/[A-Z]/g, ' $&').trim()}: ${zoneTime.toLocaleTimeString()}`;
       });
     }
 
-    setInterval(updateTimeZones, 60000);
+    setInterval(updateTimeZones, 1000); // Update every second
     updateTimeZones();
-
   </script>
 </body>
 </html>
