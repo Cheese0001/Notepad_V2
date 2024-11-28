@@ -22,14 +22,15 @@ body {
     min-height: 100%; /* Ensure full height coverage even if zoomed */
 }
    /* Footer Styles */
-        footer {
-            position: absolute;
-            bottom: 10px;
-            width: 100%;
-            text-align: center;
-            color: #9DA8C4; /* You can adjust the color here */
-            font-size: 14px;
-            font-weight: 500;
+footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: #9DA8C4; /* You can adjust the color here */
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10; /* Ensure it stays on top */
         }   
 .timezone-container {
     display: flex;
@@ -308,6 +309,5 @@ updateTimezone();
 setInterval(updateTimezone, 60000);
        // JavaScript to dynamically add the footer text
         document.getElementById('footer').textContent = "Made by Shemida Garces";
-</script>
 </body>
 </html>
