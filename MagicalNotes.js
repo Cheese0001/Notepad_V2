@@ -30,6 +30,46 @@ saveTemplateButton.addEventListener('click', () => {
     renderTemplates(); // Re-render the templates
   }
 });
+// Magical Notes Sidebar and Templates Logic
 
-// Initialize templates on page load
+// Variables to reference HTML elements
+const sidebar = document.getElementById("magicalNotesSidebar");
+const addTemplateBtn = document.getElementById("addTemplateBtn");
+const templateList = document.getElementById("templateList");
+const notepad = document.getElementById("notepad");
+
+// Toggle sidebar visibility
+let isSidebarVisible = false;
+function toggleSidebar() {
+  sidebar.style.visibility = isSidebarVisible ? 'hidden' : 'visible';
+  isSidebarVisible = !isSidebarVisible;
+}
+
+// Open sidebar on button click
+addTemplateBtn.addEventListener("click", () => {
+  toggleSidebar();
+});
+
+// Add template functionality
+const templates = [
+  "Meeting Notes Template",
+  "Project To-Do List",
+  "Personal Journal Template"
+];
+
+// Display templates in the sidebar
+function renderTemplates() {
+  templateList.innerHTML = '';
+  templates.forEach((template, index) => {
+    const templateDiv = document.createElement('div');
+    templateDiv.textContent = template;
+    templateDiv.addEventListener('click', () => {
+      notepad.value = `Template: ${template}\n\n[Start writing your notes here...]`;
+      toggleSidebar(); // Hide sidebar after template is selected
+    });
+    templateList.appendChild(templateDiv);
+  });
+}
+
+// Initialize sidebar with templates
 renderTemplates();
