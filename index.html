@@ -89,6 +89,7 @@ textarea {
   align-items: center;
   margin-bottom: 10px;
   padding: 10px 0;
+  line-height: 1.6; /* Improved line spacing for tasks */
 }
 
 .task-list li.completed {
@@ -218,17 +219,11 @@ textarea {
   <div class="task-container">
     <input type="text" id="taskInput" placeholder="Add a task..." />
     <button id="addTaskButton">Add</button>
-    <button id="increaseTaskTextSize">A+</button>
-    <button id="decreaseTaskTextSize">A-</button>
     <ul id="taskList" class="task-list"></ul>
-    <button id="clearAllButton" class="clear-all">Clear All</button>
   </div>
 </div>
 
-<!-- Theme Toggle Button -->
-<button class="theme-toggle" id="themeToggle">Toggle Theme</button>
-
-<!-- Font Selector -->
+<!-- Font and Task Text Size Control -->
 <div class="font-selector">
   <label for="fontSelect">Choose Font:</label>
   <select id="fontSelect">
@@ -237,7 +232,12 @@ textarea {
     <option value="Arial">Arial</option>
     <option value="Courier New">Courier New</option>
   </select>
+  <button id="increaseTaskTextSize">A+</button>
+  <button id="decreaseTaskTextSize">A-</button>
 </div>
+
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" id="themeToggle">Toggle Theme</button>
 
 <script>
 // Function to update the timezones
@@ -269,6 +269,7 @@ if (storedTheme) {
 const storedFont = localStorage.getItem('font');
 if (storedFont) {
   document.getElementById("notepad").style.fontFamily = storedFont;
+  document.getElementById("taskList").style.fontFamily = storedFont; // Apply font to task list
 }
 
 // Task Management
@@ -344,6 +345,7 @@ document.getElementById('themeToggle').addEventListener('click', () => {
 document.getElementById('fontSelect').addEventListener('change', (e) => {
   const font = e.target.value;
   document.getElementById("notepad").style.fontFamily = font;
+  document.getElementById("taskList").style.fontFamily = font; // Apply font to task list
   localStorage.setItem('font', font);
 });
 
@@ -369,5 +371,6 @@ document.getElementById('decreaseTaskTextSize').addEventListener('click', () => 
   document.getElementById('taskList').style.fontSize = `${currentSize - 2}px`;
 });
 </script>
+
 </body>
 </html>
