@@ -1,225 +1,325 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notepad & Task Tracker</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding-top: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notepad and Task Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --background-color: #f0f0f0;
+  --text-color: #333;
+  --container-bg: #fff;
+  --button-bg: #6200ea;
+  --button-color: white;
+}
 
-    .notepad-container,
-    .task-container {
-      margin-bottom: 20px;
-    }
+[data-theme="dark"] {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --container-bg: #1e1e1e;
+  --button-bg: #bb86fc;
+  --button-color: #000;
+}
 
-    /* Notepad */
-    #notepad {
-      width: 300px;
-      height: 200px;
-      padding: 10px;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      resize: both;
-      overflow: auto;
-    }
+body {
+  font-family: 'Nunito', sans-serif;
+  margin: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
 
-    /* Task List */
-    .task-list {
-      list-style-type: none;
-      padding: 0;
-    }
+.container {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
 
-    .task-list li {
-      font-size: 10px;
-      margin: 5px 0;
-      display: flex;
-      align-items: center;
-    }
+.notepad-container, .task-container {
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  background-color: var(--container-bg);
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: both;
+  overflow: auto;
+}
 
-    .task-list li button {
-      font-size: 10px;
-      margin-left: 5px;
-      background-color: transparent;
-      border: none;
-      cursor: pointer;
-    }
+textarea {
+  width: 100%;
+  height: 150px;
+  border: none;
+  resize: none;
+  outline: none;
+  font-size: 16px;
+  background-color: var(--container-bg);
+  color: var(--text-color);
+}
 
-    .completed {
-      text-decoration: line-through;
-    }
+.task-container input {
+  width: calc(100% - 50px);
+  padding: 5px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  background-color: var(--container-bg);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+}
 
-    /* Buttons */
-    button {
-      font-size: 10px;
-      padding: 5px 10px;
-      background-color: #9DA8C4;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+.task-container button {
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 3px;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  transition: background-color 0.3s, color 0.3s;
+}
 
-    button:hover {
-      background-color: #C6B0C8;
-    }
+.task-list {
+  list-style: none;
+  padding: 0;
+  line-height: 1.1;
+}
 
-    /* Theme Toggle Button */
-    .theme-toggle {
-      margin-top: 20px;
-      padding: 5px 10px;
-      background-color: #9DA8C4;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
+.task-list li {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
 
-    /* Add Task input */
-    #taskInput {
-      font-size: 10px;
-      padding: 5px;
-      width: 200px;
-      margin-right: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
+.task-list li.completed {
+  text-decoration: line-through;
+  color: #aaa;
+}
 
-    /* Container for resizable buttons */
-    .resize-buttons {
-      display: flex;
-      justify-content: space-between;
-      width: 300px;
-    }
+.timezone-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 20px;
+}
 
-    .resize-buttons button {
-      width: 40px;
-    }
-  </style>
+.timezone {
+  background-color: var(--container-bg);
+  padding: 10px;
+  border-radius: 5px;
+  width: 100%;
+  text-align: center;
+  margin: 0 5px;
+}
+
+.timezone h3 {
+  margin: 0;
+}
+
+.timezone p {
+  margin: 5px 0;
+}
+
+.theme-toggle {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px;
+  font-size: 16px;
+  background-color: var(--button-bg);
+  color: var(--button-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.font-selector {
+  margin-bottom: 10px;
+}
+
+select {
+  padding: 5px;
+  font-size: 14px;
+  width: 150px;
+}
+
+.notepad-container button, .task-container button {
+  padding: 5px 10px;
+  margin: 5px;
+  font-size: 16px;
+}
+
+textarea {
+  font-size: 16px;
+  width: 100%;
+  height: 300px;
+  resize: none;
+}
+
+.task-container button {
+  display: inline-block;
+  margin-left: 10px;
+}
+
+#increaseTaskTextSize, #decreaseTaskTextSize {
+  margin-left: 10px;
+}
+
+</style>
 </head>
 <body>
 
+<!-- Timezone Display -->
+<div class="timezone-container" id="timezoneContainer">
+  <div class="timezone" id="pacific">
+    <h3>Pacific</h3>
+    <p id="pacificTime">Loading...</p>
+  </div>
+  <div class="timezone" id="mountain">
+    <h3>Mountain</h3>
+    <p id="mountainTime">Loading...</p>
+  </div>
+  <div class="timezone" id="central">
+    <h3>Central</h3>
+    <p id="centralTime">Loading...</p>
+  </div>
+  <div class="timezone" id="eastern">
+    <h3>Eastern</h3>
+    <p id="easternTime">Loading...</p>
+  </div>
+  <div class="timezone" id="philippines">
+    <h3>Philippines</h3>
+    <p id="philippinesTime">Loading...</p>
+  </div>
+</div>
+
+<div class="container">
   <!-- Notepad -->
   <div class="notepad-container">
     <textarea id="notepad" placeholder="Write your notes here..."></textarea>
-  </div>
-
-  <!-- Font Size Adjustment for Notepad -->
-  <div class="resize-buttons">
-    <button id="increaseNotepadTextSize">+</button>
-    <button id="decreaseNotepadTextSize">-</button>
+    <button id="increaseTextSize">+</button>
+    <button id="decreaseTextSize">-</button>
   </div>
 
   <!-- Task Tracker -->
   <div class="task-container">
     <input type="text" id="taskInput" placeholder="Add a task..." />
     <button id="addTaskButton">Add</button>
+    <button id="increaseTaskTextSize">A+</button>
+    <button id="decreaseTaskTextSize">A-</button>
     <ul id="taskList" class="task-list"></ul>
     <button id="clearAllButton" class="clear-all">Clear All</button>
   </div>
+</div>
 
-  <!-- Font Size Adjustment for Task -->
-  <div class="resize-buttons">
-    <button id="increaseTaskTextSize">+</button>
-    <button id="decreaseTaskTextSize">-</button>
-  </div>
+<!-- Theme Toggle Button -->
+<button class="theme-toggle" id="themeToggle">Toggle Theme</button>
 
-  <!-- Theme Toggle Button -->
-  <button class="theme-toggle" id="themeToggle">Toggle Theme</button>
+<!-- Font Selector -->
+<div class="font-selector">
+  <label for="fontSelect">Choose Font:</label>
+  <select id="fontSelect">
+    <option value="Nunito">Nunito</option>
+    <option value="Quicksand">Quicksand</option>
+    <option value="Arial">Arial</option>
+    <option value="Courier New">Courier New</option>
+  </select>
+</div>
 
-  <script>
-    // Increase and Decrease Text Size Logic for Notepad
-    let currentNotepadFontSize = 16;
-    document.getElementById("increaseNotepadTextSize").addEventListener("click", () => {
-      currentNotepadFontSize += 2;
-      document.getElementById("notepad").style.fontSize = `${currentNotepadFontSize}px`;
-    });
+<script>
+// Function to update the timezones
+function updateTimezones() {
+  const pacificTime = new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles", hour: '2-digit', minute: '2-digit' });
+  const mountainTime = new Date().toLocaleString("en-US", { timeZone: "America/Denver", hour: '2-digit', minute: '2-digit' });
+  const centralTime = new Date().toLocaleString("en-US", { timeZone: "America/Chicago", hour: '2-digit', minute: '2-digit' });
+  const easternTime = new Date().toLocaleString("en-US", { timeZone: "America/New_York", hour: '2-digit', minute: '2-digit' });
+  const philippinesTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila", hour: '2-digit', minute: '2-digit' });
 
-    document.getElementById("decreaseNotepadTextSize").addEventListener("click", () => {
-      if (currentNotepadFontSize > 8) {
-        currentNotepadFontSize -= 2;
-        document.getElementById("notepad").style.fontSize = `${currentNotepadFontSize}px`;
-      }
-    });
+  document.getElementById("pacificTime").textContent = pacificTime;
+  document.getElementById("mountainTime").textContent = mountainTime;
+  document.getElementById("centralTime").textContent = centralTime;
+  document.getElementById("easternTime").textContent = easternTime;
+  document.getElementById("philippinesTime").textContent = philippinesTime;
+}
 
-    // Increase and Decrease Text Size Logic for Task
-    let currentTaskFontSize = 10;
-    document.getElementById("increaseTaskTextSize").addEventListener("click", () => {
-      currentTaskFontSize += 2;
-      document.querySelectorAll('.task-list li').forEach(taskItem => {
-        taskItem.style.fontSize = `${currentTaskFontSize}px`;
-      });
-    });
+// Set an interval to update the time every minute
+setInterval(updateTimezones, 60000);
+updateTimezones(); // Initial call to display the time immediately
 
-    document.getElementById("decreaseTaskTextSize").addEventListener("click", () => {
-      if (currentTaskFontSize > 6) {
-        currentTaskFontSize -= 2;
-        document.querySelectorAll('.task-list li').forEach(taskItem => {
-          taskItem.style.fontSize = `${currentTaskFontSize}px`;
-        });
-      }
-    });
+// Persist theme in localStorage
+const storedTheme = localStorage.getItem('theme');
+if (storedTheme) {
+  document.body.setAttribute('data-theme', storedTheme);
+}
 
-    // Task Tracker Logic
-    const taskList = document.getElementById("taskList");
-    const taskInput = document.getElementById("taskInput");
+// Persist font family in localStorage
+const storedFont = localStorage.getItem('font');
+if (storedFont) {
+  document.getElementById("notepad").style.fontFamily = storedFont;
+  document.getElementById("fontSelect").value = storedFont;
+}
 
-    document.getElementById("addTaskButton").addEventListener("click", () => {
-      const taskText = taskInput.value.trim();
-      if (taskText) {
-        const listItem = document.createElement("li");
-        listItem.textContent = taskText;
+// Persist notepad content
+const storedNotes = localStorage.getItem('notes');
+if (storedNotes) {
+  document.getElementById("notepad").value = storedNotes;
+}
 
-        // Add complete button
-        const completeButton = document.createElement("button");
-        completeButton.textContent = "✓";
-        completeButton.addEventListener("click", () => {
-          listItem.classList.toggle("completed");
-          saveTasks();
-        });
-        listItem.appendChild(completeButton);
+// Persist task list
+const storedTasks = JSON.parse(localStorage.getItem('tasks'));
+if (storedTasks) {
+  const taskList = document.getElementById('taskList');
+  storedTasks.forEach(task => {
+    const taskItem = document.createElement('li');
+    taskItem.textContent = task.name;
+    taskItem.classList.toggle('completed', task.completed);
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'X';
+    deleteButton.onclick = () => deleteTask(taskItem);
+    const completeButton = document.createElement('button');
+    completeButton.textContent = '✓';
+    completeButton.onclick = () => toggleTaskCompletion(taskItem);
+    taskItem.append(deleteButton, completeButton);
+    taskList.appendChild(taskItem);
+  });
+}
 
-        // Add delete button
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "X";
-        deleteButton.addEventListener("click", () => {
-          listItem.remove();
-          saveTasks();
-        });
-        listItem.appendChild(deleteButton);
+// Theme toggle button
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const currentTheme = document.body.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.body.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+});
 
-        taskList.appendChild(listItem);
-        taskInput.value = ""; // Clear input
-        saveTasks(); // Save the updated tasks list
-      }
-    });
+// Font selector
+document.getElementById('fontSelect').addEventListener('change', (e) => {
+  const font = e.target.value;
+  document.getElementById("notepad").style.fontFamily = font;
+  localStorage.setItem('font', font);
+});
 
-    // Save tasks to localStorage
-    function saveTasks() {
-      const tasks = [];
-      document.querySelectorAll('.task-list li').forEach((taskItem) => {
-        tasks.push({
-          text: taskItem.textContent.replace(/✓|X/g, '').trim(),
-          completed: taskItem.classList.contains("completed")
-        });
-      });
-      localStorage.setItem('tasks', JSON.stringify(tasks));
-    }
+// Notepad text size control
+document.getElementById('increaseTextSize').addEventListener('click', () => {
+  const currentSize = parseInt(window.getComputedStyle(document.getElementById('notepad')).fontSize);
+  document.getElementById('notepad').style.fontSize = `${currentSize + 2}px`;
+});
 
-    // Clear All Tasks
-    document.getElementById("clearAllButton").addEventListener("click", () => {
-      taskList.innerHTML = "";
-      saveTasks(); // Clear tasks from localStorage
-    });
-  </script>
+document.getElementById('decreaseTextSize').addEventListener('click', () => {
+  const currentSize = parseInt(window.getComputedStyle(document.getElementById('notepad')).fontSize);
+  document.getElementById('notepad').style.fontSize = `${currentSize - 2}px`;
+});
+
+// Task text size control
+document.getElementById('increaseTaskTextSize').addEventListener('click', () => {
+  const currentSize = parseInt(window.getComputedStyle(document.getElementById('taskInput')).fontSize);
+  document.getElementById('taskInput').style.fontSize = `${currentSize + 2}px`;
+});
+
+document.getElementById('decreaseTaskTextSize').addEventListener('click', () => {
+  const currentSize = parseInt(window.getComputedStyle(document.getElementById('taskInput')).fontSize);
+  document.getElementById('taskInput').style.fontSize = `${currentSize - 2}px`;
+});
+
+</script>
 </body>
 </html>
