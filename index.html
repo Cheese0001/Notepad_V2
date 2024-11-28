@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notepad & Task Tracker Widget</title>
+    <button id="increase-font" class="button">+</button>
+    <button id="decrease-font" class="button">-</button>
 
     <style>
         /* Base Styles */
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Press Start 2P', sans-serif;
             background-color: #f0f0f0;
             display: flex;
             flex-direction: column;
@@ -88,7 +90,7 @@
 
         .toggle-container {
             position: absolute;
-            bottom: 10px;
+            bottom: 60px;
             left: 10px;
         }
 
@@ -106,6 +108,22 @@
             color: white;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        /* Dark theme styling for readability */
+        .dark-theme .notepad-container {
+            background-color: #333;
+            color: black;  /* Notepad text color in dark mode */
+        }
+
+        .dark-theme .task-container {
+            background-color: #333;
+            color: white;  /* Task text color in dark mode */
+        }
+
+        /* Increased font size */
+        .large-font {
+            font-size: 24px;
         }
     </style>
 </head>
@@ -132,17 +150,12 @@
         <!-- Notepad Container -->
         <div class="notepad-container" id="notepad-container">
             <textarea id="notepad" placeholder="Write your notes here..." rows="10" style="width: 100%; font-size: 18px;"></textarea>
+            <div class="resize-handle" id="resize-handle"></div>
         </div>
 
-        <!-- Font Size Buttons Below Notepad -->
-        <div>
-            <button id="increase-font" class="button">+</button>
-            <button id="decrease-font" class="button">-</button>
-        </div>
-
-        <!-- Task Input Field Above Task Buttons -->
+        <!-- Task Container -->
         <div class="task-container" id="task-container">
-            <input id="task-input" type="text" placeholder="Enter task..." style="width: 100%; padding: 10px; margin-bottom: 10px;">
+            <input type="text" id="task-input" placeholder="Enter task" style="width: 100%; padding: 5px; margin-bottom: 10px;">
             <ul id="task-list"></ul>
             <button class="button" onclick="addTask()">Add Task</button>
             <button class="button" onclick="clearTasks()">Clear All Tasks</button>
@@ -158,7 +171,7 @@
 
     <script>
         // Initialize Theme and Font Color
-        let isDarkMode = false;
+        let isDarkMode = localStorage.getItem('theme') === 'dark';
         let currentFontColor = 'purple';
         let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
         let savedNotepad = localStorage.getItem('notepad') || '';
@@ -166,6 +179,7 @@
         // Handle Theme Toggle
         function toggleTheme() {
             isDarkMode = !isDarkMode;
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light'); // Store theme in localStorage
             document.body.className = isDarkMode ? 'dark-theme' : 'light-theme';
             document.getElementById('mainContainer').className = isDarkMode ? 'container dark-theme' : 'container light-theme';
         }
@@ -187,11 +201,11 @@
 
         // Add Task Functionality
         function addTask() {
-            const taskText = document.getElementById('task-input').value.trim();
+            const taskText = document.getElementById('task-input').value;
             if (taskText) {
                 tasks.push({ text: taskText, completed: false });
                 updateTaskList();
-                document.getElementById('task-input').value = ''; // Clear input field
+                document.getElementById('task-input').value = ''; // Clear input after adding
             }
         }
 
@@ -243,46 +257,35 @@
             document.getElementById('philippines').textContent = philippines;
         }
 
-        // Initial Setup
-        updateTimeZones();
-        setInterval(updateTimeZones, 60000); // Update every minute
+        // Call updateTimeZones function periodically
+        setInterval(updateTimeZones, 1000); // Update every second
+        updateTimeZones(); // Initial call
 
-        // Font Size Adjustments
-        document.getElementById('increase-font').addEventListener('click', function() {
-            const notepad = document.getElementById('notepad');
-            const currentSize = parseInt(window.getComputedStyle(notepad).fontSize);
-            notepad.style.fontSize = (currentSize + 2) + 'px';
-        });
-
-        document.getElementById('decrease-font').addEventListener('click', function() {
-            const notepad = document.getElementById('notepad');
-            const currentSize = parseInt(window.getComputedStyle(notepad).fontSize);
-            notepad.style.fontSize = (currentSize - 2) + 'px';
-        });
-
-        // Resize Notepad Container
+        // Handle Resizing Notepad
         const resizeHandle = document.getElementById('resize-handle');
-        let isResizing = false;
+        const notepadContainer = document.getElementById('notepad-container');
 
-        resizeHandle.addEventListener('mousedown', (e) => {
-            isResizing = true;
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', () => {
-                isResizing = false;
-                document.removeEventListener('mousemove', handleMouseMove);
-            });
+        resizeHandle.addEventListener('mousedown', function(e) {
+            const initialWidth = notepadContainer.offsetWidth;
+            const initialHeight = notepadContainer.offsetHeight;
+            const initialX = e.clientX;
+            const initialY = e.clientY;
+
+            const onMouseMove = (moveEvent) => {
+                const widthDiff = moveEvent.clientX - initialX;
+                const heightDiff = moveEvent.clientY - initialY;
+                notepadContainer.style.width = initialWidth + widthDiff + 'px';
+                notepadContainer.style.height = initialHeight + heightDiff + 'px';
+            };
+
+            const onMouseUp = () => {
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            };
+
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
         });
-
-        function handleMouseMove(e) {
-            if (isResizing) {
-                const notepadContainer = document.getElementById('notepad-container');
-                const newWidth = e.clientX - notepadContainer.offsetLeft;
-                const newHeight = e.clientY - notepadContainer.offsetTop;
-                notepadContainer.style.width = `${newWidth}px`;
-                notepadContainer.style.height = `${newHeight}px`;
-            }
-        }
-
     </script>
 </body>
 </html>
